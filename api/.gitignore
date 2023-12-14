@@ -1,0 +1,9 @@
+# folder ignored by git
+node_modules
+dist
+
+# files ignored by git
+.env
+src/**/*.map
+
+!.vscode/extensions.json
