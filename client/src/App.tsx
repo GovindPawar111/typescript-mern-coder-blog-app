@@ -10,11 +10,11 @@ import CreatePostPage from './pages/CreatePostPage'
 import EditPostPage from './pages/EditPostPage'
 import ProfilePage from './pages/ProfilePage'
 import Loader from './components/Loader'
-import { UserContextProvider } from './context/UserContext'
+import { AppContextProvider } from './context/appContext'
 
 const App: React.FC = () => {
     return (
-        <UserContextProvider>
+        <AppContextProvider>
             <Navbar />
             <Routes>
                 <Route index element={<HomePage />}></Route>
@@ -28,7 +28,7 @@ const App: React.FC = () => {
                 <Route path="/posts/create" element={<CreatePostPage />}></Route>
             </Routes>
             <Footer />
-        </UserContextProvider>
+        </AppContextProvider>
     )
 }
 

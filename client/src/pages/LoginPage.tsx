@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { ErrorResponse, Link, useNavigate } from 'react-router-dom'
 import { apiBaseUrl } from '../config/url'
 import axios, { AxiosError } from 'axios'
-import { UserContext } from '../context/UserContext'
+import { AppContext } from '../context/appContext'
 
 export interface LoginResponse {
     id: string
@@ -21,7 +21,7 @@ const LoginPage: React.FC = () => {
     const [password, setPassword] = useState<string>('')
     const [error, setError] = useState<string>('')
     const navigate = useNavigate()
-    const { setUser } = useContext(UserContext)
+    const { setUser } = useContext(AppContext)
 
     const handleLoginBtnClick = async () => {
         try {
