@@ -18,7 +18,7 @@ const HomePage: React.FC = () => {
                         id={post._id}
                         title={post.title}
                         description={post.description}
-                        photo={post.photo}
+                        headerImageUrl={post.headerImageUrl}
                         username={post.username}
                         userId={post.userId}
                         catagories={post.catagories}

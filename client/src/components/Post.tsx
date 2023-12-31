@@ -4,7 +4,7 @@ export interface IPost {
     id: string
     title: string
     description: string
-    photo: string
+    headerImageUrl: string
     username: string
     userId: string
     catagories: string[]
@@ -35,7 +35,7 @@ const Post = ({
     id,
     title,
     description,
-    photo,
+    headerImageUrl,
     username,
     userId,
     dateTimeStamp,
@@ -46,7 +46,7 @@ const Post = ({
             {/* left side*/}
             <div className="w-[35%] h-[150px] flex justify-center items-center md:h-[200px]">
                 <Link to={`/posts/${id}`} className="w-full h-full">
-                    <img src={photo} alt="" className="w-full h-full object-cover cursor-pointer" />
+                    <img src={headerImageUrl} alt="" className="w-full h-full object-cover cursor-pointer" />
                 </Link>
             </div>
             {/* right side*/}

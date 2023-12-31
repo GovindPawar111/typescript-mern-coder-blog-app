@@ -8,21 +8,21 @@ const router = express.Router()
 //create
 router.post('/', validateToken, async (req: Request, res: Response) => {
     try {
-        const { title, description, photo, catagories, username, userId } = req.body
+        const { title, description, headerImageUrl, catagories, username, userId } = req.body
         if (!title || !userId || !username) {
             return res.status(400).json({
                 message: 'Missing required fields. Please provide proper values.',
             })
         }
 
-        const newPost = new Post({ title, description, photo, catagories, username, userId })
+        const newPost = new Post({ title, description, headerImageUrl, catagories, username, userId })
         const savedPost = await newPost.save()
 
         res.status(201).json({
             message: 'Post create Successfully.',
             title: savedPost.title,
             description: savedPost.description,
-            photo: savedPost.photo,
+            headerImageUrl: savedPost.headerImageUrl,
             catagories: savedPost.catagories,
             username: savedPost.username,
             userId: savedPost.userId,
@@ -37,7 +37,15 @@ router.post('/', validateToken, async (req: Request, res: Response) => {
 router.put('/:id', validateToken, async (req: Request, res: Response) => {
     try {
         // if user don't  provide least one valid fields to update the post return bad request.
-        if (!(req.body.title || req.body.description || req.body.photo || req.body.catagories || req.body.username)) {
+        if (
+            !(
+                req.body.title ||
+                req.body.description ||
+                req.body.headerImageUrl ||
+                req.body.catagories ||
+                req.body.username
+            )
+        ) {
             return res.status(400).json({
                 message: 'Bad Request, No valid fields provided for update',
             })
@@ -48,7 +56,7 @@ router.put('/:id', validateToken, async (req: Request, res: Response) => {
                 $set: {
                     title: req.body.title,
                     description: req.body.description,
-                    photo: req.body.photo,
+                    headerImageUrl: req.body.headerImageUrl,
                     catagories: req.body.catagories,
                     username: req.body.username,
                 },

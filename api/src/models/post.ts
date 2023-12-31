@@ -5,7 +5,7 @@ type PostType = {
     updatedAt: NativeDate
     title: string
     description?: string
-    photo?: string
+    headerImageUrl?: string
     catagories?: string[]
     username: string
     userId: string
@@ -20,7 +20,7 @@ const postSchema = new mongoose.Schema(
         description: {
             type: String,
         },
-        photo: {
+        headerImageUrl: {
             type: String,
         },
         username: {

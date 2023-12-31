@@ -12,7 +12,7 @@ export interface PostResponse {
     _id: string
     title: string
     description: string
-    photo: string
+    headerImageUrl: string
     catagories: string[]
     username: string
     userId: string
