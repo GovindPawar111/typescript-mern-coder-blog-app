@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { BsSearch } from 'react-icons/bs'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import Menu from './Menu'
@@ -15,6 +15,7 @@ const Navbar: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
     const [searchQuery, setSearchQuery] = useState<string>('')
     const navigate = useNavigate()
+    const pathname = useLocation().pathname
 
     const logoutUser = async () => {
         try {
@@ -50,35 +51,37 @@ const Navbar: React.FC = () => {
 
     return (
         <div className="flex justify-between items-center px-6 md:px-[200px] py-4">
-            <h1 className="font-extrabold text-2xl md:text-xl">
-                <Link to={'/'}>CoderBlog</Link>
-            </h1>
-            <div className="flex justify-center items-center space-x-0 px-3">
-                <p>
-                    <BsSearch />
-                </p>
-                <input
-                    value={searchQuery}
-                    onChange={(event) => setSearchQuery(event.target.value)}
-                    className="outline-none px-3"
-                    type="text"
-                    placeholder="Search a post"
-                />
-            </div>
-            <div className="hidden md:flex justify-center items-center space-x-2 md:space-x-6 ">
+            <Link to={'/'}>
+                <h1 className="font-extrabold text-2xl flex justify-center items-center">CoderBlog</h1>
+            </Link>
+            {pathname === '/' && (
+                <div className="flex justify-center items-center space-x-0 px-3">
+                    <p>
+                        <BsSearch />
+                    </p>
+                    <input
+                        value={searchQuery}
+                        onChange={(event) => setSearchQuery(event.target.value)}
+                        className="outline-none px-3"
+                        type="text"
+                        placeholder="Search a post"
+                    />
+                </div>
+            )}
+            <div className="hidden md:flex justify-center text-gray-500 items-center space-x-2 md:space-x-6">
                 {isUserLoggedIn && (
                     <>
-                        <h3>
+                        <h3 className="hover:text-black hover:underline hover:underline-offset-4">
                             <Link to={'posts/create'}>Write</Link>
                         </h3>
-                        <h3>
+                        <h3 className="hover:text-black hover:underline hover:underline-offset-4">
                             <Link to={'/profile/${id}'}>Profile</Link>
                         </h3>
                         <h3
                             onClick={() => {
                                 logoutUser()
                             }}
-                            className="hover:cursor-pointer"
+                            className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4"
                         >
                             Logout
                         </h3>
