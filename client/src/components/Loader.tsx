@@ -1,8 +1,12 @@
 import React from 'react'
 
-const Loader: React.FC = () => {
+interface ILoader {
+    label?: React.ReactNode
+}
+
+const Loader: React.FC<ILoader> = ({ label }: ILoader) => {
     return (
-        <div role="status" className='w-full h-full flex justify-center items-center'>
+        <div role="status" className="w-full h-full flex justify-center items-center">
             <svg
                 aria-hidden="true"
                 className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-200 fill-black"
@@ -19,6 +23,7 @@ const Loader: React.FC = () => {
                     fill="currentFill"
                 />
             </svg>
+            <h2 className="inline-block mx-4 text-2xl capitalize">{label}</h2>
         </div>
     )
 }

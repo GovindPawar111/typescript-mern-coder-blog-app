@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import placeholderImage from '../../public/images/placeholder-image.png'
 export interface IPost {
     id: string
     title: string
@@ -46,7 +47,15 @@ const Post = ({
             {/* left side*/}
             <div className="w-[35%] h-[150px] flex justify-center items-center md:h-[200px]">
                 <Link to={`/posts/${id}`} className="w-full h-full">
-                    <img src={headerImageUrl} alt="" className="w-full h-full object-cover cursor-pointer" />
+                    {headerImageUrl ? (
+                        <img src={headerImageUrl} alt={title} className="w-full h-full object-cover cursor-pointer" />
+                    ) : (
+                        <img
+                            src={placeholderImage}
+                            alt={'placeholder-image'}
+                            className="w-full h-full object-cover cursor-pointer"
+                        />
+                    )}
                 </Link>
             </div>
             {/* right side*/}

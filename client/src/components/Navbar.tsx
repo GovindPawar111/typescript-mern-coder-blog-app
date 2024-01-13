@@ -39,7 +39,6 @@ const Navbar: React.FC = () => {
             try {
                 const response = await axios.get<PostResponse[]>(`${apiBaseUrl}/api/post?search=${query}`)
                 setPosts(response.data)
-                console.log(response)
             } catch (e) {
                 const error = e as AxiosError
                 console.log(error)

@@ -2,22 +2,38 @@ import express, { Request, Response } from 'express'
 import Post from '../models/post'
 import User from '../models/user'
 import validateToken from '../utils/validateToken'
+import { upload } from '../middlewares/multer.middleware'
+import uploadOnCloudinary from '../utils/cloudinaryService'
+import fs from 'fs'
 
 const router = express.Router()
 
 //create
-router.post('/', validateToken, async (req: Request, res: Response) => {
+router.post('/', validateToken, upload.single('header-image'), async (req: Request, res: Response) => {
     try {
-        const { title, description, headerImageUrl, catagories, username, userId } = req.body
+        const { title, description, catagories, username, userId } = JSON.parse(req.body.data)
         if (!title || !userId || !username) {
             return res.status(400).json({
                 message: 'Missing required fields. Please provide proper values.',
+                ...req.body,
             })
         }
-
-        const newPost = new Post({ title, description, headerImageUrl, catagories, username, userId })
+        const imageLocalPath = req.file?.path
+        let imageUrl: string = ''
+        if (imageLocalPath) {
+            // upload header image file on cloudinary
+            const cloudinaryResponse = await uploadOnCloudinary(imageLocalPath)
+            imageUrl = cloudinaryResponse?.url || ''
+        }
+        const newPost = new Post({
+            title,
+            description,
+            headerImageUrl: imageUrl,
+            catagories,
+            username,
+            userId,
+        })
         const savedPost = await newPost.save()
-
         res.status(201).json({
             message: 'Post create Successfully.',
             title: savedPost.title,
@@ -27,9 +43,14 @@ router.post('/', validateToken, async (req: Request, res: Response) => {
             username: savedPost.username,
             userId: savedPost.userId,
             _id: savedPost.id,
+            createdAt: savedPost.createdAt,
+            updatedAt: savedPost.updatedAt,
         })
     } catch (error) {
-        res.status(500).json({ error: error, message: 'Internal server error, Please try again later.' })
+        if (req.file?.path) {
+            await fs.unlink(req.file?.path, () => {})
+        }
+        res.status(500).json({ error, message: 'Internal server error, Please try again later.' })
     }
 })
 
