@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { BsSearch } from 'react-icons/bs'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import Menu from './Menu'
@@ -36,12 +36,14 @@ const Navbar: React.FC = () => {
 
     useEffect(() => {
         const getSearchedPost = async (query: string) => {
-            try {
-                const response = await axios.get<PostResponse[]>(`${apiBaseUrl}/api/post?search=${query}`)
-                setPosts(response.data)
-            } catch (e) {
-                const error = e as AxiosError
-                console.log(error)
+            if (query && query !== '/') {
+                try {
+                    const response = await axios.get<PostResponse[]>(`${apiBaseUrl}/api/post?search=${query}`)
+                    setPosts(response.data)
+                } catch (e) {
+                    const error = e as AxiosError
+                    console.log(error)
+                }
             }
         }
         getSearchedPost(debouncedQuery)

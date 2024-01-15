@@ -8,8 +8,9 @@ import axios, { AxiosError } from 'axios'
 import { errorResponse } from './LoginPage'
 import { useNavigate } from 'react-router-dom'
 import Loader from '../components/Loader'
+import placeholderImage from '../../public/images/placeholder-image.png'
 
-const modules = {
+export const ReactQuillModules = {
     toolbar: [
         [{ header: [1, 2, false] }],
         ['bold', 'italic', 'underline', 'strike', 'blockquote'],
@@ -19,7 +20,7 @@ const modules = {
     ],
 }
 
-const formats = [
+export const ReactQuillFormats = [
     'header',
     'bold',
     'italic',
@@ -37,12 +38,15 @@ const CreatePostPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [title, setTitle] = useState<string>('')
     const [description, setDescription] = useState<string>('')
-    const [imageFile, setImageFile] = useState<File | null>(null)
+    const [image, setImage] = useState<{ file: File | null; previewImageURL: string }>({
+        file: null,
+        previewImageURL: placeholderImage,
+    })
     const [category, setCategory] = useState<string>('')
     const [content, setContent] = useState<string>('')
     const [categoryList, setCategoryList] = useState<string[]>([])
 
-    const { user, setPosts } = useContext(AppContext)
+    const { user } = useContext(AppContext)
     const navigate = useNavigate()
 
     const handleAddCategory = (): void => {
@@ -50,6 +54,7 @@ const CreatePostPage: React.FC = () => {
             const newCategoryLIst = [...categoryList, category]
             setCategoryList(newCategoryLIst)
         }
+        setCategory('')
     }
 
     const handleRemoveCategory = (removedCategory: string): void => {
@@ -59,10 +64,23 @@ const CreatePostPage: React.FC = () => {
 
     const handleAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         const target = e.target as HTMLInputElement & { files: FileList }
-        setImageFile(target.files[0])
+        const selectedFile = target.files[0]
+
+        if (selectedFile) {
+            // Update state with the new file and its preview URL
+            setImage({
+                file: target.files[0],
+                previewImageURL: URL.createObjectURL(selectedFile),
+            })
+        } else {
+            setImage({
+                file: null,
+                previewImageURL: placeholderImage,
+            })
+        }
     }
 
-    const handleFormSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault()
 
         const newPost = {
@@ -75,8 +93,8 @@ const CreatePostPage: React.FC = () => {
 
         // formData is create to send image file and json data together
         const formData = new FormData()
-        if (imageFile !== null) {
-            formData.append('header-image', imageFile, imageFile.name)
+        if (image.file !== null) {
+            formData.append('header-image', image.file, image.file.name)
         }
 
         formData.append('data', JSON.stringify(newPost))
@@ -85,13 +103,7 @@ const CreatePostPage: React.FC = () => {
             const response = await axios.post<PostResponse>(`${apiBaseUrl}/api/post`, formData, {
                 withCredentials: true,
             })
-            setPosts((posts) => {
-                if (posts !== null) {
-                    return [...posts, response.data]
-                }
-                return posts
-            })
-            navigate('/')
+            navigate(`/posts/${response.data._id}`)
             setIsLoading(false)
         } catch (e) {
             const error = e as AxiosError<errorResponse>
@@ -118,14 +130,23 @@ const CreatePostPage: React.FC = () => {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                 />
-                <input
-                    type="text"
+                <textarea
                     placeholder="Enter post description"
                     className="px-4 py-2 text-black border-2 focus:border-black"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
-                <input type="file" className="px-4" accept="image/png, image/jpg" onChange={(e) => handleAddImage(e)} />
+                <img
+                    src={image.previewImageURL}
+                    alt={title}
+                    className="w-[250px] h-[150px] object-contain cursor-pointer"
+                />
+                <input
+                    type="file"
+                    className="px-4 w-[300px]"
+                    accept="image/png, image/jpg"
+                    onChange={(e) => handleAddImage(e)}
+                />
                 <div className="flex flex-col">
                     <div className="flex items-center space-x-4 md:space-x-8">
                         <input
@@ -164,10 +185,15 @@ const CreatePostPage: React.FC = () => {
                     })}
                 </div>
 
-                <ReactQuill theme="snow" value={content} onChange={setContent} modules={modules} formats={formats} />
+                <ReactQuill
+                    theme="snow"
+                    value={content}
+                    onChange={setContent}
+                    modules={ReactQuillModules}
+                    formats={ReactQuillFormats}
+                />
 
                 <button
-                    onClick={(e) => handleFormSubmit(e)}
                     className="bg-black text-white w-full md:w-[20%] mx-auto font-semibold px-4 py-2 text-lg md:text-xl"
                 >
                     Create

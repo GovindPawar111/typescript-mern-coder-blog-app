@@ -1,11 +1,26 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import Post from '../components/Post'
-import { AppContext } from '../context/appContext'
+import { AppContext, PostResponse } from '../context/appContext'
 import NoPost from '../components/NoPost'
 import Loader from '../components/Loader'
+import axios, { AxiosError } from 'axios'
+import { apiBaseUrl } from '../config/url'
 
 const HomePage: React.FC = () => {
-    const { posts } = useContext(AppContext)
+    const { posts, setPosts } = useContext(AppContext)
+
+    useEffect(() => {
+        const getPosts = async () => {
+            try {
+                const response = await axios.get<PostResponse[]>(`${apiBaseUrl}/api/post`)
+                setPosts(response.data)
+            } catch (e) {
+                const error = e as AxiosError
+                console.log(error)
+            }
+        }
+        getPosts()
+    }, [])
 
     return (
         <div className="px-8 md:px-[200px] min-h-screen">

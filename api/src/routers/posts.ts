@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import Post from '../models/post'
 import User from '../models/user'
+import Comment from '../models/comment'
 import validateToken from '../utils/validateToken'
 import { upload } from '../middlewares/multer.middleware'
 import uploadOnCloudinary from '../utils/cloudinaryService'
@@ -18,13 +19,17 @@ router.post('/', validateToken, upload.single('header-image'), async (req: Reque
                 ...req.body,
             })
         }
-        const imageLocalPath = req.file?.path
+
         let imageUrl: string = ''
-        if (imageLocalPath) {
+        if (req.file?.path) {
             // upload header image file on cloudinary
-            const cloudinaryResponse = await uploadOnCloudinary(imageLocalPath)
+            const cloudinaryResponse = await uploadOnCloudinary(req.file?.path)
             imageUrl = cloudinaryResponse?.url || ''
+
+            // remove the file stored on server.
+            await fs.unlink(req.file?.path, () => {})
         }
+
         const newPost = new Post({
             title,
             description,
@@ -33,6 +38,7 @@ router.post('/', validateToken, upload.single('header-image'), async (req: Reque
             username,
             userId,
         })
+        
         const savedPost = await newPost.save()
         res.status(201).json({
             message: 'Post create Successfully.',
@@ -47,6 +53,7 @@ router.post('/', validateToken, upload.single('header-image'), async (req: Reque
             updatedAt: savedPost.updatedAt,
         })
     } catch (error) {
+        // remove the file stored on server in case of any error.
         if (req.file?.path) {
             await fs.unlink(req.file?.path, () => {})
         }
@@ -55,31 +62,38 @@ router.post('/', validateToken, upload.single('header-image'), async (req: Reque
 })
 
 //update
-router.put('/:id', validateToken, async (req: Request, res: Response) => {
+router.put('/:id', validateToken, upload.single('header-image'), async (req: Request, res: Response) => {
     try {
-        // if user don't  provide least one valid fields to update the post return bad request.
-        if (
-            !(
-                req.body.title ||
-                req.body.description ||
-                req.body.headerImageUrl ||
-                req.body.catagories ||
-                req.body.username
-            )
-        ) {
+        const { title, description, catagories, username, userId, headerImageUrl } = JSON.parse(req.body.data)
+        if (!title || !userId || !username) {
             return res.status(400).json({
-                message: 'Bad Request, No valid fields provided for update',
+                message: 'Missing required fields. Please provide proper values.',
+                ...req.body,
             })
         }
+
+        let imageUrl: string = ''
+        if (req.file?.path) {
+            // upload header image file on cloudinary
+            const cloudinaryResponse = await uploadOnCloudinary(req.file?.path)
+            imageUrl = cloudinaryResponse?.url || headerImageUrl || ''
+
+            // remove the file stored on server.
+            await fs.unlink(req.file?.path, () => {})
+        } else {
+            imageUrl = headerImageUrl
+        }
+
         const updatedPost = await Post.findByIdAndUpdate(
             req.params.id,
             {
                 $set: {
-                    title: req.body.title,
-                    description: req.body.description,
-                    headerImageUrl: req.body.headerImageUrl,
-                    catagories: req.body.catagories,
-                    username: req.body.username,
+                    title: title,
+                    description: description,
+                    headerImageUrl: imageUrl,
+                    catagories: catagories,
+                    username: username,
+                    userId: userId,
                 },
             },
             { new: true },
@@ -92,7 +106,11 @@ router.put('/:id', validateToken, async (req: Request, res: Response) => {
             ...updatedPost,
         })
     } catch (error) {
-        res.status(500).json({ error: error, message: 'Internal server error, Please try again later.' })
+        // remove the file stored on server in case of any error.
+        if (req.file?.path) {
+            await fs.unlink(req.file?.path, () => {})
+        }
+        res.status(500).json({ error, message: 'Internal server error, Please try again later.' })
     }
 })
 
@@ -105,6 +123,7 @@ router.delete('/:id', validateToken, async (req: Request, res: Response) => {
         }
 
         const deletedPost = await Post.findByIdAndDelete({ _id: req.params.id }).lean().exec()
+        await Comment.deleteMany({ postId: req.params.id }).lean().exec()
         res.status(200).json({ message: 'Post deleted successfully.', ...deletedPost })
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error, Please try again later.' })

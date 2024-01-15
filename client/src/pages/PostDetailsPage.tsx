@@ -3,7 +3,7 @@ import { BiEdit } from 'react-icons/bi'
 import { MdDelete } from 'react-icons/md'
 import Comment from '../components/Comment'
 import { AppContext, PostResponse } from '../context/appContext'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { apiBaseUrl } from '../config/url'
 import { getFormattedTime, getFormattedDate } from '../components/Post'
@@ -11,8 +11,20 @@ import { getFormattedTime, getFormattedDate } from '../components/Post'
 const PostDetailsPage: React.FC = () => {
     const [post, setPost] = useState<PostResponse | null>(null)
     const { user } = useContext(AppContext)
-
     const params = useParams()
+    const navigate = useNavigate()
+
+    const handleDeletePost = async (): Promise<void> => {
+        try {
+            const response = await axios.delete<PostResponse>(`${apiBaseUrl}/api/post/${params.postId}`, {
+                withCredentials: true,
+            })
+            console.log(response)
+            navigate('/')
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
         const getPost = async (postId: string) => {
@@ -29,10 +41,10 @@ const PostDetailsPage: React.FC = () => {
                 <h1 className="text-2xl font-bold text-black md:text-3xl">{post?.title}</h1>
                 {post?.userId === user?.id && (
                     <div className="flex items-center justify-center space-x-2">
-                        <Link to={`/edit/${post?._id}`}>
+                        <Link to={`/posts/edit/${post?._id}`}>
                             <BiEdit />
                         </Link>
-                        <MdDelete />
+                        <MdDelete className="cursor-pointer" onClick={handleDeletePost} />
                     </div>
                 )}
             </div>

@@ -14,12 +14,8 @@ const uploadOnCloudinary = async (localPath: string): Promise<UploadApiResponse 
             return null
         }
         const response = await cloudinary.uploader.upload(localPath, { resource_type: 'auto' })
-        // remove the file stored on server.
-        await fs.unlink(localPath, () => {})
         return response
     } catch (error) {
-        // remove the file stored on server.
-        await fs.unlink(localPath, () => {})
         return null
     }
 }
