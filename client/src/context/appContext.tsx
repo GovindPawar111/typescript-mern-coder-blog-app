@@ -3,7 +3,7 @@ import { ReactNode, createContext, useEffect, useState } from 'react'
 import { errorResponse } from '../pages/LoginPage'
 import { apiBaseUrl } from '../config/url'
 
-type UserResponse = {
+export type UserResponse = {
     username: string
     email: string
     id: string

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Profile from '../components/EditProfile'
+import Profile from '../components/ProfileSection'
 import { useLocation, useParams } from 'react-router-dom'
 import { AppContext, PostResponse } from '../context/appContext'
 import axios, { AxiosError } from 'axios'
@@ -12,6 +12,7 @@ import { errorResponse } from './LoginPage'
 const ProfilePage: React.FC = () => {
     const [posts, setPosts] = useState<PostResponse[]>([])
     const { user } = useContext(AppContext)
+
     const params = useParams()
     const location = useLocation()
     const username = location.state
@@ -30,12 +31,12 @@ const ProfilePage: React.FC = () => {
 
     useEffect(() => {
         params.profileId && getUserPost(params.profileId)
-    }, [])
+    }, [params.profileId])
 
     return (
         <section className="px-8 py-8 md:mx-[160px] md:px-8 flex flex-col-reverse items-start md:flex-row md:gap-4 min-h-screen bg-white">
             <div className="flex flex-col w-full md:w-[70%] mt-8 md:mt-0">
-                <h1 className="text-xl font-bold mb-4">{`${
+                <h1 className="text-xl font-extrabold mb-4 ">{`${
                     params.profileId === user?.id ? 'Your' : `${username}'s`
                 } posts:`}</h1>
                 {posts === undefined || posts === null ? (
