@@ -119,7 +119,7 @@ const EditPostPage: React.FC = () => {
     }
 
     return (
-        <div className="px-6 md:px-[200px] mt-8">
+        <section className="px-8 py-8 md:mx-[160px] md:px-8 w-[100wh] bg-white">
             <h1 className="font-bold text-xl md:text-2xl">Edit a post</h1>
             <form className="w-full flex flex-col space-y-4 md:space-y-4 mt-4" onSubmit={(e) => handleFormSubmit(e)}>
                 <input
@@ -196,7 +196,7 @@ const EditPostPage: React.FC = () => {
                     Save
                 </button>
             </form>
-        </div>
+        </section>
     )
 }
 

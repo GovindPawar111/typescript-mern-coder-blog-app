@@ -113,14 +113,14 @@ const CreatePostPage: React.FC = () => {
 
     if (isLoading) {
         return (
-            <div className="px-6 md:px-[200px] mt-8 min-h-screen">
+            <div className="px-6 md:mx-[160px] md:px-8 w-[100wh] mt-8 min-h-screen">
                 <Loader label={'Creating New Post...'}></Loader>
             </div>
         )
     }
 
     return (
-        <div className="px-6 md:px-[200px] mt-8">
+        <section className="px-8 py-8 md:mx-[160px] md:px-8 w-[100wh] bg-white">
             <h1 className="font-bold text-xl md:text-2xl">Create a post</h1>
             <form className="w-full flex flex-col space-y-4 md:space-y-4 mt-4" onSubmit={(e) => handleFormSubmit(e)}>
                 <input
@@ -193,13 +193,11 @@ const CreatePostPage: React.FC = () => {
                     formats={ReactQuillFormats}
                 />
 
-                <button
-                    className="bg-black text-white w-full md:w-[20%] mx-auto font-semibold px-4 py-2 text-lg md:text-xl"
-                >
+                <button className="bg-black text-white w-full md:w-[20%] mx-auto font-semibold px-4 py-2 text-lg md:text-xl">
                     Create
                 </button>
             </form>
-        </div>
+        </section>
     )
 }
 

@@ -43,7 +43,7 @@ const Post = ({
     catagories,
 }: IPost): React.ReactElement => {
     return (
-        <div className="flex mt-8 w-full space-x-2 md:space-x-4">
+        <div className="flex w-full py-8 space-x-2 md:space-x-4">
             {/* left side*/}
             <div className="w-[35%] h-[150px] flex justify-center items-center md:h-[200px]">
                 <Link to={`/posts/${id}`} className="w-full h-full">
@@ -72,7 +72,7 @@ const Post = ({
                 </p>
 
                 <div className="flex mb-1 font-semibold text-xs text-gray-500 text-center items-center justify-start md:mb-2">
-                    <Link to={`/profile/${userId}`}>
+                    <Link to={`/profile/${userId}`} state={username}>
                         <span className="cursor-pointer text-black">@{username}</span>
                     </Link>
                     <span className="px-1">·</span>

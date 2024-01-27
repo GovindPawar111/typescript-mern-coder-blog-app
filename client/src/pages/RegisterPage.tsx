@@ -43,7 +43,7 @@ const RegisterPage = (): React.ReactElement => {
     }
 
     return (
-        <div className="w-full flex justify-center items-center h-[70vh]">
+        <section className="w-full flex justify-center items-center h-[70vh] bg-white">
             <div className="flex  flex-col justify-center items-center space-y-4 w-[80%] md:w-[25%]">
                 <h1 className="text-xl font-bold text-left">Create an account</h1>
                 <input
@@ -81,7 +81,7 @@ const RegisterPage = (): React.ReactElement => {
                     </p>
                 </div>
             </div>
-        </div>
+        </section>
     )
 }
 

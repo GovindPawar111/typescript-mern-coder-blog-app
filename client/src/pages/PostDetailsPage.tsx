@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { BiEdit } from 'react-icons/bi'
 import { MdDelete } from 'react-icons/md'
-import Comment from '../components/Comment'
+import CommentSection from '../components/CommentSection'
 import { AppContext, PostResponse } from '../context/appContext'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
@@ -36,7 +36,7 @@ const PostDetailsPage: React.FC = () => {
     }, [])
 
     return (
-        <div className="px-8 md:px-[200px] mt-8">
+        <section className="px-8 py-8 md:mx-[160px] w-[100wh] md:px-8 bg-white">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-black md:text-3xl">{post?.title}</h1>
                 {post?.userId === user?.id && (
@@ -71,19 +71,9 @@ const PostDetailsPage: React.FC = () => {
                     ))}
                 </div>
             </div>
-            {/* comments */}
-            <Comment />
 
-            {/* write a comment */}
-            <div className="w-full flex flex-col md:flex-row mt-4">
-                <input
-                    type="text"
-                    placeholder="Write a comment"
-                    className="w-[80%] outline-none px-4 py-2 mt-4 md:mt-0"
-                />
-                <button className="bg-black text-white px-4 py-2 mt-4 md:mt-0  md:w-[20%]">Add comment</button>
-            </div>
-        </div>
+            {params.postId && <CommentSection postId={params.postId} />}
+        </section>
     )
 }
 

@@ -81,7 +81,7 @@ router.delete('/:id', validateToken, async (req: Request, res: Response) => {
 //get Comment by postId
 router.get('/post/:id', async (req: Request, res: Response) => {
     try {
-        const post = await Post.findById(req.params.id).lean().exec()
+        const post = await Post.findById({ _id: req.params.id }).lean().exec()
         if (!post) {
             return res.status(404).json({ message: 'Post not found.' })
         }

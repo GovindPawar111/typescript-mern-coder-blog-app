@@ -41,6 +41,7 @@ router.post('/register', async (req: Request, res: Response) => {
             id: savedUser.id,
             username: savedUser.username,
             createdAt: savedUser.createdAt,
+            updatedAt: savedUser.updatedAt,
         })
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error. Please try again later.' })
@@ -77,9 +78,14 @@ router.post('/login', async (req: Request, res: Response) => {
             expiresIn: '2d',
         })
 
-        res.status(200)
-            .cookie('token', token)
-            .json({ message: 'Login successful', email: user.email, id: user._id, username: user.username })
+        res.status(200).cookie('token', token).json({
+            message: 'Login successful',
+            email: user.email,
+            id: user._id,
+            username: user.username,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        })
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error. Please try again later.' })
     }
@@ -88,10 +94,20 @@ router.post('/login', async (req: Request, res: Response) => {
 //Refetch route
 router.get('/refetch', validateToken, async (req: Request, res: Response) => {
     try {
+        const user = await User.findOne({ email: req.body.user.email })
+        if (!user) {
+            return res.status(404).json({
+                error: 'User not found',
+                message: 'The requested user could not be found on the server.',
+            })
+        }
+
         res.status(200).json({
-            email: req.body.user.email,
-            id: req.body.user.id,
-            username: req.body.user.username,
+            email: user.email,
+            id: user._id,
+            username: user.username,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
         })
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error. Please try again later.' })

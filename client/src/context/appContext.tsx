@@ -7,6 +7,8 @@ type UserResponse = {
     username: string
     email: string
     id: string
+    createdAt?: string
+    updatedAt?: string
 }
 export interface PostResponse {
     _id: string

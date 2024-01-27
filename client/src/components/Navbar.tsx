@@ -51,7 +51,7 @@ const Navbar: React.FC = () => {
     }, [debouncedQuery])
 
     return (
-        <div className="flex justify-between items-center px-6 md:px-[200px] py-4">
+        <nav className="flex justify-between items-center px-6 md:px-[200px] py-4 sticky top-0 bg-white border-b shadow-lg">
             <Link to={'/'}>
                 <h1 className="font-extrabold text-2xl flex justify-center items-center">CoderBlog</h1>
             </Link>
@@ -70,13 +70,13 @@ const Navbar: React.FC = () => {
                 </div>
             )}
             <div className="hidden md:flex justify-center text-gray-500 items-center space-x-2 md:space-x-6">
-                {isUserLoggedIn && (
+                {isUserLoggedIn && user && (
                     <>
                         <h3 className="hover:text-black hover:underline hover:underline-offset-4">
                             <Link to={'posts/create'}>Write</Link>
                         </h3>
                         <h3 className="hover:text-black hover:underline hover:underline-offset-4">
-                            <Link to={'/profile/${id}'}>Profile</Link>
+                            <Link to={`/profile/${user?.id}`} >Profile</Link>
                         </h3>
                         <h3
                             onClick={() => {
@@ -105,7 +105,7 @@ const Navbar: React.FC = () => {
             {isMenuOpen && (
                 <Menu isUserLoggedIn={isUserLoggedIn} onSetIsMenuOpen={handleMenuClick} onLogout={logoutUser} />
             )}
-        </div>
+        </nav>
     )
 }
 

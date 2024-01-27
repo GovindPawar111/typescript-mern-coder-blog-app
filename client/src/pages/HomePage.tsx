@@ -23,7 +23,7 @@ const HomePage: React.FC = () => {
     }, [])
 
     return (
-        <div className="px-8 md:px-[200px] min-h-screen">
+        <section className="flex flex-col gap-8 md:mx-[160px] w-[100wh] md:px-8 bg-white">
             {posts === undefined || posts === null ? (
                 <Loader></Loader>
             ) : posts.length > 0 ? (
@@ -43,7 +43,7 @@ const HomePage: React.FC = () => {
             ) : (
                 <NoPost />
             )}
-        </div>
+        </section>
     )
 }
 

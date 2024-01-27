@@ -9,6 +9,7 @@ export interface LoginResponse {
     username: string
     email: string
     updatedAt: string
+    createdAt: string
 }
 
 export type errorResponse = {
@@ -34,7 +35,13 @@ const LoginPage: React.FC = () => {
                 { withCredentials: true }
             )
 
-            setUser({ id: response.data.id, username: response.data.username, email: response.data.email })
+            setUser({
+                id: response.data.id,
+                username: response.data.username,
+                email: response.data.email,
+                createdAt: response.data.createdAt,
+                updatedAt: response.data.updatedAt,
+            })
             setPassword('')
             navigate('/')
         } catch (e) {
@@ -44,7 +51,7 @@ const LoginPage: React.FC = () => {
     }
 
     return (
-        <div className="w-full flex justify-center items-center h-[70vh]">
+        <section className="w-full flex justify-center items-center h-[70vh] bg-white">
             <div className="flex  flex-col justify-center items-center space-y-4 w-[80%] md:w-[25%]">
                 <h1 className="text-xl font-bold text-left">Log in to your account</h1>
                 <input
@@ -75,7 +82,7 @@ const LoginPage: React.FC = () => {
                     </p>
                 </div>
             </div>
-        </div>
+        </section>
     )
 }
 
