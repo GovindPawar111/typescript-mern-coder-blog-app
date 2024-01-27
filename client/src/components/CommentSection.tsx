@@ -7,6 +7,8 @@ import { apiBaseUrl } from '../config/url'
 import { errorResponse } from '../pages/LoginPage'
 import { AppContext } from '../context/appContext'
 import { useNavigate } from 'react-router-dom'
+import Overlay from './Overlay'
+import Model from './Model'
 
 type commentResponse = {
     _id: string
@@ -26,6 +28,8 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
     const [newComment, setNewComment] = useState<string>('')
     const [updatedComment, setUpdatedComment] = useState<string>('')
     const [editCommentId, setEditCommentId] = useState<string | undefined>(undefined)
+    const [isModelOpen, setIsModelOpen] = useState<boolean>(false)
+
     const { user } = useContext(AppContext)
     const navigate = useNavigate()
 
@@ -141,10 +145,18 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
                                                 onClick={() => handleCommentEdit(comment._id, comment.comment)}
                                                 className="cursor-pointer"
                                             />
-                                            <MdDelete
-                                                onClick={() => handleCommentDelete(comment._id)}
-                                                className="cursor-pointer"
-                                            />
+                                            <MdDelete onClick={() => setIsModelOpen(true)} className="cursor-pointer" />
+                                            <Overlay isOpen={isModelOpen} onClose={() => setIsModelOpen(false)}>
+                                                <Model
+                                                    headerText={'Are you sure you want to delete this Comment?'}
+                                                    description={
+                                                        'This will delete the Comment permanently. You cannot undo this action.'
+                                                    }
+                                                    onCancel={() => setIsModelOpen(false)}
+                                                    onAction={() => () => handleCommentDelete(comment._id)}
+                                                    actionLabel="Delete"
+                                                />
+                                            </Overlay>
                                         </div>
                                     )}
                                 </div>

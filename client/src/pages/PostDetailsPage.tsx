@@ -7,9 +7,13 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { apiBaseUrl } from '../config/url'
 import { getFormattedTime, getFormattedDate } from '../components/Post'
+import Overlay from '../components/Overlay'
+import Model from '../components/Model'
 
 const PostDetailsPage: React.FC = () => {
     const [post, setPost] = useState<PostResponse | null>(null)
+    const [isModelOpen, setIsModelOpen] = useState<boolean>(false)
+
     const { user } = useContext(AppContext)
     const params = useParams()
     const navigate = useNavigate()
@@ -44,7 +48,16 @@ const PostDetailsPage: React.FC = () => {
                         <Link to={`/posts/edit/${post?._id}`}>
                             <BiEdit />
                         </Link>
-                        <MdDelete className="cursor-pointer" onClick={handleDeletePost} />
+                        <MdDelete className="cursor-pointer" onClick={() => setIsModelOpen(true)} />
+                        <Overlay isOpen={isModelOpen} onClose={() => setIsModelOpen(false)}>
+                            <Model
+                                headerText={'Are you sure you want to delete this post?'}
+                                description={'This will delete the post permanently. You cannot undo this action.'}
+                                onCancel={() => setIsModelOpen(false)}
+                                onAction={() => handleDeletePost()}
+                                actionLabel="Delete"
+                            />
+                        </Overlay>
                     </div>
                 )}
             </div>

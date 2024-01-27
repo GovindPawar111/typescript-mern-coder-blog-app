@@ -8,12 +8,17 @@ import axios, { AxiosError } from 'axios'
 import { errorResponse } from '../pages/LoginPage'
 import { apiBaseUrl } from '../config/url'
 import useSearchDebounce from '../hooks/useSearchDebounce'
+import Overlay from './Overlay'
+import Model from './Model'
 
 const Navbar: React.FC = () => {
-    const { user, setUser, setPosts } = useContext(AppContext)
-    const isUserLoggedIn = user?.email && user.id ? true : false
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
     const [searchQuery, setSearchQuery] = useState<string>('')
+    const [isModelOpen, setIsModelOpen] = useState<boolean>(false)
+
+    const { user, setUser, setPosts } = useContext(AppContext)
+    const isUserLoggedIn = user?.email && user.id ? true : false
+
     const navigate = useNavigate()
     const pathname = useLocation().pathname
 
@@ -76,16 +81,23 @@ const Navbar: React.FC = () => {
                             <Link to={'posts/create'}>Write</Link>
                         </h3>
                         <h3 className="hover:text-black hover:underline hover:underline-offset-4">
-                            <Link to={`/profile/${user?.id}`} >Profile</Link>
+                            <Link to={`/profile/${user?.id}`}>Profile</Link>
                         </h3>
                         <h3
-                            onClick={() => {
-                                logoutUser()
-                            }}
+                            onClick={() => setIsModelOpen(true)}
                             className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4"
                         >
                             Logout
                         </h3>
+                        <Overlay isOpen={isModelOpen} onClose={() => setIsModelOpen(false)}>
+                            <Model
+                                headerText={'Log Out?'}
+                                description={'Are you sure want to logout?'}
+                                onCancel={() => setIsModelOpen(false)}
+                                onAction={() => logoutUser()}
+                                actionLabel="Logout"
+                            />
+                        </Overlay>
                     </>
                 )}
                 {!isUserLoggedIn && (
