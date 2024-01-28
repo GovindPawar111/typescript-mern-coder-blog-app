@@ -115,7 +115,11 @@ const Navbar: React.FC = () => {
                 <GiHamburgerMenu onClick={handleMenuClick} />
             </div>
             {isMenuOpen && (
-                <Menu isUserLoggedIn={isUserLoggedIn} onSetIsMenuOpen={handleMenuClick} onLogout={logoutUser} />
+                <Menu
+                    isUserLoggedIn={isUserLoggedIn}
+                    onSetIsMenuOpen={handleMenuClick}
+                    onLogout={logoutUser}
+                />
             )}
         </nav>
     )

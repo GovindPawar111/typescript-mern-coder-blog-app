@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
 import { MdOutlineClose } from 'react-icons/md'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { AppContext } from '../context/appContext'
+import Overlay from './Overlay'
+import Model from './Model'
 
 interface IMenuProps {
     isUserLoggedIn: boolean
@@ -11,6 +13,7 @@ interface IMenuProps {
 
 const Menu = (props: IMenuProps): JSX.Element => {
     const { isUserLoggedIn, onSetIsMenuOpen, onLogout } = props
+    const [isModelOpen, setIsModelOpen] = useState<boolean>(false)
     const { user } = useContext(AppContext)
 
     return (
@@ -46,13 +49,24 @@ const Menu = (props: IMenuProps): JSX.Element => {
                         </Link>
                         <div
                             onClick={() => {
-                                onLogout()
-                                onSetIsMenuOpen()
+                                setIsModelOpen(true)
                             }}
                             className="text-black hover:underline text-xl mt-6 cursor-pointer"
                         >
                             Logout
                         </div>
+                        <Overlay isOpen={isModelOpen} onClose={() => setIsModelOpen(false)}>
+                            <Model
+                                headerText={'Log Out?'}
+                                description={'Are you sure want to logout?'}
+                                onClose={() => setIsModelOpen(false)}
+                                onAction={() => {
+                                    onLogout()
+                                    onSetIsMenuOpen()
+                                }}
+                                actionLabel="Logout"
+                            />
+                        </Overlay>
                     </>
                 )}
             </div>

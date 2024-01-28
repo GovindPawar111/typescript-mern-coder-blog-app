@@ -62,7 +62,9 @@ const PostDetailsPage: React.FC = () => {
                 )}
             </div>
             <div className="flex justify-between items-center mt-2 md:mt-4">
-                <p>@{post?.username}</p>
+                <Link to={`/profile/${post?.userId}`} state={post?.username}>
+                    <p>@{post?.username}</p>
+                </Link>
                 <div className="flex space-x-2">
                     {post?.updatedAt && (
                         <>
