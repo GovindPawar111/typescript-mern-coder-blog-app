@@ -21,7 +21,6 @@ const Overlay = ({ isOpen, onClose, children }: IOverlayProps): React.ReactEleme
                 className="fixed inset-0 bg-black  bg-opacity-30 backdrop-blur-sm "
                 onClick={() => {
                     onClose()
-                    console.log('clicked')
                 }}
             ></div>
             <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white p-8 rounded-lg shadow-xl text-black w-[30%]">

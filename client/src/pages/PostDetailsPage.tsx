@@ -40,7 +40,7 @@ const PostDetailsPage: React.FC = () => {
     }, [])
 
     return (
-        <section className="px-8 py-8 md:mx-[160px] w-[100wh] md:px-8 bg-white">
+        <section className="px-8 py-8 md:mx-[160px] w-[100wh] md:px-8 bg-white shadow-md flex-grow">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-black md:text-3xl">{post?.title}</h1>
                 {post?.userId === user?.id && (
@@ -53,7 +53,7 @@ const PostDetailsPage: React.FC = () => {
                             <Model
                                 headerText={'Are you sure you want to delete this post?'}
                                 description={'This will delete the post permanently. You cannot undo this action.'}
-                                onCancel={() => setIsModelOpen(false)}
+                                onClose={() => setIsModelOpen(false)}
                                 onAction={() => handleDeletePost()}
                                 actionLabel="Delete"
                             />
@@ -72,7 +72,7 @@ const PostDetailsPage: React.FC = () => {
                     )}
                 </div>
             </div>
-            <img src={post?.headerImageUrl} alt="" className="w-full mx-auto mt-8" />
+            <img src={post?.headerImageUrl} alt="" className="w-full mx-auto mt-8 rounded-sm" />
             <p className="mx-auto mt-8">{post?.description}</p>
             <div className="flex items-center mt-8 space-x-4 font-semibold">
                 <p>Categories:</p>

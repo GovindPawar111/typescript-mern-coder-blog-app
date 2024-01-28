@@ -23,7 +23,7 @@ const HomePage: React.FC = () => {
     }, [])
 
     return (
-        <section className="flex flex-col gap-8 md:mx-[160px] w-[100wh] md:px-8 bg-white">
+        <section className="flex flex-col gap-8 md:mx-[160px] w-[100wh] md:px-8 bg-white shadow-md flex-grow">
             {posts === undefined || posts === null ? (
                 <Loader></Loader>
             ) : posts.length > 0 ? (

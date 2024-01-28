@@ -34,7 +34,7 @@ const ProfilePage: React.FC = () => {
     }, [params.profileId])
 
     return (
-        <section className="px-8 py-8 md:mx-[160px] md:px-8 flex flex-col-reverse items-start md:flex-row md:gap-4 min-h-screen bg-white">
+        <section className="px-8 py-8 md:mx-[160px] md:px-8 flex flex-col-reverse items-start md:flex-row md:gap-4 flex-grow bg-white shadow-md flex-grow">
             <div className="flex flex-col w-full md:w-[70%] mt-8 md:mt-0">
                 <h1 className="text-xl font-extrabold mb-4 ">{`${
                     params.profileId === user?.id ? 'Your' : `${username}'s`

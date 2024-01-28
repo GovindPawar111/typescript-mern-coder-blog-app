@@ -120,7 +120,7 @@ const CreatePostPage: React.FC = () => {
     }
 
     return (
-        <section className="px-8 py-8 md:mx-[160px] md:px-8 w-[100wh] bg-white">
+        <section className="px-8 py-8 md:mx-[160px] md:px-8 w-[100wh] bg-white shadow-md flex-grow">
             <h1 className="font-bold text-xl md:text-2xl">Create a post</h1>
             <form className="w-full flex flex-col space-y-4 md:space-y-4 mt-4" onSubmit={(e) => handleFormSubmit(e)}>
                 <input

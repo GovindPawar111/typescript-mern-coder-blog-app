@@ -152,8 +152,8 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
                                                     description={
                                                         'This will delete the Comment permanently. You cannot undo this action.'
                                                     }
-                                                    onCancel={() => setIsModelOpen(false)}
-                                                    onAction={() => () => handleCommentDelete(comment._id)}
+                                                    onClose={() => setIsModelOpen(false)}
+                                                    onAction={() => handleCommentDelete(comment._id)}
                                                     actionLabel="Delete"
                                                 />
                                             </Overlay>

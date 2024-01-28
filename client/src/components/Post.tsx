@@ -48,12 +48,16 @@ const Post = ({
             <div className="w-[35%] h-[150px] flex justify-center items-center md:h-[200px]">
                 <Link to={`/posts/${id}`} className="w-full h-full">
                     {headerImageUrl ? (
-                        <img src={headerImageUrl} alt={title} className="w-full h-full object-cover cursor-pointer" />
+                        <img
+                            src={headerImageUrl}
+                            alt={title}
+                            className="w-full h-full object-cover cursor-pointer rounded-sm"
+                        />
                     ) : (
                         <img
                             src={placeholderImage}
                             alt={'placeholder-image'}
-                            className="w-full h-full object-cover cursor-pointer"
+                            className="w-full h-full object-cover cursor-pointer rounded-sm"
                         />
                     )}
                 </Link>

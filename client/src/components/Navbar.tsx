@@ -93,7 +93,7 @@ const Navbar: React.FC = () => {
                             <Model
                                 headerText={'Log Out?'}
                                 description={'Are you sure want to logout?'}
-                                onCancel={() => setIsModelOpen(false)}
+                                onClose={() => setIsModelOpen(false)}
                                 onAction={() => logoutUser()}
                                 actionLabel="Logout"
                             />
@@ -102,10 +102,10 @@ const Navbar: React.FC = () => {
                 )}
                 {!isUserLoggedIn && (
                     <>
-                        <h3>
+                        <h3 className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4">
                             <Link to={'/register'}>Register</Link>
                         </h3>
-                        <h3>
+                        <h3 className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4">
                             <Link to={'/login'}>Login</Link>
                         </h3>
                     </>
