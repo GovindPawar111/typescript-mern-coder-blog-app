@@ -115,7 +115,7 @@ const EditPostPage: React.FC = () => {
     if (isLoading) {
         return (
             <div className="px-6 md:px-[200px] mt-8 min-h-screen">
-                <Loader label={'Creating New Post...'}></Loader>
+                <Loader label={'Saving Post...'}></Loader>
             </div>
         )
     }
