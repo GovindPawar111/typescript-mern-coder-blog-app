@@ -6,9 +6,8 @@ import Loader from '../components/Loader'
 import axios, { AxiosError } from 'axios'
 import { apiBaseUrl } from '../config/url'
 import { errorResponse } from './LoginPage'
-import ReactQuill from 'react-quill'
-import { ReactQuillFormats, ReactQuillModules } from './CreatePostPage'
-import placeholderImage from '../../public/images/placeholder-image.png'
+import placeholderImage from '../assets/images/placeholder-image.png'
+import TextEditor from '../components/TextEditor/TextEditor'
 
 const EditPostPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -23,6 +22,7 @@ const EditPostPage: React.FC = () => {
     const headerImageUrlRef = useRef<string>('')
     const [category, setCategory] = useState<string>('')
     const [content, setContent] = useState<string>('')
+    const [initialContent, setInitialContent] = useState<string>('')
     const [categoryList, setCategoryList] = useState<string[]>([])
 
     const { user } = useContext(AppContext)
@@ -68,6 +68,7 @@ const EditPostPage: React.FC = () => {
             description,
             headerImageUrl: image.file ? '' : headerImageUrlRef.current,
             catagories: categoryList,
+            content: content,
             username: user?.username,
             userId: user?.id,
         }
@@ -97,7 +98,8 @@ const EditPostPage: React.FC = () => {
             const postResponse = await axios.get<PostResponse>(`${apiBaseUrl}/api/post/${postId}`)
             setTitle(postResponse.data.title || '')
             setDescription(postResponse.data.description || '')
-            setContent('')
+            setContent(postResponse.data.content || '')
+            setInitialContent(postResponse.data.content || '')
             headerImageUrlRef.current = postResponse.data.headerImageUrl
             setImage({
                 file: null,
@@ -184,13 +186,7 @@ const EditPostPage: React.FC = () => {
                     })}
                 </div>
 
-                <ReactQuill
-                    theme="snow"
-                    value={content}
-                    onChange={setContent}
-                    modules={ReactQuillModules}
-                    formats={ReactQuillFormats}
-                />
+                <TextEditor initialContent={initialContent} onChange={(text: string) => setContent(text)} />
 
                 <button className="bg-black text-white w-full md:w-[20%] mx-auto font-semibold px-4 py-2 text-lg md:text-xl">
                     Save

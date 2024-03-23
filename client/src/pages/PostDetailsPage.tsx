@@ -9,6 +9,7 @@ import { apiBaseUrl } from '../config/url'
 import { getFormattedTime, getFormattedDate } from '../components/Post'
 import Overlay from '../components/Overlay'
 import Model from '../components/Model'
+import TextViewer from '../components/TextEditor/TextViewer'
 
 const PostDetailsPage: React.FC = () => {
     const [post, setPost] = useState<PostResponse | null>(null)
@@ -86,6 +87,8 @@ const PostDetailsPage: React.FC = () => {
                     ))}
                 </div>
             </div>
+
+            <TextViewer initialContent={post?.content || ''} />
 
             {params.postId && <CommentSection postId={params.postId} />}
         </section>

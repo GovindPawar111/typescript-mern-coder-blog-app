@@ -14,6 +14,7 @@ export interface PostResponse {
     _id: string
     title: string
     description: string
+    content: string
     headerImageUrl: string
     catagories: string[]
     username: string

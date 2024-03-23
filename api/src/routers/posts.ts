@@ -12,7 +12,7 @@ const router = express.Router()
 //create
 router.post('/', validateToken, upload.single('header-image'), async (req: Request, res: Response) => {
     try {
-        const { title, description, catagories, username, userId } = JSON.parse(req.body.data)
+        const { title, description, catagories, content, username, userId } = JSON.parse(req.body.data)
         if (!title || !userId || !username) {
             return res.status(400).json({
                 message: 'Missing required fields. Please provide proper values.',
@@ -33,17 +33,19 @@ router.post('/', validateToken, upload.single('header-image'), async (req: Reque
         const newPost = new Post({
             title,
             description,
+            content,
             headerImageUrl: imageUrl,
             catagories,
             username,
             userId,
         })
-        
+
         const savedPost = await newPost.save()
         res.status(201).json({
             message: 'Post create Successfully.',
             title: savedPost.title,
             description: savedPost.description,
+            content: savedPost.content,
             headerImageUrl: savedPost.headerImageUrl,
             catagories: savedPost.catagories,
             username: savedPost.username,
@@ -64,7 +66,7 @@ router.post('/', validateToken, upload.single('header-image'), async (req: Reque
 //update
 router.put('/:id', validateToken, upload.single('header-image'), async (req: Request, res: Response) => {
     try {
-        const { title, description, catagories, username, userId, headerImageUrl } = JSON.parse(req.body.data)
+        const { title, description, catagories, content, username, userId, headerImageUrl } = JSON.parse(req.body.data)
         if (!title || !userId || !username) {
             return res.status(400).json({
                 message: 'Missing required fields. Please provide proper values.',
@@ -90,6 +92,7 @@ router.put('/:id', validateToken, upload.single('header-image'), async (req: Req
                 $set: {
                     title: title,
                     description: description,
+                    content: content,
                     headerImageUrl: imageUrl,
                     catagories: catagories,
                     username: username,

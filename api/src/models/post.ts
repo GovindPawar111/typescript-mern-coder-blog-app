@@ -6,6 +6,7 @@ type PostType = {
     title: string
     description?: string
     headerImageUrl?: string
+    content?: string
     catagories?: string[]
     username: string
     userId: string
@@ -21,6 +22,9 @@ const postSchema = new mongoose.Schema(
             type: String,
         },
         headerImageUrl: {
+            type: String,
+        },
+        content: {
             type: String,
         },
         username: {

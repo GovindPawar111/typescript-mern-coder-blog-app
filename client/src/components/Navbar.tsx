@@ -56,7 +56,7 @@ const Navbar: React.FC = () => {
     }, [debouncedQuery])
 
     return (
-        <nav className="flex justify-between items-center px-6 md:px-[200px] py-4 sticky top-0 bg-white border-b shadow-lg">
+        <nav className="flex justify-between items-center px-6 md:px-[200px] py-4 sticky top-0 bg-white border-b shadow-lg  z-10">
             <Link to={'/'}>
                 <h1 className="font-extrabold text-2xl flex justify-center items-center">CoderBlog</h1>
             </Link>
@@ -115,11 +115,7 @@ const Navbar: React.FC = () => {
                 <GiHamburgerMenu onClick={handleMenuClick} />
             </div>
             {isMenuOpen && (
-                <Menu
-                    isUserLoggedIn={isUserLoggedIn}
-                    onSetIsMenuOpen={handleMenuClick}
-                    onLogout={logoutUser}
-                />
+                <Menu isUserLoggedIn={isUserLoggedIn} onSetIsMenuOpen={handleMenuClick} onLogout={logoutUser} />
             )}
         </nav>
     )

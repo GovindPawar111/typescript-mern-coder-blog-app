@@ -1,38 +1,13 @@
 import React, { useContext, useState } from 'react'
 import { RxCross2 } from 'react-icons/rx'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
 import { AppContext, PostResponse } from '../context/appContext'
 import { apiBaseUrl } from '../config/url'
 import axios, { AxiosError } from 'axios'
 import { errorResponse } from './LoginPage'
 import { useNavigate } from 'react-router-dom'
 import Loader from '../components/Loader'
-import placeholderImage from '../../public/images/placeholder-image.png'
-
-export const ReactQuillModules = {
-    toolbar: [
-        [{ header: [1, 2, false] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
-        ['link', 'image'],
-        ['clean'],
-    ],
-}
-
-export const ReactQuillFormats = [
-    'header',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'indent',
-    'link',
-    'image',
-]
+import placeholderImage from '../assets/images/placeholder-image.png'
+import TextEditor from './../components/TextEditor/TextEditor'
 
 const CreatePostPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -44,6 +19,7 @@ const CreatePostPage: React.FC = () => {
     })
     const [category, setCategory] = useState<string>('')
     const [content, setContent] = useState<string>('')
+
     const [categoryList, setCategoryList] = useState<string[]>([])
 
     const { user } = useContext(AppContext)
@@ -87,6 +63,7 @@ const CreatePostPage: React.FC = () => {
             title,
             description,
             catagories: categoryList,
+            content: content,
             username: user?.username,
             userId: user?.id,
         }
@@ -107,6 +84,8 @@ const CreatePostPage: React.FC = () => {
             setIsLoading(false)
         } catch (e) {
             const error = e as AxiosError<errorResponse>
+            setIsLoading(false)
+            navigate('/posts')
             console.error(error.response?.data.message)
         }
     }
@@ -184,16 +163,11 @@ const CreatePostPage: React.FC = () => {
                         )
                     })}
                 </div>
-
-                <ReactQuill
-                    theme="snow"
-                    value={content}
-                    onChange={setContent}
-                    modules={ReactQuillModules}
-                    formats={ReactQuillFormats}
-                />
-
-                <button className="bg-black text-white w-full md:w-[20%] mx-auto font-semibold px-4 py-2 text-lg md:text-xl">
+                <TextEditor initialContent="" onChange={(text: string) => setContent(text)} />
+                <button
+                    type="submit"
+                    className="bg-black text-white w-full md:w-[20%] mx-auto font-semibold px-4 py-2 text-lg md:text-xl"
+                >
                     Create
                 </button>
             </form>

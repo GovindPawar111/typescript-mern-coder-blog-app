@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import placeholderImage from '../../public/images/placeholder-image.png'
+import placeholderImage from '../assets/images/placeholder-image.png'
 export interface IPost {
     id: string
     title: string
