@@ -10,6 +10,7 @@ interface ITextViewerProps {
 export const TextViewer = ({ initialContent }: ITextViewerProps) => {
     const editor = useEditor({
         extensions: extension,
+        editable: false,
         content: '',
         editorProps: {
             attributes: {
