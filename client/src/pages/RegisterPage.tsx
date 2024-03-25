@@ -85,4 +85,6 @@ const RegisterPage = (): React.ReactElement => {
     )
 }
 
+export const Component = RegisterPage
+
 export default RegisterPage

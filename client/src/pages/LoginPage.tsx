@@ -86,4 +86,6 @@ const LoginPage: React.FC = () => {
     )
 }
 
+export const Component = LoginPage
+
 export default LoginPage

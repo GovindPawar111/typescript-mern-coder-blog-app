@@ -11,7 +11,7 @@ export const TextViewer = ({ initialContent }: ITextViewerProps) => {
     const editor = useEditor({
         extensions: extension,
         editable: false,
-        content: '',
+        content: JSON.parse(initialContent),
         editorProps: {
             attributes: {
                 class: 'px-4 py-2 focus:border-none focus:rounded-none border-none',

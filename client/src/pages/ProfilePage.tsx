@@ -66,4 +66,6 @@ const ProfilePage: React.FC = () => {
     )
 }
 
+export const Component = ProfilePage
+
 export default ProfilePage

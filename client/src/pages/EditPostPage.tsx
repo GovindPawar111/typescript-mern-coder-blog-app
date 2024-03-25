@@ -196,4 +196,6 @@ const EditPostPage: React.FC = () => {
     )
 }
 
+export const Component = EditPostPage
+
 export default EditPostPage

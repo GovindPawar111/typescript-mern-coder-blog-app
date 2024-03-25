@@ -175,4 +175,6 @@ const CreatePostPage: React.FC = () => {
     )
 }
 
+export const Component = CreatePostPage
+
 export default CreatePostPage

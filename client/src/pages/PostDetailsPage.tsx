@@ -88,11 +88,13 @@ const PostDetailsPage: React.FC = () => {
                 </div>
             </div>
 
-            <TextViewer initialContent={post?.content || ''} />
+            {post?.content && <TextViewer initialContent={post?.content || ''} />}
 
             {params.postId && <CommentSection postId={params.postId} />}
         </section>
     )
 }
+
+export const Component = PostDetailsPage
 
 export default PostDetailsPage
