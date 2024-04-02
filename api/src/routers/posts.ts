@@ -24,7 +24,7 @@ router.post('/', validateToken, upload.single('header-image'), async (req: Reque
         if (req.file?.path) {
             // upload header image file on cloudinary
             const cloudinaryResponse = await uploadOnCloudinary(req.file?.path)
-            imageUrl = cloudinaryResponse?.url || ''
+            imageUrl = cloudinaryResponse?.secure_url || ''
 
             // remove the file stored on server.
             await fs.unlink(req.file?.path, () => {})
@@ -78,7 +78,7 @@ router.put('/:id', validateToken, upload.single('header-image'), async (req: Req
         if (req.file?.path) {
             // upload header image file on cloudinary
             const cloudinaryResponse = await uploadOnCloudinary(req.file?.path)
-            imageUrl = cloudinaryResponse?.url || headerImageUrl || ''
+            imageUrl = cloudinaryResponse?.secure_url || headerImageUrl || ''
 
             // remove the file stored on server.
             await fs.unlink(req.file?.path, () => {})

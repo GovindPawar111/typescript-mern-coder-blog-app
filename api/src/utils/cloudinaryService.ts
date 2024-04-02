@@ -1,6 +1,5 @@
 import { UploadApiResponse, v2 as cloudinary } from 'cloudinary'
 
-
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -14,6 +13,7 @@ const uploadOnCloudinary = async (localPath: string): Promise<UploadApiResponse 
             return null
         }
         const response = await cloudinary.uploader.upload(localPath, { resource_type: 'auto' })
+        console.log(response)
         return response
     } catch (error) {
         return null
