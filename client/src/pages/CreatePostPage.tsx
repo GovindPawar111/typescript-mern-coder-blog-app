@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { RxCross2 } from 'react-icons/rx'
+import CloseIcon from '../assets/svgs/close.svg?react'
 import { AppContext, PostResponse } from '../context/appContext'
 import { apiBaseUrl } from '../config/url'
 import axios, { AxiosError } from 'axios'
@@ -157,7 +157,7 @@ const CreatePostPage: React.FC = () => {
                                     className="text-black p-1 cursor-pointer text-sm"
                                     onClick={() => handleRemoveCategory(category)}
                                 >
-                                    <RxCross2 />
+                                    <CloseIcon />
                                 </span>
                             </div>
                         )

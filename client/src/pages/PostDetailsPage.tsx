@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { BiEdit } from 'react-icons/bi'
-import { MdDelete } from 'react-icons/md'
+import EditIcon from '../assets/svgs/edit.svg?react'
+import DeleteIcon from '../assets/svgs/Delete.svg?react'
 import CommentSection from '../components/CommentSection'
 import { AppContext, PostResponse } from '../context/appContext'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -47,9 +47,9 @@ const PostDetailsPage: React.FC = () => {
                 {post?.userId === user?.id && (
                     <div className="flex items-center justify-center space-x-2">
                         <Link to={`/posts/edit/${post?._id}`}>
-                            <BiEdit />
+                            <EditIcon />
                         </Link>
-                        <MdDelete className="cursor-pointer" onClick={() => setIsModelOpen(true)} />
+                        <DeleteIcon className="cursor-pointer" onClick={() => setIsModelOpen(true)} />
                         <Overlay isOpen={isModelOpen} onClose={() => setIsModelOpen(false)}>
                             <Model
                                 headerText={'Are you sure you want to delete this post?'}

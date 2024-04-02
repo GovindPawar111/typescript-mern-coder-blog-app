@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext, UserResponse } from '../context/appContext'
 import { getFormattedDate } from './Post'
-import { FaRegUser } from 'react-icons/fa6'
-import { LuCake } from 'react-icons/lu'
+import UserIcon from '../assets/svgs/user.svg?react'
+import CakeIcon from '../assets/svgs/cake.svg?react'
 import axios from 'axios'
 import { apiBaseUrl } from '../config/url'
 
@@ -53,13 +53,13 @@ const ProfileSection: React.FC<IProfileSectionProps> = ({ id }: IProfileSectionP
 
             <div className="flex items-center text-gray-800 mb-4">
                 <div>
-                    <FaRegUser className="text-xl" />
+                    <UserIcon className="text-xl" />
                 </div>
                 <h2 className="text-lg font-bold flex ml-2">{userProfile.username}</h2>
             </div>
             <div className="flex items-center text-gray-500">
                 <div>
-                    <LuCake className="text-xl" />
+                    <CakeIcon className="text-xl" />
                 </div>
                 <h2 className="text-lg font-medium ml-2">{`Joined on ${getFormattedDate(userProfile.createdAt)}`}</h2>
             </div>

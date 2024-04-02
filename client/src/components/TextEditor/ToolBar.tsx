@@ -1,19 +1,26 @@
 import { Editor } from '@tiptap/react'
-
-import { RiBold, RiItalic, RiStrikethrough } from 'react-icons/ri'
-import { PiParagraph, PiListBullets, PiCodeBlock } from 'react-icons/pi'
-import { LuHeading1, LuHeading2, LuHeading3, LuUndo, LuRedo } from 'react-icons/lu'
-import { TbClearFormatting } from 'react-icons/tb'
-import { AiOutlineOrderedList } from 'react-icons/ai'
-import { FaLink } from 'react-icons/fa'
-import { GrBlockQuote } from 'react-icons/gr'
-import { MdOutlineWrapText } from 'react-icons/md'
-import { LiaHighlighterSolid } from 'react-icons/lia'
-import { IoRemoveOutline } from 'react-icons/io5'
-import { IoCodeOutline } from 'react-icons/io5'
-import { CiTextAlignLeft } from 'react-icons/ci'
-import { CiTextAlignCenter } from 'react-icons/ci'
-import { CiTextAlignRight } from 'react-icons/ci'
+import BoldIcon from '../../assets/svgs/bold.svg?react'
+import ItalicIcon from '../../assets/svgs/italic.svg?react'
+import StrikeThroughIcon from '../../assets/svgs/strikethrough.svg?react'
+import ParagraphIcon from '../../assets/svgs/paragraph.svg?react'
+import UnorderedListIcon from '../../assets/svgs/unordered-list.svg?react'
+import CodeBlockIcon from '../../assets/svgs/code-block.svg?react'
+import Heading1Icon from '../../assets/svgs/heading1.svg?react'
+import Heading2Icon from '../../assets/svgs/heading2.svg?react'
+import Heading3Icon from '../../assets/svgs/heading3.svg?react'
+import UndoIcon from '../../assets/svgs/undo.svg?react'
+import RedoIcon from '../../assets/svgs/redo.svg?react'
+import FormatClearIcon from '../../assets/svgs/format-clear.svg?react'
+import OrderedListIcon from '../../assets/svgs/ordered-list.svg?react'
+import LinkIcon from '../../assets/svgs/link.svg?react'
+import DoubleQuotesIcon from '../../assets/svgs/double-quotes.svg?react'
+import TextWrapIcon from '../../assets/svgs/text-wrap.svg?react'
+import MarkPenIcon from '../../assets/svgs/mark-pen.svg?react'
+import SeparatorLineIcon from '../../assets/svgs/separator-line.svg?react'
+import CodeIcon from '../../assets/svgs/code.svg?react'
+import AlignLeftIcon from '../../assets/svgs/align-left.svg?react'
+import AlignCenterIcon from '../../assets/svgs/align-center.svg?react'
+import AlignRightIcon from '../../assets/svgs/align-right.svg?react'
 
 interface IToolBarProps {
     editor: Editor | null
@@ -55,7 +62,7 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                         : 'p-2 m-1 hover:bg-gray-100 hover:rounded-md'
                 }
             >
-                <RiBold />
+                <BoldIcon />
             </button>
             <button
                 type="button"
@@ -67,7 +74,7 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                         : 'p-2 m-1 hover:bg-gray-100 hover:rounded-md'
                 }
             >
-                <RiItalic />
+                <ItalicIcon />
             </button>
             <button
                 type="button"
@@ -79,7 +86,7 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                         : 'p-2 m-1 hover:bg-gray-100 hover:rounded-md'
                 }
             >
-                <RiStrikethrough />
+                <StrikeThroughIcon />
             </button>
             <button
                 type="button"
@@ -91,7 +98,7 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                         : 'p-2 m-1 hover:bg-gray-100 hover:rounded-md'
                 }
             >
-                <LiaHighlighterSolid />
+                <MarkPenIcon />
             </button>
             <button
                 type="button"
@@ -102,14 +109,14 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                         : 'p-2 m-1 hover:bg-gray-100 hover:rounded-md'
                 }
             >
-                <IoCodeOutline />
+                <CodeIcon />
             </button>
             <button
                 type="button"
                 onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}
                 className={'p-2 m-1 hover:bg-gray-100 hover:rounded-md'}
             >
-                <TbClearFormatting />
+                <FormatClearIcon />
             </button>
             <button
                 type="button"
@@ -120,7 +127,7 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                         : 'p-2 m-1 hover:bg-gray-100 hover:rounded-md'
                 }
             >
-                <PiParagraph />
+                <ParagraphIcon />
             </button>
             <button
                 type="button"
@@ -131,7 +138,7 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                         : 'p-2 m-1 hover:bg-gray-100 hover:rounded-md'
                 }
             >
-                <LuHeading1 />
+                <Heading1Icon />
             </button>
             <button
                 type="button"
@@ -142,7 +149,7 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                         : 'p-2 m-1 hover:bg-gray-100 hover:rounded-md'
                 }
             >
-                <LuHeading2 />
+                <Heading2Icon />
             </button>
             <button
                 type="button"
@@ -153,7 +160,7 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                         : 'p-2 m-1 hover:bg-gray-100 hover:rounded-md'
                 }
             >
-                <LuHeading3 />
+                <Heading3Icon />
             </button>
             <button
                 type="button"
@@ -164,7 +171,7 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                         : 'p-2 m-1 hover:bg-gray-100 hover:rounded-md'
                 }
             >
-                <PiListBullets />
+                <UnorderedListIcon />
             </button>
             <button
                 type="button"
@@ -175,28 +182,28 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                         : 'p-2 m-1 hover:bg-gray-100 hover:rounded-md'
                 }
             >
-                <AiOutlineOrderedList />
+                <OrderedListIcon />
             </button>
             <button
                 type="button"
                 onClick={() => editor.chain().focus().setTextAlign('left').run()}
                 className={'p-2 m-1 hover:bg-gray-100 hover:rounded-md'}
             >
-                <CiTextAlignLeft />
+                <AlignLeftIcon />
             </button>
             <button
                 type="button"
                 onClick={() => editor.chain().focus().setTextAlign('center').run()}
                 className={'p-2 m-1 hover:bg-gray-100 hover:rounded-md'}
             >
-                <CiTextAlignCenter />
+                <AlignCenterIcon />
             </button>
             <button
                 type="button"
                 onClick={() => editor.chain().focus().setTextAlign('right').run()}
                 className={'p-2 m-1 hover:bg-gray-100 hover:rounded-md'}
             >
-                <CiTextAlignRight />
+                <AlignRightIcon />
             </button>
             <button
                 type="button"
@@ -207,7 +214,7 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                         : 'p-2 m-1 hover:bg-gray-100 hover:rounded-md'
                 }
             >
-                <PiCodeBlock />
+                <CodeBlockIcon />
             </button>
             <button
                 type="button"
@@ -218,28 +225,28 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                         : 'p-2 m-1 hover:bg-gray-100 hover:rounded-md'
                 }
             >
-                <GrBlockQuote />
+                <DoubleQuotesIcon />
             </button>
             <button
                 type="button"
                 onClick={() => editor.chain().focus().setHorizontalRule().run()}
                 className={'p-2 m-1 hover:bg-gray-100 hover:rounded-md'}
             >
-                <IoRemoveOutline />
+                <SeparatorLineIcon />
             </button>
             <button
                 type="button"
                 onClick={() => editor.chain().focus().setHardBreak().run()}
                 className={'px-2 mr-1 mb-1 hover:bg-gray-100 hover:rounded-md'}
             >
-                <MdOutlineWrapText />
+                <TextWrapIcon />
             </button>
             <button
                 type="button"
                 onClick={() => setLink(editor)}
                 className={'p-2 m-1 hover:bg-gray-100 hover:rounded-md'}
             >
-                <FaLink />
+                <LinkIcon />
             </button>
             <button
                 type="button"
@@ -247,7 +254,7 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                 disabled={!editor.can().chain().focus().undo().run()}
                 className={'p-2 m-1 hover:bg-gray-100 hover:rounded-md'}
             >
-                <LuUndo />
+                <UndoIcon />
             </button>
             <button
                 type="button"
@@ -255,7 +262,7 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
                 disabled={!editor.can().chain().focus().redo().run()}
                 className={'p-2 m-1 hover:bg-gray-100 hover:rounded-md'}
             >
-                <LuRedo />
+                <RedoIcon />
             </button>
         </div>
     )

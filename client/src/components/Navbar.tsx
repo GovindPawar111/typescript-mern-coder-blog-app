@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { BsSearch } from 'react-icons/bs'
-import { GiHamburgerMenu } from 'react-icons/gi'
+import SearchIcon from '../assets/svgs/search.svg?react'
+import MenuIcon from '../assets/svgs/menu.svg?react'
 import Menu from './Menu'
 import { AppContext, PostResponse } from '../context/appContext'
 import axios, { AxiosError } from 'axios'
@@ -63,7 +63,7 @@ const Navbar: React.FC = () => {
             {pathname === '/' && (
                 <div className="flex justify-center items-center space-x-0 px-3">
                     <p>
-                        <BsSearch />
+                        <SearchIcon />
                     </p>
                     <input
                         value={searchQuery}
@@ -112,7 +112,7 @@ const Navbar: React.FC = () => {
                 )}
             </div>
             <div className="md:hidden text-xl">
-                <GiHamburgerMenu onClick={handleMenuClick} />
+                <MenuIcon onClick={handleMenuClick} />
             </div>
             {isMenuOpen && (
                 <Menu isUserLoggedIn={isUserLoggedIn} onSetIsMenuOpen={handleMenuClick} onLogout={logoutUser} />

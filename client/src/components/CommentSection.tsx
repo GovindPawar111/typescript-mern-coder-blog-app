@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { BiEdit } from 'react-icons/bi'
-import { MdDelete } from 'react-icons/md'
+import EditIcon from '../assets/svgs/edit.svg?react'
+import DeleteIcon from '../assets/svgs/Delete.svg?react'
 import { getFormattedDate, getFormattedTime } from './Post'
 import axios, { AxiosError } from 'axios'
 import { apiBaseUrl } from '../config/url'
@@ -141,11 +141,11 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
                                     </p>
                                     {user?.id && user.id === comment.userId && !(editCommentId === comment._id) && (
                                         <div className="flex items-center justify-center space-x-2">
-                                            <BiEdit
+                                            <EditIcon
                                                 onClick={() => handleCommentEdit(comment._id, comment.comment)}
                                                 className="cursor-pointer"
                                             />
-                                            <MdDelete onClick={() => setIsModelOpen(true)} className="cursor-pointer" />
+                                            <DeleteIcon onClick={() => setIsModelOpen(true)} className="cursor-pointer" />
                                             <Overlay isOpen={isModelOpen} onClose={() => setIsModelOpen(false)}>
                                                 <Model
                                                     headerText={'Are you sure you want to delete this Comment?'}

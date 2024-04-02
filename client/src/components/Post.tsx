@@ -1,6 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import placeholderImage from '../assets/images/placeholder-image.png'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
+import 'react-lazy-load-image-component/src/effects/blur.css'
+
 export interface IPost {
     id: string
     title: string
@@ -48,10 +51,18 @@ const Post = ({
             <div className="w-[35%] h-[150px] flex justify-center items-center md:h-[200px]">
                 <Link to={`/posts/${id}`} className="w-full h-full">
                     {headerImageUrl ? (
-                        <img
-                            src={headerImageUrl}
+                        // <img
+                        //     src={headerImageUrl}
+                        //     alt={title}
+                        //     className="w-full h-full object-cover cursor-pointer rounded-sm"
+                        // />
+                        <LazyLoadImage
                             alt={title}
+                            effect="blur"
                             className="w-full h-full object-cover cursor-pointer rounded-sm"
+                            height={'110%'}
+                            width={'100%'}
+                            src={headerImageUrl}
                         />
                     ) : (
                         <img

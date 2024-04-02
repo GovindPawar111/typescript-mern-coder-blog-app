@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { MdOutlineClose } from 'react-icons/md'
+import CloseIcon from '../assets/svgs/close.svg?react'
 import { useContext, useState } from 'react'
 import { AppContext } from '../context/appContext'
 import Overlay from './Overlay'
@@ -25,7 +25,7 @@ const Menu = (props: IMenuProps): JSX.Element => {
                     </Link>
                 </h1>
                 <div onClick={onSetIsMenuOpen} className="flex justify-center items-center space-x-0 text-2xl">
-                    <MdOutlineClose />
+                    <CloseIcon />
                 </div>
             </div>
             <div className="flex flex-col px-6 font-semibold ">
