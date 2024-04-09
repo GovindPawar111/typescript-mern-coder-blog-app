@@ -49,13 +49,8 @@ const Post = ({
         <div className="flex w-full py-8 space-x-2 md:space-x-4">
             {/* left side*/}
             <div className="w-[35%] h-[150px] flex justify-center items-center md:h-[200px]">
-                <Link to={`/posts/${id}`} className="w-full h-full">
+                <Link to={`/posts/${id}`} className="w-full h-full" aria-label={title} rel="noopener noreferrer">
                     {headerImageUrl ? (
-                        // <img
-                        //     src={headerImageUrl}
-                        //     alt={title}
-                        //     className="w-full h-full object-cover cursor-pointer rounded-sm"
-                        // />
                         <LazyLoadImage
                             alt={title}
                             effect="blur"
@@ -63,6 +58,8 @@ const Post = ({
                             height={'110%'}
                             width={'100%'}
                             src={headerImageUrl}
+                            placeholderSrc={placeholderImage}
+                            onErrorCapture={(e) => (e.currentTarget.src = placeholderImage)}
                         />
                     ) : (
                         <img
@@ -93,7 +90,7 @@ const Post = ({
                     <span className="px-1">·</span>
                     <span>{getFormattedDate(dateTimeStamp)}</span>
                     <span className="px-1">·</span>
-                    <span className="p-2 rounded-full bg-gray-200">{catagories[0]}</span>
+                    <span className="p-2 rounded-full bg-gray-200 text-black">{catagories[0]}</span>
                 </div>
             </div>
         </div>

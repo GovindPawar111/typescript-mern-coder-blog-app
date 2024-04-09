@@ -128,6 +128,7 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
                 comments.map((comment) => {
                     return (
                         <div
+                            key={comment._id}
                             className={`w-full py-2 px-2 rounded-lg bg-gray-300 my-2 self-end ${
                                 user?.id && user.id === comment.userId ? 'bg-gray-100 self-end ' : 'bg-gray-250 '
                             }`}
@@ -145,7 +146,10 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
                                                 onClick={() => handleCommentEdit(comment._id, comment.comment)}
                                                 className="cursor-pointer"
                                             />
-                                            <DeleteIcon onClick={() => setIsModelOpen(true)} className="cursor-pointer" />
+                                            <DeleteIcon
+                                                onClick={() => setIsModelOpen(true)}
+                                                className="cursor-pointer"
+                                            />
                                             <Overlay isOpen={isModelOpen} onClose={() => setIsModelOpen(false)}>
                                                 <Model
                                                     headerText={'Are you sure you want to delete this Comment?'}

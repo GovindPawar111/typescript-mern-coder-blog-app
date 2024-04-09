@@ -10,6 +10,8 @@ import { getFormattedTime, getFormattedDate } from '../components/Post'
 import Overlay from '../components/Overlay'
 import Model from '../components/Model'
 import TextViewer from '../components/TextEditor/TextViewer'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
+import placeholderImage from '../assets/images/placeholder-image.png'
 
 const PostDetailsPage: React.FC = () => {
     const [post, setPost] = useState<PostResponse | null>(null)
@@ -21,10 +23,9 @@ const PostDetailsPage: React.FC = () => {
 
     const handleDeletePost = async (): Promise<void> => {
         try {
-            const response = await axios.delete<PostResponse>(`${apiBaseUrl}/api/post/${params.postId}`, {
+            await axios.delete<PostResponse>(`${apiBaseUrl}/api/post/${params.postId}`, {
                 withCredentials: true,
             })
-            console.log(response)
             navigate('/')
         } catch (error) {
             console.log(error)
@@ -75,7 +76,20 @@ const PostDetailsPage: React.FC = () => {
                     )}
                 </div>
             </div>
-            <img src={post?.headerImageUrl} alt="" className="w-full mx-auto mt-8 rounded-sm" />
+            <div className="w-full mx-auto mt-8 rounded-sm">
+                {post?.headerImageUrl && (
+                    <LazyLoadImage
+                        alt={post.title}
+                        effect="blur"
+                        className="w-full h-full object-cover cursor-pointer rounded-sm"
+                        height={'110%'}
+                        width={'100%'}
+                        src={post?.headerImageUrl}
+                        placeholderSrc={placeholderImage}
+                        onErrorCapture={(e) => (e.currentTarget.src = placeholderImage)}
+                    />
+                )}
+            </div>
             <p className="mx-auto mt-8">{post?.description}</p>
             <div className="flex items-center mt-8 space-x-4 font-semibold">
                 <p>Categories:</p>

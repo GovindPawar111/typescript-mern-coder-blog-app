@@ -120,12 +120,7 @@ const CreatePostPage: React.FC = () => {
                     alt={title}
                     className="w-[250px] h-[150px] object-contain cursor-pointer"
                 />
-                <input
-                    type="file"
-                    className="px-4 w-[300px]"
-                    accept="image/png, image/jpg"
-                    onChange={(e) => handleAddImage(e)}
-                />
+                <input type="file" className="px-4 w-[300px]" accept="image/*" onChange={(e) => handleAddImage(e)} />
                 <div className="flex flex-col">
                     <div className="flex items-center space-x-4 md:space-x-8">
                         <input

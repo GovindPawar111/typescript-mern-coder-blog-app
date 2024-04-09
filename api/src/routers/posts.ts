@@ -4,7 +4,7 @@ import User from '../models/user'
 import Comment from '../models/comment'
 import validateToken from '../utils/validateToken'
 import { upload } from '../middlewares/multer.middleware'
-import uploadOnCloudinary from '../utils/cloudinaryService'
+import { DeleteOnCloudinary, imageToWebp, uploadOnCloudinary } from '../utils/cloudinaryService'
 import fs from 'fs'
 
 const router = express.Router()
@@ -22,12 +22,19 @@ router.post('/', validateToken, upload.single('header-image'), async (req: Reque
 
         let imageUrl: string = ''
         if (req.file?.path) {
+            const urlParts = req.file?.path.split('\\')
+            const filename = urlParts[urlParts.length - 1].split('.')[0]
+
+            // convert image to webp formate
+            await imageToWebp(req.file?.path, filename)
+
             // upload header image file on cloudinary
-            const cloudinaryResponse = await uploadOnCloudinary(req.file?.path)
+            const cloudinaryResponse = await uploadOnCloudinary('./src/public/temp/webp/' + filename + '.webp')
             imageUrl = cloudinaryResponse?.secure_url || ''
 
             // remove the file stored on server.
             await fs.unlink(req.file?.path, () => {})
+            await fs.unlink('./src/public/temp/webp/' + filename + '.webp', () => {})
         }
 
         const newPost = new Post({
@@ -74,14 +81,27 @@ router.put('/:id', validateToken, upload.single('header-image'), async (req: Req
             })
         }
 
+        const oldPost = await Post.findById(req.params.id)
+        if (oldPost?.headerImageUrl) {
+            // delete the old image file from cloudinary
+            await DeleteOnCloudinary(oldPost?.headerImageUrl)
+        }
+
         let imageUrl: string = ''
         if (req.file?.path) {
+            const urlParts = req.file?.path.split('\\')
+            const filename = urlParts[urlParts.length - 1].split('.')[0]
+
+            // convert image to webp formate
+            await imageToWebp(req.file?.path, filename)
+
             // upload header image file on cloudinary
-            const cloudinaryResponse = await uploadOnCloudinary(req.file?.path)
+            const cloudinaryResponse = await uploadOnCloudinary('./src/public/temp/webp/' + filename + '.webp')
             imageUrl = cloudinaryResponse?.secure_url || headerImageUrl || ''
 
             // remove the file stored on server.
             await fs.unlink(req.file?.path, () => {})
+            await fs.unlink('./src/public/temp/webp/' + filename + '.webp', () => {})
         } else {
             imageUrl = headerImageUrl
         }
@@ -123,6 +143,9 @@ router.delete('/:id', validateToken, async (req: Request, res: Response) => {
         const existingPost = await Post.findById({ _id: req.params.id }).lean().exec()
         if (!existingPost) {
             return res.status(404).json({ message: 'Post No found' })
+        }
+        if (existingPost.headerImageUrl) {
+            await DeleteOnCloudinary(existingPost.headerImageUrl)
         }
 
         const deletedPost = await Post.findByIdAndDelete({ _id: req.params.id }).lean().exec()

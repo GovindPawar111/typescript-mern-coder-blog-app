@@ -1,4 +1,5 @@
-import { UploadApiResponse, v2 as cloudinary } from 'cloudinary'
+import { DeleteApiResponse, UploadApiResponse, v2 as cloudinary } from 'cloudinary'
+import sharp from 'sharp'
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -7,17 +8,48 @@ cloudinary.config({
 })
 
 // upload the file on cloudinary
-const uploadOnCloudinary = async (localPath: string): Promise<UploadApiResponse | null> => {
+export const uploadOnCloudinary = async (localPath: string): Promise<UploadApiResponse | undefined> => {
     try {
         if (!localPath) {
-            return null
+            return undefined
         }
         const response = await cloudinary.uploader.upload(localPath, { resource_type: 'auto' })
         console.log(response)
         return response
     } catch (error) {
-        return null
+        console.log(error)
     }
 }
 
-export default uploadOnCloudinary
+// delete the file from cloudinary
+export const DeleteOnCloudinary = async (imageUrl: string): Promise<DeleteApiResponse | undefined> => {
+    try {
+        if (!imageUrl) {
+            return undefined
+        }
+        // Split the URL string by "/"
+        const urlParts = imageUrl.split('/')
+
+        // Get the last part of the URL which contains the filename
+        const filenameWithExtension = urlParts[urlParts.length - 1]
+
+        // Split the filename by "." and return filename present at 0 index
+        const filename = filenameWithExtension.split('.')[0]
+        const response = await cloudinary.uploader.destroy(filename)
+        console.log(imageUrl, response)
+        return response
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// convert the any type of image in to webp formate
+export const imageToWebp = async (filepath: string, filename: string) => {
+    try {
+        await sharp(filepath)
+            .webp({ quality: 80 })
+            .toFile('./src/public/temp/webp/' + filename + '.webp')
+    } catch (error) {
+        console.log(error)
+    }
+}

@@ -21,7 +21,7 @@ const RegisterPage = (): React.ReactElement => {
 
     const handleRegisterBtnClick = async (): Promise<void> => {
         try {
-            const response = await axios.post<RegisterResponse>(
+            await axios.post<RegisterResponse>(
                 `${apiBaseUrl}/api/auth/register`,
                 {
                     username,

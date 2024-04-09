@@ -77,18 +77,18 @@ const Navbar: React.FC = () => {
             <div className="hidden md:flex justify-center text-gray-500 items-center space-x-2 md:space-x-6">
                 {isUserLoggedIn && user && (
                     <>
-                        <h3 className="hover:text-black hover:underline hover:underline-offset-4">
+                        <div className="hover:text-black hover:underline hover:underline-offset-4">
                             <Link to={'posts/create'}>Write</Link>
-                        </h3>
-                        <h3 className="hover:text-black hover:underline hover:underline-offset-4">
+                        </div>
+                        <div className="hover:text-black hover:underline hover:underline-offset-4">
                             <Link to={`/profile/${user?.id}`}>Profile</Link>
-                        </h3>
-                        <h3
+                        </div>
+                        <div
                             onClick={() => setIsModelOpen(true)}
                             className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4"
                         >
                             Logout
-                        </h3>
+                        </div>
                         <Overlay isOpen={isModelOpen} onClose={() => setIsModelOpen(false)}>
                             <Model
                                 headerText={'Log Out?'}
@@ -102,12 +102,12 @@ const Navbar: React.FC = () => {
                 )}
                 {!isUserLoggedIn && (
                     <>
-                        <h3 className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4">
+                        <div className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4">
                             <Link to={'/register'}>Register</Link>
-                        </h3>
-                        <h3 className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4">
+                        </div>
+                        <div className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4">
                             <Link to={'/login'}>Login</Link>
-                        </h3>
+                        </div>
                     </>
                 )}
             </div>

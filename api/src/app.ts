@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser'
 import http from 'node:http'
 import 'dotenv/config'
 import env from './utils/validateEnv'
+import compression from 'compression'
 
 import authRouter from './routers/auth'
 import userRouter from './routers/users'
@@ -17,12 +18,15 @@ const port = env.PORT
 
 app.use(
     cors({
-        origin: 'http://localhost:5173',
+        origin: ['http://localhost:4173', 'http://localhost:5173'],
         credentials: true,
     }),
 )
 app.use(express.json())
 app.use(cookieParser())
+
+// compress responses
+app.use(compression())
 
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
