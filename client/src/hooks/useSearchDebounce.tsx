@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
-const useSearchDebounce = (query: string, delay = 500) => {
-    const [searchQuery, setSearchQuery] = useState<string>('/')
+const useSearchDebounce = (query: string | null, delay = 500) => {
+    const [searchQuery, setSearchQuery] = useState<string | null>(null)
     const timeoutRef = useRef<number | null>(null)
 
     useEffect(() => {

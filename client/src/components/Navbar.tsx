@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import SearchIcon from '../assets/svgs/search.svg?react'
 import MenuIcon from '../assets/svgs/menu.svg?react'
@@ -13,7 +13,7 @@ import Model from './Model'
 
 const Navbar: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
-    const [searchQuery, setSearchQuery] = useState<string>('')
+    const [searchQuery, setSearchQuery] = useState<string | null>(null)
     const [isModelOpen, setIsModelOpen] = useState<boolean>(false)
 
     const { user, setUser, setPosts } = useContext(AppContext)
@@ -41,18 +41,18 @@ const Navbar: React.FC = () => {
 
     useEffect(() => {
         const getSearchedPost = async (query: string) => {
-            if (query && query !== '/') {
-                try {
-                    const response = await axios.get<PostResponse[]>(`${apiBaseUrl}/api/post?search=${query}`)
-                    setPosts(response.data)
-                } catch (e) {
-                    const error = e as AxiosError
-                    console.log(error)
-                }
+            try {
+                const response = await axios.get<PostResponse[]>(`${apiBaseUrl}/api/post?search=${query}`)
+                setPosts(response.data)
+            } catch (e) {
+                const error = e as AxiosError
+                console.log(error)
             }
         }
-        getSearchedPost(debouncedQuery)
-        navigate(debouncedQuery ? '?search=' + debouncedQuery : '/')
+        if (debouncedQuery !== null && debouncedQuery !== '/') {
+            getSearchedPost(debouncedQuery)
+            navigate(debouncedQuery ? '?search=' + debouncedQuery : '')
+        }
     }, [debouncedQuery])
 
     return (
@@ -66,7 +66,7 @@ const Navbar: React.FC = () => {
                         <SearchIcon />
                     </p>
                     <input
-                        value={searchQuery}
+                        value={searchQuery || ''}
                         onChange={(event) => setSearchQuery(event.target.value)}
                         className="outline-none px-3"
                         type="text"
