@@ -1,23 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { AppContext, UserResponse } from '../context/appContext'
-import { getFormattedDate } from './Post'
+import { AppContext } from '../utils/context/appContext'
 import UserIcon from '../assets/svgs/user.svg?react'
 import CakeIcon from '../assets/svgs/cake.svg?react'
 import axios from 'axios'
-import { apiBaseUrl } from '../config/url'
+import { apiBaseUrl } from '../utils/config/url'
+import { UserType } from '../utils/types/userType'
+import { getFormattedDate } from '../utils/formattedDateTime'
 
 interface IProfileSectionProps {
     id?: string
 }
 
-type userProfile = {
-    username: string
-    createdAt: string
-}
-
 const ProfileSection: React.FC<IProfileSectionProps> = ({ id }: IProfileSectionProps) => {
     const { user } = useContext(AppContext)
-    const [userProfile, setUserProfile] = useState<userProfile>({ username: '', createdAt: '' })
+    const [userProfile, setUserProfile] = useState<{
+        username: string
+        createdAt: string
+    }>({ username: '', createdAt: '' })
 
     if (!id && user && user.createdAt) {
         setUserProfile({
@@ -28,7 +27,7 @@ const ProfileSection: React.FC<IProfileSectionProps> = ({ id }: IProfileSectionP
 
     const userDetails = async (id: string) => {
         try {
-            const response = await axios.get<UserResponse>(`${apiBaseUrl}/api/user/${id}`)
+            const response = await axios.get<UserType>(`${apiBaseUrl}/api/user/${id}`)
 
             if (response.data && response.data.createdAt) {
                 setUserProfile({

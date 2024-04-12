@@ -2,19 +2,20 @@ import React, { useContext, useEffect, useState } from 'react'
 import EditIcon from '../assets/svgs/edit.svg?react'
 import DeleteIcon from '../assets/svgs/Delete.svg?react'
 import CommentSection from '../components/CommentSection'
-import { AppContext, PostResponse } from '../context/appContext'
+import { AppContext } from '../utils/context/appContext'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
-import { apiBaseUrl } from '../config/url'
-import { getFormattedTime, getFormattedDate } from '../components/Post'
+import { apiBaseUrl } from '../utils/config/url'
 import Overlay from '../components/Overlay'
 import Model from '../components/Model'
 import TextViewer from '../components/TextEditor/TextViewer'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import placeholderImage from '../assets/images/placeholder-image.png'
+import { PostType } from '../utils/types/postType'
+import { getFormattedDate, getFormattedTime } from '../utils/formattedDateTime'
 
 const PostDetailsPage: React.FC = () => {
-    const [post, setPost] = useState<PostResponse | null>(null)
+    const [post, setPost] = useState<PostType | null>(null)
     const [isModelOpen, setIsModelOpen] = useState<boolean>(false)
 
     const { user } = useContext(AppContext)
@@ -23,7 +24,7 @@ const PostDetailsPage: React.FC = () => {
 
     const handleDeletePost = async (): Promise<void> => {
         try {
-            await axios.delete<PostResponse>(`${apiBaseUrl}/api/post/${params.postId}`, {
+            await axios.delete<PostType>(`${apiBaseUrl}/api/post/${params.postId}`, {
                 withCredentials: true,
             })
             navigate('/')
@@ -34,7 +35,7 @@ const PostDetailsPage: React.FC = () => {
 
     useEffect(() => {
         const getPost = async (postId: string) => {
-            const postResponse = await axios.get<PostResponse>(`${apiBaseUrl}/api/post/${postId}`)
+            const postResponse = await axios.get<PostType>(`${apiBaseUrl}/api/post/${postId}`)
             setPost(postResponse.data)
         }
 

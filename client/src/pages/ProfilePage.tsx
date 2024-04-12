@@ -1,16 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Profile from '../components/ProfileSection'
 import { useLocation, useParams } from 'react-router-dom'
-import { AppContext, PostResponse } from '../context/appContext'
+import { AppContext } from '../utils/context/appContext'
 import axios, { AxiosError } from 'axios'
-import { apiBaseUrl } from '../config/url'
+import { apiBaseUrl } from '../utils/config/url'
 import Loader from '../components/Loader'
 import Post from '../components/Post'
 import NoPost from '../components/NoPost'
-import { errorResponse } from './LoginPage'
+import { PostType } from '../utils/types/postType'
+import { ErrorType } from '../utils/types/errorType'
 
 const ProfilePage: React.FC = () => {
-    const [posts, setPosts] = useState<PostResponse[]>([])
+    const [posts, setPosts] = useState<PostType[]>([])
     const { user } = useContext(AppContext)
 
     const params = useParams()
@@ -19,12 +20,12 @@ const ProfilePage: React.FC = () => {
 
     const getUserPost = async (id: string) => {
         try {
-            const response = await axios.get<PostResponse[]>(`${apiBaseUrl}/api/post/user/${id}`, {
+            const response = await axios.get<PostType[]>(`${apiBaseUrl}/api/post/user/${id}`, {
                 withCredentials: true,
             })
             response.data && setPosts(response.data)
         } catch (e) {
-            const error = e as AxiosError<errorResponse>
+            const error = e as AxiosError<ErrorType>
             console.log(error)
         }
     }

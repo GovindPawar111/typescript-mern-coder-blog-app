@@ -1,33 +1,15 @@
 import axios, { AxiosError } from 'axios'
 import { ReactNode, createContext, useEffect, useState } from 'react'
-import { errorResponse } from '../pages/LoginPage'
 import { apiBaseUrl } from '../config/url'
-
-export type UserResponse = {
-    username: string
-    email: string
-    id: string
-    createdAt?: string
-    updatedAt?: string
-}
-export interface PostResponse {
-    _id: string
-    title: string
-    description: string
-    content: string
-    headerImageUrl: string
-    catagories: string[]
-    username: string
-    userId: string
-    createdAt: string
-    updatedAt: string
-}
+import { UserType } from '../types/userType'
+import { PostType } from '../types/postType'
+import { ErrorType } from '../types/errorType'
 
 export type appContextType = {
-    user: UserResponse | null
-    posts: PostResponse[] | null
-    setUser: React.Dispatch<React.SetStateAction<UserResponse | null>>
-    setPosts: React.Dispatch<React.SetStateAction<PostResponse[] | null>>
+    user: UserType | null
+    posts: PostType[] | null
+    setUser: React.Dispatch<React.SetStateAction<UserType | null>>
+    setPosts: React.Dispatch<React.SetStateAction<PostType[] | null>>
 }
 
 export const AppContext = createContext<appContextType>({
@@ -42,20 +24,20 @@ type AppContextProviderProps = {
 }
 
 export const AppContextProvider = ({ children }: AppContextProviderProps) => {
-    const [user, setUser] = useState<UserResponse | null>(null)
-    const [posts, setPosts] = useState<PostResponse[] | null>(null)
+    const [user, setUser] = useState<UserType | null>(null)
+    const [posts, setPosts] = useState<PostType[] | null>(null)
 
     // check whether token is present or not, If it is then refetch the data.
     const refetchUser = async () => {
         try {
             if (!document.cookie.indexOf('token=')) {
-                const response = await axios.get<UserResponse>(`${apiBaseUrl}/api/auth/refetch`, {
+                const response = await axios.get<UserType>(`${apiBaseUrl}/api/auth/refetch`, {
                     withCredentials: true,
                 })
                 setUser(response.data)
             }
         } catch (e) {
-            const error = e as AxiosError<errorResponse>
+            const error = e as AxiosError<ErrorType>
             console.error(error.response?.data.message)
         }
     }

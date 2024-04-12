@@ -1,15 +1,16 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import SearchIcon from '../assets/svgs/search.svg?react'
 import MenuIcon from '../assets/svgs/menu.svg?react'
 import Menu from './Menu'
-import { AppContext, PostResponse } from '../context/appContext'
+import { AppContext } from '../utils/context/appContext'
 import axios, { AxiosError } from 'axios'
-import { errorResponse } from '../pages/LoginPage'
-import { apiBaseUrl } from '../config/url'
-import useSearchDebounce from '../hooks/useSearchDebounce'
+import { apiBaseUrl } from '../utils/config/url'
+import useSearchDebounce from '../utils/hooks/useSearchDebounce'
 import Overlay from './Overlay'
 import Model from './Model'
+import { PostType } from '../utils/types/postType'
+import { ErrorType } from '../utils/types/errorType'
 
 const Navbar: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
@@ -28,7 +29,7 @@ const Navbar: React.FC = () => {
             setUser(null)
             navigate('/')
         } catch (e) {
-            const error = e as AxiosError<errorResponse>
+            const error = e as AxiosError<ErrorType>
             console.log(error)
         }
     }
@@ -42,7 +43,7 @@ const Navbar: React.FC = () => {
     useEffect(() => {
         const getSearchedPost = async (query: string) => {
             try {
-                const response = await axios.get<PostResponse[]>(`${apiBaseUrl}/api/post?search=${query}`)
+                const response = await axios.get<PostType[]>(`${apiBaseUrl}/api/post?search=${query}`)
                 setPosts(response.data)
             } catch (e) {
                 const error = e as AxiosError

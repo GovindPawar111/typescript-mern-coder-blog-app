@@ -1,15 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios, { AxiosError } from 'axios'
-import { apiBaseUrl } from '../config/url'
-import { errorResponse } from './LoginPage'
-
-interface RegisterResponse {
-    id: string
-    username: string
-    email: string
-    updatedAt: string
-}
+import { apiBaseUrl } from '../utils/config/url'
+import { UserType } from '../utils/types/userType'
+import { ErrorType } from '../utils/types/errorType'
 
 const RegisterPage = (): React.ReactElement => {
     const [username, setUsername] = useState<string>('')
@@ -21,7 +15,7 @@ const RegisterPage = (): React.ReactElement => {
 
     const handleRegisterBtnClick = async (): Promise<void> => {
         try {
-            await axios.post<RegisterResponse>(
+            await axios.post<UserType>(
                 `${apiBaseUrl}/api/auth/register`,
                 {
                     username,
@@ -36,7 +30,7 @@ const RegisterPage = (): React.ReactElement => {
 
             navigate('/')
         } catch (e) {
-            const error = e as AxiosError<errorResponse>
+            const error = e as AxiosError<ErrorType>
             setError(error.response?.data.message || 'Something went wrong, please try after sometime.')
             console.error(error.response?.data.message)
         }

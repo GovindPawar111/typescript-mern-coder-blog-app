@@ -1,30 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react'
 import EditIcon from '../assets/svgs/edit.svg?react'
 import DeleteIcon from '../assets/svgs/Delete.svg?react'
-import { getFormattedDate, getFormattedTime } from './Post'
 import axios, { AxiosError } from 'axios'
-import { apiBaseUrl } from '../config/url'
-import { errorResponse } from '../pages/LoginPage'
-import { AppContext } from '../context/appContext'
+import { apiBaseUrl } from '../utils/config/url'
+import { AppContext } from '../utils/context/appContext'
 import { useNavigate } from 'react-router-dom'
 import Overlay from './Overlay'
 import Model from './Model'
-
-type commentResponse = {
-    _id: string
-    comment: string
-    author: string
-    postId: string
-    userId: string
-    updatedAt: string
-}
+import { CommentType } from '../utils/types/commentType'
+import { ErrorType } from '../utils/types/errorType'
+import { getFormattedDate, getFormattedTime } from '../utils/formattedDateTime'
 
 interface ICommentSectionProps {
     postId: string
 }
 
 const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSectionProps) => {
-    const [comments, setComments] = useState<commentResponse[]>([])
+    const [comments, setComments] = useState<CommentType[]>([])
     const [newComment, setNewComment] = useState<string>('')
     const [updatedComment, setUpdatedComment] = useState<string>('')
     const [editCommentId, setEditCommentId] = useState<string | undefined>(undefined)
@@ -35,19 +27,19 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
 
     const getComments = async (postId: string) => {
         try {
-            const response = await axios.get<commentResponse[]>(`${apiBaseUrl}/api/comment/post/${postId}`, {
+            const response = await axios.get<CommentType[]>(`${apiBaseUrl}/api/comment/post/${postId}`, {
                 withCredentials: true,
             })
             response.data && setComments(response.data)
         } catch (e) {
-            const error = e as AxiosError<errorResponse>
+            const error = e as AxiosError<ErrorType>
             console.log(error)
         }
     }
 
     const AddComments = async (comment: string, postId: string, userId: string, author: string) => {
         try {
-            const response = await axios.post<commentResponse[]>(
+            const response = await axios.post<CommentType[]>(
                 `${apiBaseUrl}/api/comment/`,
                 {
                     postId,
@@ -61,26 +53,26 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
             )
             response.data && (await getComments(postId))
         } catch (e) {
-            const error = e as AxiosError<errorResponse>
+            const error = e as AxiosError<ErrorType>
             console.log(error)
         }
     }
 
     const deleteComments = async (id: string) => {
         try {
-            await axios.delete<commentResponse[]>(`${apiBaseUrl}/api/comment/${id}`, {
+            await axios.delete<CommentType[]>(`${apiBaseUrl}/api/comment/${id}`, {
                 withCredentials: true,
             })
             await getComments(postId)
         } catch (e) {
-            const error = e as AxiosError<errorResponse>
+            const error = e as AxiosError<ErrorType>
             console.log(error)
         }
     }
 
     const updateComments = async (id: string, updatedComment: string) => {
         try {
-            const response = await axios.put<commentResponse[]>(
+            const response = await axios.put<CommentType[]>(
                 `${apiBaseUrl}/api/comment/${id}`,
                 {
                     comment: updatedComment,
@@ -91,7 +83,7 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
             )
             response.data && (await getComments(postId))
         } catch (e) {
-            const error = e as AxiosError<errorResponse>
+            const error = e as AxiosError<ErrorType>
             console.log(error)
         }
     }

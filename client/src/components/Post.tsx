@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom'
 import placeholderImage from '../assets/images/placeholder-image.png'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import 'react-lazy-load-image-component/src/effects/blur.css'
+import { getFormattedDate } from '../utils/formattedDateTime'
 
-export interface IPost {
+export interface IPostProps {
     id: string
     title: string
     description: string
@@ -13,26 +14,6 @@ export interface IPost {
     userId: string
     catagories: string[]
     dateTimeStamp: string
-}
-
-export const getFormattedDate = (timestamp: string) => {
-    const date: Date = new Date(timestamp)
-    const formattedDate: string = date.toLocaleString('en-US', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-    } as Intl.DateTimeFormatOptions)
-    return formattedDate
-}
-
-export const getFormattedTime = (timestamp: string) => {
-    const date: Date = new Date(timestamp)
-    const formattedDate: string = date.toLocaleString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-    } as Intl.DateTimeFormatOptions)
-    return formattedDate
 }
 
 const Post = ({
@@ -44,7 +25,7 @@ const Post = ({
     userId,
     dateTimeStamp,
     catagories,
-}: IPost): React.ReactElement => {
+}: IPostProps): React.ReactElement => {
     return (
         <div className="flex w-full py-8 space-x-2 md:space-x-4">
             {/* left side*/}

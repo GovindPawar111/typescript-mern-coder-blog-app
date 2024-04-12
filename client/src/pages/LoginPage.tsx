@@ -1,21 +1,10 @@
 import React, { useContext, useState } from 'react'
-import { ErrorResponse, Link, useNavigate } from 'react-router-dom'
-import { apiBaseUrl } from '../config/url'
+import { Link, useNavigate } from 'react-router-dom'
+import { apiBaseUrl } from '../utils/config/url'
 import axios, { AxiosError } from 'axios'
-import { AppContext } from '../context/appContext'
-
-export interface LoginResponse {
-    id: string
-    username: string
-    email: string
-    updatedAt: string
-    createdAt: string
-}
-
-export type errorResponse = {
-    error: ErrorResponse
-    message: string
-}
+import { AppContext } from '../utils/context/appContext'
+import { UserType } from '../utils/types/userType'
+import { ErrorType } from '../utils/types/errorType'
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState<string>('')
@@ -26,7 +15,7 @@ const LoginPage: React.FC = () => {
 
     const handleLoginBtnClick = async () => {
         try {
-            const response = await axios.post<LoginResponse>(
+            const response = await axios.post<UserType>(
                 `${apiBaseUrl}/api/auth/login`,
                 {
                     email,
@@ -45,7 +34,7 @@ const LoginPage: React.FC = () => {
             setPassword('')
             navigate('/')
         } catch (e) {
-            const error = e as AxiosError<errorResponse>
+            const error = e as AxiosError<ErrorType>
             setError(error.response?.data.message || 'Something went wrong, please try after sometime.')
         }
     }

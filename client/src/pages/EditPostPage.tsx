@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import CloseIcon from '../assets/svgs/close.svg?react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { AppContext, PostResponse } from '../context/appContext'
+import { AppContext } from '../utils/context/appContext'
 import Loader from '../components/Loader'
 import axios, { AxiosError } from 'axios'
-import { apiBaseUrl } from '../config/url'
-import { errorResponse } from './LoginPage'
+import { apiBaseUrl } from '../utils/config/url'
 import placeholderImage from '../assets/images/placeholder-image.png'
 import TextEditor from '../components/TextEditor/TextEditor'
+import { PostType } from '../utils/types/postType'
+import { ErrorType } from '../utils/types/errorType'
 
 const EditPostPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -82,20 +83,20 @@ const EditPostPage: React.FC = () => {
         formData.append('data', JSON.stringify(newPost))
         try {
             setIsLoading(true)
-            const response = await axios.put<PostResponse>(`${apiBaseUrl}/api/post/${params.postId}`, formData, {
+            const response = await axios.put<PostType>(`${apiBaseUrl}/api/post/${params.postId}`, formData, {
                 withCredentials: true,
             })
             navigate(`/posts/${response.data._id}`)
             setIsLoading(false)
         } catch (e) {
-            const error = e as AxiosError<errorResponse>
+            const error = e as AxiosError<ErrorType>
             console.error(error.response?.data.message)
         }
     }
 
     useEffect(() => {
         const getPost = async (postId: string) => {
-            const postResponse = await axios.get<PostResponse>(`${apiBaseUrl}/api/post/${postId}`)
+            const postResponse = await axios.get<PostType>(`${apiBaseUrl}/api/post/${postId}`)
             setTitle(postResponse.data.title || '')
             setDescription(postResponse.data.description || '')
             setContent(postResponse.data.content || '')

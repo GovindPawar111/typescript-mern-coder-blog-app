@@ -1,10 +1,11 @@
 import React, { useContext, useEffect } from 'react'
 import Post from '../components/Post'
-import { AppContext, PostResponse } from '../context/appContext'
+import { AppContext } from '../utils/context/appContext'
 import NoPost from '../components/NoPost'
 import Loader from '../components/Loader'
 import axios, { AxiosError } from 'axios'
-import { apiBaseUrl } from '../config/url'
+import { apiBaseUrl } from '../utils/config/url'
+import { PostType } from '../utils/types/postType'
 
 const HomePage: React.FC = () => {
     const { posts, setPosts } = useContext(AppContext)
@@ -12,7 +13,7 @@ const HomePage: React.FC = () => {
     useEffect(() => {
         const getPosts = async () => {
             try {
-                const response = await axios.get<PostResponse[]>(`${apiBaseUrl}/api/post`)
+                const response = await axios.get<PostType[]>(`${apiBaseUrl}/api/post`)
                 setPosts(response.data)
             } catch (e) {
                 const error = e as AxiosError
