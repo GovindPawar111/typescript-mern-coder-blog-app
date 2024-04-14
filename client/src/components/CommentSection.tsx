@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import EditIcon from '../assets/svgs/edit.svg?react'
 import DeleteIcon from '../assets/svgs/Delete.svg?react'
-import axios, { AxiosError } from 'axios'
-import { apiBaseUrl } from '../utils/config/url'
+import { AxiosError } from 'axios'
 import { AppContext } from '../utils/context/appContext'
 import { useNavigate } from 'react-router-dom'
 import Overlay from './Overlay'
@@ -10,6 +9,7 @@ import Model from './Model'
 import { CommentType } from '../utils/types/commentType'
 import { ErrorType } from '../utils/types/errorType'
 import { getFormattedDate, getFormattedTime } from '../utils/formattedDateTime'
+import { addComment, deleteComment, getAllCommentsOfPost, updateComment } from '../utils/api/commentApi'
 
 interface ICommentSectionProps {
     postId: string
@@ -27,10 +27,8 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
 
     const getComments = async (postId: string) => {
         try {
-            const response = await axios.get<CommentType[]>(`${apiBaseUrl}/api/comment/post/${postId}`, {
-                withCredentials: true,
-            })
-            response.data && setComments(response.data)
+            const response = await getAllCommentsOfPost(postId)
+            response && setComments(response)
         } catch (e) {
             const error = e as AxiosError<ErrorType>
             console.log(error)
@@ -39,19 +37,8 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
 
     const AddComments = async (comment: string, postId: string, userId: string, author: string) => {
         try {
-            const response = await axios.post<CommentType[]>(
-                `${apiBaseUrl}/api/comment/`,
-                {
-                    postId,
-                    userId,
-                    author,
-                    comment,
-                },
-                {
-                    withCredentials: true,
-                }
-            )
-            response.data && (await getComments(postId))
+            const response = await addComment(postId, userId, author, comment)
+            response && (await getComments(postId))
         } catch (e) {
             const error = e as AxiosError<ErrorType>
             console.log(error)
@@ -60,9 +47,7 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
 
     const deleteComments = async (id: string) => {
         try {
-            await axios.delete<CommentType[]>(`${apiBaseUrl}/api/comment/${id}`, {
-                withCredentials: true,
-            })
+            await deleteComment(id)
             await getComments(postId)
         } catch (e) {
             const error = e as AxiosError<ErrorType>
@@ -72,16 +57,8 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
 
     const updateComments = async (id: string, updatedComment: string) => {
         try {
-            const response = await axios.put<CommentType[]>(
-                `${apiBaseUrl}/api/comment/${id}`,
-                {
-                    comment: updatedComment,
-                },
-                {
-                    withCredentials: true,
-                }
-            )
-            response.data && (await getComments(postId))
+            const response = await updateComment(id, updatedComment)
+            response && (await getComments(postId))
         } catch (e) {
             const error = e as AxiosError<ErrorType>
             console.log(error)

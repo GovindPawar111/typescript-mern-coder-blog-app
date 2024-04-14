@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios, { AxiosError } from 'axios'
-import { apiBaseUrl } from '../utils/config/url'
-import { UserType } from '../utils/types/userType'
+import { AxiosError } from 'axios'
 import { ErrorType } from '../utils/types/errorType'
+import { registerUser } from '../utils/api/authApi'
 
 const RegisterPage = (): React.ReactElement => {
     const [username, setUsername] = useState<string>('')
@@ -15,20 +14,12 @@ const RegisterPage = (): React.ReactElement => {
 
     const handleRegisterBtnClick = async (): Promise<void> => {
         try {
-            await axios.post<UserType>(
-                `${apiBaseUrl}/api/auth/register`,
-                {
-                    username,
-                    email,
-                    password,
-                },
-                { withCredentials: true }
-            )
+            await registerUser(username, email, password)
             setUsername('')
             setEmail('')
             setPassword('')
 
-            navigate('/')
+            navigate('/login')
         } catch (e) {
             const error = e as AxiosError<ErrorType>
             setError(error.response?.data.message || 'Something went wrong, please try after sometime.')

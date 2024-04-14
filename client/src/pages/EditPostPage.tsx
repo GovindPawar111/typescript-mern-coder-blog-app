@@ -3,12 +3,11 @@ import CloseIcon from '../assets/svgs/close.svg?react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../utils/context/appContext'
 import Loader from '../components/Loader'
-import axios, { AxiosError } from 'axios'
-import { apiBaseUrl } from '../utils/config/url'
+import { AxiosError } from 'axios'
 import placeholderImage from '../assets/images/placeholder-image.png'
 import TextEditor from '../components/TextEditor/TextEditor'
-import { PostType } from '../utils/types/postType'
 import { ErrorType } from '../utils/types/errorType'
+import { getPostWithId, updatePost } from '../utils/api/postApi'
 
 const EditPostPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -64,6 +63,10 @@ const EditPostPage: React.FC = () => {
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault()
 
+        if (!params.postId) {
+            return
+        }
+
         const newPost = {
             title,
             description,
@@ -83,10 +86,8 @@ const EditPostPage: React.FC = () => {
         formData.append('data', JSON.stringify(newPost))
         try {
             setIsLoading(true)
-            const response = await axios.put<PostType>(`${apiBaseUrl}/api/post/${params.postId}`, formData, {
-                withCredentials: true,
-            })
-            navigate(`/posts/${response.data._id}`)
+            const response = await updatePost(params.postId, formData)
+            navigate(`/posts/${response._id}`)
             setIsLoading(false)
         } catch (e) {
             const error = e as AxiosError<ErrorType>
@@ -96,17 +97,17 @@ const EditPostPage: React.FC = () => {
 
     useEffect(() => {
         const getPost = async (postId: string) => {
-            const postResponse = await axios.get<PostType>(`${apiBaseUrl}/api/post/${postId}`)
-            setTitle(postResponse.data.title || '')
-            setDescription(postResponse.data.description || '')
-            setContent(postResponse.data.content || '')
-            setInitialContent(postResponse.data.content || '')
-            headerImageUrlRef.current = postResponse.data.headerImageUrl
+            const postResponse = await getPostWithId(postId)
+            setTitle(postResponse.title || '')
+            setDescription(postResponse.description || '')
+            setContent(postResponse.content || '')
+            setInitialContent(postResponse.content || '')
+            headerImageUrlRef.current = postResponse.headerImageUrl
             setImage({
                 file: null,
-                previewImageURL: postResponse.data.headerImageUrl || placeholderImage,
+                previewImageURL: postResponse.headerImageUrl || placeholderImage,
             })
-            setCategoryList(postResponse.data.catagories || [])
+            setCategoryList(postResponse.catagories || [])
         }
 
         params.postId && getPost(params.postId)

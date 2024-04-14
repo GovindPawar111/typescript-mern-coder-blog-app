@@ -3,21 +3,24 @@ import Post from '../components/Post'
 import { AppContext } from '../utils/context/appContext'
 import NoPost from '../components/NoPost'
 import Loader from '../components/Loader'
-import axios, { AxiosError } from 'axios'
-import { apiBaseUrl } from '../utils/config/url'
-import { PostType } from '../utils/types/postType'
+import { AxiosError } from 'axios'
+import { getAllPosts } from '../utils/api/postApi'
+import { ErrorType } from '../utils/types/errorType'
+import { useErrorBoundary } from 'react-error-boundary'
 
 const HomePage: React.FC = () => {
     const { posts, setPosts } = useContext(AppContext)
+    const { showBoundary } = useErrorBoundary()
 
     useEffect(() => {
         const getPosts = async () => {
             try {
-                const response = await axios.get<PostType[]>(`${apiBaseUrl}/api/post`)
-                setPosts(response.data)
+                const data = await getAllPosts()
+                setPosts(data)
             } catch (e) {
-                const error = e as AxiosError
+                const error = e as AxiosError<ErrorType>
                 console.log(error)
+                showBoundary(error)
             }
         }
         getPosts()

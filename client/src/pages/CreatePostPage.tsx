@@ -1,14 +1,13 @@
 import React, { useContext, useState } from 'react'
 import CloseIcon from '../assets/svgs/close.svg?react'
 import { AppContext } from '../utils/context/appContext'
-import { apiBaseUrl } from '../utils/config/url'
-import axios, { AxiosError } from 'axios'
+import { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
 import Loader from '../components/Loader'
 import placeholderImage from '../assets/images/placeholder-image.png'
 import TextEditor from './../components/TextEditor/TextEditor'
-import { PostType } from '../utils/types/postType'
 import { ErrorType } from '../utils/types/errorType'
+import { createPost } from '../utils/api/postApi'
 
 const CreatePostPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -78,10 +77,8 @@ const CreatePostPage: React.FC = () => {
         formData.append('data', JSON.stringify(newPost))
         try {
             setIsLoading(true)
-            const response = await axios.post<PostType>(`${apiBaseUrl}/api/post`, formData, {
-                withCredentials: true,
-            })
-            navigate(`/posts/${response.data._id}`)
+            const data = await createPost(formData)
+            navigate(`/posts/${data._id}`)
             setIsLoading(false)
         } catch (e) {
             const error = e as AxiosError<ErrorType>

@@ -4,8 +4,6 @@ import DeleteIcon from '../assets/svgs/Delete.svg?react'
 import CommentSection from '../components/CommentSection'
 import { AppContext } from '../utils/context/appContext'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios'
-import { apiBaseUrl } from '../utils/config/url'
 import Overlay from '../components/Overlay'
 import Model from '../components/Model'
 import TextViewer from '../components/TextEditor/TextViewer'
@@ -13,6 +11,8 @@ import { LazyLoadImage } from 'react-lazy-load-image-component'
 import placeholderImage from '../assets/images/placeholder-image.png'
 import { PostType } from '../utils/types/postType'
 import { getFormattedDate, getFormattedTime } from '../utils/formattedDateTime'
+import { useErrorBoundary } from 'react-error-boundary'
+import { deletePost, getPostWithId } from '../utils/api/postApi'
 
 const PostDetailsPage: React.FC = () => {
     const [post, setPost] = useState<PostType | null>(null)
@@ -21,12 +21,15 @@ const PostDetailsPage: React.FC = () => {
     const { user } = useContext(AppContext)
     const params = useParams()
     const navigate = useNavigate()
+    const { showBoundary } = useErrorBoundary()
 
     const handleDeletePost = async (): Promise<void> => {
+        if (!params.postId) {
+            return
+        }
+
         try {
-            await axios.delete<PostType>(`${apiBaseUrl}/api/post/${params.postId}`, {
-                withCredentials: true,
-            })
+            await deletePost(params.postId)
             navigate('/')
         } catch (error) {
             console.log(error)
@@ -35,8 +38,13 @@ const PostDetailsPage: React.FC = () => {
 
     useEffect(() => {
         const getPost = async (postId: string) => {
-            const postResponse = await axios.get<PostType>(`${apiBaseUrl}/api/post/${postId}`)
-            setPost(postResponse.data)
+            try {
+                const postResponse = await getPostWithId(postId)
+                setPost(postResponse)
+            } catch (error) {
+                console.log(error)
+                showBoundary(error)
+            }
         }
 
         params.postId && getPost(params.postId)

@@ -4,6 +4,8 @@ import HomePage from './pages/HomePage'
 import { AppContextProvider } from './utils/context/appContext'
 import AuthLayout from './pages/Layout/AuthLayout'
 import MainLayout from './pages/Layout/MainLayout'
+import { ErrorBoundary } from 'react-error-boundary'
+import AppErrorFallback from './components/AppErrorFallback'
 
 const router = createBrowserRouter([
     {
@@ -54,9 +56,11 @@ const router = createBrowserRouter([
 
 const App: React.FC = () => {
     return (
-        <AppContextProvider>
-            <RouterProvider router={router} />
-        </AppContextProvider>
+        <ErrorBoundary FallbackComponent={AppErrorFallback}>
+            <AppContextProvider>
+                <RouterProvider router={router} />
+            </AppContextProvider>
+        </ErrorBoundary>
     )
 }
 

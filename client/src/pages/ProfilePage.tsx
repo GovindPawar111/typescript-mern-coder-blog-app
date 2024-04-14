@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Profile from '../components/ProfileSection'
+import ProfileSection from '../components/ProfileSection'
 import { useLocation, useParams } from 'react-router-dom'
 import { AppContext } from '../utils/context/appContext'
-import axios, { AxiosError } from 'axios'
-import { apiBaseUrl } from '../utils/config/url'
+import { AxiosError } from 'axios'
 import Loader from '../components/Loader'
 import Post from '../components/Post'
 import NoPost from '../components/NoPost'
 import { PostType } from '../utils/types/postType'
 import { ErrorType } from '../utils/types/errorType'
+import { getUsersPosts } from '../utils/api/postApi'
 
 const ProfilePage: React.FC = () => {
     const [posts, setPosts] = useState<PostType[]>([])
@@ -20,10 +20,8 @@ const ProfilePage: React.FC = () => {
 
     const getUserPost = async (id: string) => {
         try {
-            const response = await axios.get<PostType[]>(`${apiBaseUrl}/api/post/user/${id}`, {
-                withCredentials: true,
-            })
-            response.data && setPosts(response.data)
+            const response = await getUsersPosts(id)
+            response && setPosts(response)
         } catch (e) {
             const error = e as AxiosError<ErrorType>
             console.log(error)
@@ -61,7 +59,7 @@ const ProfilePage: React.FC = () => {
                 )}
             </div>
             <div className="flex flex-col justify-start items-start space-x-2 md:space-x-4 md:w-[30%] w-full md:pl-8">
-                <Profile id={params.profileId} />
+                <ProfileSection id={params.profileId} />
             </div>
         </section>
     )

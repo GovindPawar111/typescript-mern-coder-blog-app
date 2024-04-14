@@ -21,11 +21,12 @@ router.post('/', validateToken, async (req: Request, res: Response) => {
 
         res.status(201).json({
             message: 'Comment create Successfully.',
+            _id: savedComment.id,
             comment: savedComment.comment,
             author: savedComment.author,
             postId: savedComment.postId,
             userId: savedComment.userId,
-            _id: savedComment.id,
+            updatedAt: savedComment.updatedAt,
         })
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error, Please try again later.' })

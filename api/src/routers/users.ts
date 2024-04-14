@@ -18,7 +18,13 @@ router.get('/:id', async (req: Request, res: Response) => {
             })
         }
 
-        res.status(200).json(user)
+        res.status(200).json({
+            id: user._id,
+            email: user.email,
+            username: user.username,
+            updatedAt: user.updatedAt,
+            createdAt: user.createdAt,
+        })
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error. Please try again later.' })
     }

@@ -1,10 +1,9 @@
 import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { apiBaseUrl } from '../utils/config/url'
-import axios, { AxiosError } from 'axios'
+import { AxiosError } from 'axios'
 import { AppContext } from '../utils/context/appContext'
-import { UserType } from '../utils/types/userType'
 import { ErrorType } from '../utils/types/errorType'
+import { loginUser } from '../utils/api/authApi'
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState<string>('')
@@ -15,21 +14,14 @@ const LoginPage: React.FC = () => {
 
     const handleLoginBtnClick = async () => {
         try {
-            const response = await axios.post<UserType>(
-                `${apiBaseUrl}/api/auth/login`,
-                {
-                    email,
-                    password,
-                },
-                { withCredentials: true }
-            )
+            const response = await loginUser(email, password)
 
             setUser({
-                id: response.data.id,
-                username: response.data.username,
-                email: response.data.email,
-                createdAt: response.data.createdAt,
-                updatedAt: response.data.updatedAt,
+                id: response.id,
+                username: response.username,
+                email: response.email,
+                createdAt: response.createdAt,
+                updatedAt: response.updatedAt,
             })
             setPassword('')
             navigate('/')

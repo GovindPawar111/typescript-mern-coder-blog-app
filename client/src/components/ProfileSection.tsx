@@ -2,10 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../utils/context/appContext'
 import UserIcon from '../assets/svgs/user.svg?react'
 import CakeIcon from '../assets/svgs/cake.svg?react'
-import axios from 'axios'
-import { apiBaseUrl } from '../utils/config/url'
-import { UserType } from '../utils/types/userType'
 import { getFormattedDate } from '../utils/formattedDateTime'
+import { getUserWithId } from '../utils/api/userApi'
 
 interface IProfileSectionProps {
     id?: string
@@ -27,12 +25,12 @@ const ProfileSection: React.FC<IProfileSectionProps> = ({ id }: IProfileSectionP
 
     const userDetails = async (id: string) => {
         try {
-            const response = await axios.get<UserType>(`${apiBaseUrl}/api/user/${id}`)
+            const response = await getUserWithId(id)
 
-            if (response.data && response.data.createdAt) {
+            if (response && response.createdAt) {
                 setUserProfile({
-                    username: response.data.username,
-                    createdAt: response.data.createdAt,
+                    username: response.username,
+                    createdAt: response.createdAt,
                 })
             }
         } catch (error) {

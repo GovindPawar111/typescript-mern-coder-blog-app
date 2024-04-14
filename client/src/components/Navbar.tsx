@@ -4,13 +4,13 @@ import SearchIcon from '../assets/svgs/search.svg?react'
 import MenuIcon from '../assets/svgs/menu.svg?react'
 import Menu from './Menu'
 import { AppContext } from '../utils/context/appContext'
-import axios, { AxiosError } from 'axios'
-import { apiBaseUrl } from '../utils/config/url'
+import { AxiosError } from 'axios'
 import useSearchDebounce from '../utils/hooks/useSearchDebounce'
 import Overlay from './Overlay'
 import Model from './Model'
-import { PostType } from '../utils/types/postType'
 import { ErrorType } from '../utils/types/errorType'
+import { getAllSearchedPosts } from '../utils/api/postApi'
+import { logoutUser } from '../utils/api/authApi'
 
 const Navbar: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
@@ -23,9 +23,9 @@ const Navbar: React.FC = () => {
     const navigate = useNavigate()
     const pathname = useLocation().pathname
 
-    const logoutUser = async () => {
+    const logoutUserHandler = async () => {
         try {
-            await axios.get(`${apiBaseUrl}/api/auth/logout`, { withCredentials: true })
+            await logoutUser()
             setUser(null)
             navigate('/')
         } catch (e) {
@@ -43,10 +43,10 @@ const Navbar: React.FC = () => {
     useEffect(() => {
         const getSearchedPost = async (query: string) => {
             try {
-                const response = await axios.get<PostType[]>(`${apiBaseUrl}/api/post?search=${query}`)
-                setPosts(response.data)
+                const data = await getAllSearchedPosts(query)
+                setPosts(data)
             } catch (e) {
-                const error = e as AxiosError
+                const error = e as AxiosError<ErrorType>
                 console.log(error)
             }
         }
@@ -95,7 +95,7 @@ const Navbar: React.FC = () => {
                                 headerText={'Log Out?'}
                                 description={'Are you sure want to logout?'}
                                 onClose={() => setIsModelOpen(false)}
-                                onAction={() => logoutUser()}
+                                onAction={() => logoutUserHandler()}
                                 actionLabel="Logout"
                             />
                         </Overlay>
@@ -116,7 +116,7 @@ const Navbar: React.FC = () => {
                 <MenuIcon onClick={handleMenuClick} />
             </div>
             {isMenuOpen && (
-                <Menu isUserLoggedIn={isUserLoggedIn} onSetIsMenuOpen={handleMenuClick} onLogout={logoutUser} />
+                <Menu isUserLoggedIn={isUserLoggedIn} onSetIsMenuOpen={handleMenuClick} onLogout={logoutUserHandler} />
             )}
         </nav>
     )
