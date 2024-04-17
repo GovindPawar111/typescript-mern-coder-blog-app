@@ -1,11 +1,11 @@
 import React, { useContext, useEffect } from 'react'
 import Post from '../components/Post'
-import { AppContext } from '../utils/context/appContext'
+import { AppContext } from '../context/appContext'
 import NoPost from '../components/NoPost'
 import Loader from '../components/Loader'
 import { AxiosError } from 'axios'
-import { getAllPosts } from '../utils/api/postApi'
-import { ErrorType } from '../utils/types/errorType'
+import { getAllPosts } from '../api/postApi'
+import { ErrorType } from '../types/errorType'
 import { useErrorBoundary } from 'react-error-boundary'
 
 const HomePage: React.FC = () => {

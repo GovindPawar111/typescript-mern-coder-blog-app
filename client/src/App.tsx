@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import HomePage from './pages/HomePage'
-import { AppContextProvider } from './utils/context/appContext'
+import { AppContextProvider } from './context/appContext'
 import AuthLayout from './pages/Layout/AuthLayout'
 import MainLayout from './pages/Layout/MainLayout'
 import { ErrorBoundary } from 'react-error-boundary'

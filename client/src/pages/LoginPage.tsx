@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AxiosError } from 'axios'
-import { AppContext } from '../utils/context/appContext'
-import { ErrorType } from '../utils/types/errorType'
-import { loginUser } from '../utils/api/authApi'
+import { AppContext } from '../context/appContext'
+import { ErrorType } from '../types/errorType'
+import { loginUser } from '../api/authApi'
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState<string>('')

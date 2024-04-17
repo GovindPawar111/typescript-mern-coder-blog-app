@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { AppContext } from '../utils/context/appContext'
+import { AppContext } from '../context/appContext'
 import UserIcon from '../assets/svgs/user.svg?react'
 import CakeIcon from '../assets/svgs/cake.svg?react'
 import { getFormattedDate } from '../utils/formattedDateTime'
-import { getUserWithId } from '../utils/api/userApi'
+import { getUserWithId } from '../api/userApi'
 
 interface IProfileSectionProps {
     id?: string

@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react'
 import CloseIcon from '../assets/svgs/close.svg?react'
-import { AppContext } from '../utils/context/appContext'
+import { AppContext } from '../context/appContext'
 import { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
 import Loader from '../components/Loader'
 import placeholderImage from '../assets/images/placeholder-image.png'
 import TextEditor from './../components/TextEditor/TextEditor'
-import { ErrorType } from '../utils/types/errorType'
-import { createPost } from '../utils/api/postApi'
+import { ErrorType } from '../types/errorType'
+import { createPost } from '../api/postApi'
 
 const CreatePostPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)

@@ -2,14 +2,14 @@ import React, { useContext, useEffect, useState } from 'react'
 import EditIcon from '../assets/svgs/edit.svg?react'
 import DeleteIcon from '../assets/svgs/Delete.svg?react'
 import { AxiosError } from 'axios'
-import { AppContext } from '../utils/context/appContext'
+import { AppContext } from '../context/appContext'
 import { useNavigate } from 'react-router-dom'
 import Overlay from './Overlay'
 import Model from './Model'
-import { CommentType } from '../utils/types/commentType'
-import { ErrorType } from '../utils/types/errorType'
+import { CommentType } from '../types/commentType'
+import { ErrorType } from '../types/errorType'
 import { getFormattedDate, getFormattedTime } from '../utils/formattedDateTime'
-import { addComment, deleteComment, getAllCommentsOfPost, updateComment } from '../utils/api/commentApi'
+import { addComment, deleteComment, getAllCommentsOfPost, updateComment } from '../api/commentApi'
 
 interface ICommentSectionProps {
     postId: string

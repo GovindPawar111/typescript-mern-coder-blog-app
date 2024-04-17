@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
 import ProfileSection from '../components/ProfileSection'
 import { useLocation, useParams } from 'react-router-dom'
-import { AppContext } from '../utils/context/appContext'
+import { AppContext } from '../context/appContext'
 import { AxiosError } from 'axios'
 import Loader from '../components/Loader'
 import Post from '../components/Post'
 import NoPost from '../components/NoPost'
-import { PostType } from '../utils/types/postType'
-import { ErrorType } from '../utils/types/errorType'
-import { getUsersPosts } from '../utils/api/postApi'
+import { PostType } from '../types/postType'
+import { ErrorType } from '../types/errorType'
+import { getUsersPosts } from '../api/postApi'
 
 const ProfilePage: React.FC = () => {
     const [posts, setPosts] = useState<PostType[]>([])

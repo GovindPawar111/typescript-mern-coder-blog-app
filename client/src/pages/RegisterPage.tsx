@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AxiosError } from 'axios'
-import { ErrorType } from '../utils/types/errorType'
-import { registerUser } from '../utils/api/authApi'
+import { ErrorType } from '../types/errorType'
+import { registerUser } from '../api/authApi'
 
 const RegisterPage = (): React.ReactElement => {
     const [username, setUsername] = useState<string>('')
