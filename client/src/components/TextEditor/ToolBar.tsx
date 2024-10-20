@@ -51,7 +51,7 @@ export const ToolBar = ({ editor }: IToolBarProps) => {
     }
 
     return (
-        <div className="px-1 rounded-none border-[1px]">
+        <div className="px-1 rounded-none border-[2px]">
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleBold().run()}

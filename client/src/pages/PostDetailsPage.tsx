@@ -33,6 +33,7 @@ const PostDetailsPage: React.FC = () => {
             navigate('/')
         } catch (error) {
             console.log(error)
+            showBoundary(error)
         }
     }
 

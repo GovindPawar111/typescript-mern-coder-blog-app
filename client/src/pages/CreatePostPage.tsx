@@ -26,6 +26,10 @@ const CreatePostPage: React.FC = () => {
     const navigate = useNavigate()
 
     const handleAddCategory = (): void => {
+        if (categoryList.length >= 3) {
+            setCategory('')
+            return
+        }
         if (category !== '' && categoryList.indexOf(category) < 0) {
             const newCategoryLIst = [...categoryList, category]
             setCategoryList(newCategoryLIst)

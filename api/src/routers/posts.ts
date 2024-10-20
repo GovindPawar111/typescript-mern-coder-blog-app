@@ -163,6 +163,7 @@ router.get('/', async (req: Request, res: Response) => {
             title: { $regex: req.query.search, $options: 'i' },
         }
         const posts = await Post.find(req.query.search ? searchFilter : {})
+            .sort({ updatedAt: -1 })
             .lean()
             .exec()
         res.status(200).json(posts)

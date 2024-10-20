@@ -101,7 +101,7 @@ export const TextEditor = ({ initialContent, onChange }: ITextEditorProps) => {
         content: '',
         editorProps: {
             attributes: {
-                class: 'px-4 py-2 focus:border-none focus:rounded-none border-none',
+                class: 'px-4 py-2 h-[500px] overflow-hidden overflow-y-scroll',
             },
         },
         onUpdate({ editor }) {
@@ -119,7 +119,7 @@ export const TextEditor = ({ initialContent, onChange }: ITextEditorProps) => {
     return (
         <>
             <ToolBar editor={editor} />
-            <div className=" focus:border-black focus:rounded-none border-[1px] mt-2 ">
+            <div className=" border-[2px] mt-2 ">
                 <EditorContent editor={editor} />
             </div>
         </>

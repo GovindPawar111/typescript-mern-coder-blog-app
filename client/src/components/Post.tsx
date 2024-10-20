@@ -26,6 +26,7 @@ const Post = ({
     dateTimeStamp,
     catagories,
 }: IPostProps): React.ReactElement => {
+     
     return (
         <div className="flex w-full py-8 space-x-2 md:space-x-4">
             {/* left side*/}
@@ -66,12 +67,19 @@ const Post = ({
 
                 <div className="flex mb-1 font-semibold text-xs text-gray-500 text-center items-center justify-start md:mb-2">
                     <Link to={`/profile/${userId}`} state={username}>
-                        <span className="cursor-pointer text-black">@{username}</span>
+                        <span className=" cursor-pointer text-black hover:border-b-2 hover:border-black">
+                            @{username}
+                        </span>
                     </Link>
                     <span className="px-1">·</span>
                     <span>{getFormattedDate(dateTimeStamp)}</span>
                     <span className="px-1">·</span>
-                    <span className="p-2 rounded-full bg-gray-200 text-black">{catagories[0]}</span>
+                    {catagories.map((category, index) => {
+                        if (index === 3) {
+                            return
+                        }
+                        return <span className="p-2 rounded-lg bg-gray-200 text-black mr-1">{category}</span>
+                    })}
                 </div>
             </div>
         </div>
