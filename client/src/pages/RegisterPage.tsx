@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { AxiosError } from 'axios'
 import { ErrorType } from '../types/errorType'
 import { registerUser } from '../api/authApi'
-import Button from '../components/button'
+import Button from '../components/generic/button'
 
 const RegisterPage = (): React.ReactElement => {
     const [username, setUsername] = useState<string>('')

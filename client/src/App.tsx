@@ -6,6 +6,9 @@ import AuthLayout from './pages/Layout/AuthLayout'
 import MainLayout from './pages/Layout/MainLayout'
 import { ErrorBoundary } from 'react-error-boundary'
 import AppErrorFallback from './components/AppErrorFallback'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from './hooks/api/queryClient'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const router = createBrowserRouter([
     {
@@ -57,9 +60,12 @@ const router = createBrowserRouter([
 const App: React.FC = () => {
     return (
         <ErrorBoundary FallbackComponent={AppErrorFallback}>
-            <AppContextProvider>
-                <RouterProvider router={router} />
-            </AppContextProvider>
+            <QueryClientProvider client={queryClient}>
+                <AppContextProvider>
+                    <RouterProvider router={router} />
+                </AppContextProvider>
+                <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
         </ErrorBoundary>
     )
 }

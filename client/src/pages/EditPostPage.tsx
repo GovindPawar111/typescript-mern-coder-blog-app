@@ -2,13 +2,13 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import CloseIcon from '../assets/svgs/close.svg?react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../context/appContext'
-import Loader from '../components/Loader'
+import Loader from '../components/generic/Loader'
 import { AxiosError } from 'axios'
 import placeholderImage from '../assets/images/placeholder-image.png'
-import TextEditor from '../components/TextEditor/TextEditor'
+import TextEditor from '../components/textEditor/TextEditor'
 import { ErrorType } from '../types/errorType'
 import { getPostWithId, updatePost } from '../api/postApi'
-import Button from '../components/button'
+import Button from '../components/generic/button'
 
 const EditPostPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true)

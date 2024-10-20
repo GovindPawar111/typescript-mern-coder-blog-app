@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import placeholderImage from '../assets/images/placeholder-image.png'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import 'react-lazy-load-image-component/src/effects/blur.css'
-import { getFormattedDate } from '../utils/formattedDateTime'
+import { getFormattedDate } from '../../utils/formattedDateTime'
 
 export interface IPostProps {
     id: string
@@ -26,7 +26,6 @@ const Post = ({
     dateTimeStamp,
     catagories,
 }: IPostProps): React.ReactElement => {
-     
     return (
         <div className="flex w-full py-8 space-x-2 md:space-x-4">
             {/* left side*/}

@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom'
 import CloseIcon from '../assets/svgs/close.svg?react'
 import { useContext, useState } from 'react'
 import { AppContext } from '../context/appContext'
-import Overlay from './Overlay'
-import Model from './Model'
+import Overlay from './generic/Overlay'
+import Model from './generic/Model'
 
 interface IMenuProps {
     isUserLoggedIn: boolean

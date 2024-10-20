@@ -3,12 +3,12 @@ import CloseIcon from '../assets/svgs/close.svg?react'
 import { AppContext } from '../context/appContext'
 import { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
-import Loader from '../components/Loader'
+import Loader from '../components/generic/Loader'
 import placeholderImage from '../assets/images/placeholder-image.png'
-import TextEditor from './../components/TextEditor/TextEditor'
+import TextEditor from '../components/textEditor/TextEditor'
 import { ErrorType } from '../types/errorType'
 import { createPost } from '../api/postApi'
-import Button from '../components/button'
+import Button from '../components/generic/button'
 
 const CreatePostPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -158,11 +158,7 @@ const CreatePostPage: React.FC = () => {
                     })}
                 </div>
                 <TextEditor initialContent="" onChange={(text: string) => setContent(text)} />
-                <Button
-                    type="submit"
-                    label={'Create'}
-                    className="w-full md:w-[20%] mx-auto text-lg md:text-xl"
-                />
+                <Button type="submit" label={'Create'} className="w-full md:w-[20%] mx-auto text-lg md:text-xl" />
             </form>
         </section>
     )

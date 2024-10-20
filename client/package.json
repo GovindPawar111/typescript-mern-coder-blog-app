@@ -11,6 +11,7 @@
     "prod": "npm run build && npm run preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.29.2",
     "@tiptap/extension-highlight": "^2.2.4",
     "@tiptap/extension-link": "^2.2.4",
     "@tiptap/extension-text-align": "^2.2.4",
@@ -26,6 +27,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@tanstack/react-query-devtools": "^5.29.2",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@types/react-lazy-load-image-component": "^1.6.3",

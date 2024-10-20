@@ -4,13 +4,13 @@ import DeleteIcon from '../assets/svgs/Delete.svg?react'
 import { AxiosError } from 'axios'
 import { AppContext } from '../context/appContext'
 import { useNavigate } from 'react-router-dom'
-import Overlay from './Overlay'
-import Model from './Model'
+import Overlay from './generic/Overlay'
+import Model from './generic/Model'
 import { CommentType } from '../types/commentType'
 import { ErrorType } from '../types/errorType'
 import { getFormattedDate, getFormattedTime } from '../utils/formattedDateTime'
 import { addComment, deleteComment, getAllCommentsOfPost, updateComment } from '../api/commentApi'
-import Button from './button'
+import Button from './generic/button'
 
 interface ICommentSectionProps {
     postId: string
