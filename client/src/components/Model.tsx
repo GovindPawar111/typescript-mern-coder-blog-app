@@ -1,4 +1,5 @@
 import React from 'react'
+import Button from './button'
 
 interface IModelProps {
     headerText: string
@@ -22,19 +23,16 @@ const Model = ({
             <h2 className="text-black font-extrabold text-2xl capitalize">{headerText}</h2>
             <p className="text-black py-4">{description}</p>
             <div className="self-end">
-                <button className="bg-black text-white px-4 py-2 ml-2 rounded-md" onClick={onClose}>
-                    {cancelLabel ? cancelLabel : 'Cancel'}
-                </button>
-                <button
-                    className="text-white bg-black px-4 py-2 ml-2 rounded-md"
+                <Button label={cancelLabel ? cancelLabel : 'Cancel'} className="ml-2" onClick={onClose} />
+                <Button
+                    label={actionLabel ? actionLabel : 'Continue'}
+                    className="ml-2"
                     onClick={() => {
                         // after performing an action it will close a model
                         onAction()
                         onClose()
                     }}
-                >
-                    {actionLabel ? actionLabel : 'Continue'}
-                </button>
+                />
             </div>
         </div>
     )

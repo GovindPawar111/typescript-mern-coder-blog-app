@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { AxiosError } from 'axios'
 import { ErrorType } from '../types/errorType'
 import { registerUser } from '../api/authApi'
+import Button from '../components/button'
 
 const RegisterPage = (): React.ReactElement => {
     const [username, setUsername] = useState<string>('')
@@ -52,12 +53,11 @@ const RegisterPage = (): React.ReactElement => {
                     value={password}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                 />
-                <button
+                <Button
+                    label={'Register'}
                     onClick={handleRegisterBtnClick}
-                    className="w-full px-4 py-3 bg-black text-white text-lg font-bold rounded-lg hover:bg-gray-500 hover:text-black"
-                >
-                    Register
-                </button>
+                    className="w-full py-3 text-lg font-bold rounded-lg hover:bg-gray-500 hover:text-black"
+                />
                 {error && <h3 className="text-red-600">{error}</h3>}
                 <div className="flex justify-center items-center space-x-3 ">
                     <p>Already have an account?</p>

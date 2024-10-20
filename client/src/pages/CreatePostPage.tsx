@@ -8,6 +8,7 @@ import placeholderImage from '../assets/images/placeholder-image.png'
 import TextEditor from './../components/TextEditor/TextEditor'
 import { ErrorType } from '../types/errorType'
 import { createPost } from '../api/postApi'
+import Button from '../components/button'
 
 const CreatePostPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -132,12 +133,8 @@ const CreatePostPage: React.FC = () => {
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
                         />
-                        <a
-                            onClick={() => handleAddCategory()}
-                            className="bg-black text-white px-4 py-2 font-semibold cursor-pointer"
-                        >
-                            Add
-                        </a>
+
+                        <Button label={'Add'} onClick={() => handleAddCategory()} />
                     </div>
                 </div>
                 {/* categories */}
@@ -161,12 +158,11 @@ const CreatePostPage: React.FC = () => {
                     })}
                 </div>
                 <TextEditor initialContent="" onChange={(text: string) => setContent(text)} />
-                <button
+                <Button
                     type="submit"
-                    className="bg-black text-white w-full md:w-[20%] mx-auto font-semibold px-4 py-2 text-lg md:text-xl"
-                >
-                    Create
-                </button>
+                    label={'Create'}
+                    className="w-full md:w-[20%] mx-auto text-lg md:text-xl"
+                />
             </form>
         </section>
     )

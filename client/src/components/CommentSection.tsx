@@ -10,6 +10,7 @@ import { CommentType } from '../types/commentType'
 import { ErrorType } from '../types/errorType'
 import { getFormattedDate, getFormattedTime } from '../utils/formattedDateTime'
 import { addComment, deleteComment, getAllCommentsOfPost, updateComment } from '../api/commentApi'
+import Button from './button'
 
 interface ICommentSectionProps {
     postId: string
@@ -145,18 +146,17 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
                                         onChange={(e) => setUpdatedComment(e.target.value)}
                                     />
                                     <div className="flex justify-between">
-                                        <button
+                                        <Button
+                                            label={'Update'}
+                                            className="mt-4 md:mt-0 ml-2"
                                             onClick={handleCommentUpdate}
-                                            className="bg-black text-white px-4 py-2 mt-4 md:mt-0 ml-2"
-                                        >
-                                            Update
-                                        </button>
-                                        <button
+                                        />
+
+                                        <Button
+                                            label={'Close'}
+                                            className="mt-4 md:mt-0 ml-2"
                                             onClick={() => setEditCommentId('')}
-                                            className="bg-black text-white px-4 py-2 mt-4 md:mt-0 ml-2"
-                                        >
-                                            Close
-                                        </button>
+                                        />
                                     </div>
                                 </div>
                             ) : (
@@ -174,9 +174,7 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                 />
-                <button onClick={handleAddComment} className="bg-black text-white px-4 py-2 mt-4 md:mt-0  md:w-[20%]">
-                    Add comment
-                </button>
+                <Button label={'Add comment'} className="mt-4 md:mt-0 md:w-[20%]" onClick={handleAddComment} />
             </div>
         </section>
     )

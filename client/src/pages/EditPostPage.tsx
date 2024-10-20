@@ -8,6 +8,7 @@ import placeholderImage from '../assets/images/placeholder-image.png'
 import TextEditor from '../components/TextEditor/TextEditor'
 import { ErrorType } from '../types/errorType'
 import { getPostWithId, updatePost } from '../api/postApi'
+import Button from '../components/button'
 
 const EditPostPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -158,12 +159,11 @@ const EditPostPage: React.FC = () => {
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
                         />
-                        <a
+                        <Button
+                            label={'Add'}
+                            className="w-full md:w-[20%] mx-auto text-lg md:text-xl"
                             onClick={() => handleAddCategory()}
-                            className="bg-black text-white px-4 py-2 font-semibold cursor-pointer"
-                        >
-                            Add
-                        </a>
+                        />
                     </div>
                 </div>
                 {/* categories */}
@@ -189,9 +189,7 @@ const EditPostPage: React.FC = () => {
 
                 <TextEditor initialContent={initialContent} onChange={(text: string) => setContent(text)} />
 
-                <button className="bg-black text-white w-full md:w-[20%] mx-auto font-semibold px-4 py-2 text-lg md:text-xl">
-                    Save
-                </button>
+                <Button type="submit" label={'Save'} className="w-full md:w-[20%] mx-auto text-lg md:text-xl" />
             </form>
         </section>
     )

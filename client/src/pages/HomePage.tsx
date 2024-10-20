@@ -45,7 +45,14 @@ const HomePage: React.FC = () => {
                     />
                 ))
             ) : (
-                <NoPost />
+                <NoPost
+                    title="Posts not found!"
+                    steps={[
+                        'Make sure all words are spelled correctly.',
+                        'Try different keywords.',
+                        'Try more general keywords.',
+                    ]}
+                />
             )}
         </section>
     )

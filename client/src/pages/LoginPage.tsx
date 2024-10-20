@@ -4,6 +4,7 @@ import { AxiosError } from 'axios'
 import { AppContext } from '../context/appContext'
 import { ErrorType } from '../types/errorType'
 import { loginUser } from '../api/authApi'
+import Button from '../components/button'
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState<string>('')
@@ -49,12 +50,11 @@ const LoginPage: React.FC = () => {
                     placeholder="Enter your password"
                     className="w-full px-4 py-2 border-2 border-black outline-0"
                 />
-                <button
+                <Button
+                    label={'Log in'}
                     onClick={handleLoginBtnClick}
-                    className="w-full px-4 py-3 bg-black text-white text-lg font-bold rounded-lg hover:bg-gray-500 hover:text-black"
-                >
-                    Log in
-                </button>
+                    className="w-full py-3 text-lg font-bold rounded-lg hover:bg-gray-500 hover:text-black"
+                />
                 {error.length > 0 && <h3 className="text-red-500">{error}</h3>}
                 <div className="flex justify-center items-center space-x-3 ">
                     <p>New here?</p>
