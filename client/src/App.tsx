@@ -7,7 +7,7 @@ import MainLayout from './pages/Layout/MainLayout'
 import { ErrorBoundary } from 'react-error-boundary'
 import AppErrorFallback from './components/AppErrorFallback'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { queryClient } from './hooks/api/queryClient'
+import { queryClient } from './api/queryClient'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const router = createBrowserRouter([
