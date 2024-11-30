@@ -34,9 +34,9 @@ const ProfilePage: React.FC = () => {
 
     return (
         <section className="flex justify-center items-start w-full">
-            <div className="flex flex-col-reverse items-start py-8 lg:flex-row lg:gap-4 w-full px-4 sm:px-8 lg:w-[90%] min-[1400px]:w-[1240px]">
-                <div className="flex flex-col w-full lg:w-[70%] mt-8 lg:mt-0">
-                    <h1 className="text-xl font-extrabold mb-4 ">{`${
+            <div className="flex flex-col-reverse items-start lg:flex-row lg:gap-4 py-4 sm:py-8 px-4 sm:px-8 w-full lg:w-[90%] min-[1400px]:w-[1240px]">
+                <div className="flex flex-col w-full lg:w-[75%] mt-4 sm:mt-8 lg:mt-0 gap-6 md:gap-8">
+                    <h1 className="text-xl font-extrabold">{`${
                         params.profileId === user?.id ? 'Your' : `${username}'s`
                     } posts:`}</h1>
                     {posts === undefined || posts === null ? (
@@ -59,7 +59,7 @@ const ProfilePage: React.FC = () => {
                         <NoPost title="This user hasn't posted anything yet." />
                     )}
                 </div>
-                <div className="flex flex-col justify-start items-start space-x-2 md:space-x-4 lg:w-[30%] w-full lg:pl-8">
+                <div className="flex flex-col justify-start items-start space-x-2 md:space-x-4 lg:w-[25%] w-full lg:pl-4">
                     <ProfileSection id={params.profileId} />
                 </div>
             </div>
