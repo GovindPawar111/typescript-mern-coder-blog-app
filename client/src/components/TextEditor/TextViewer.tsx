@@ -27,7 +27,7 @@ export const TextViewer = ({ initialContent }: ITextViewerProps) => {
     }, [initialContent])
 
     return (
-        <div className="focus:rounded-none mt-8">
+        <div className="focus:rounded-none mt-4">
             <EditorContent editor={editor} />
         </div>
     )

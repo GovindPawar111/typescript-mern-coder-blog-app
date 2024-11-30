@@ -4,7 +4,7 @@ import { AxiosError } from 'axios'
 import { AppContext } from '../context/appContext'
 import { ErrorType } from '../types/errorType'
 import { loginUser } from '../api/authApi'
-import Button from '../components/generic/button'
+import Button from '../components/generic/Button'
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState<string>('')

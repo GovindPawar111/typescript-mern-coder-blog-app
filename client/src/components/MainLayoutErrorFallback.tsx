@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import Button from './generic/button'
+import Button from './generic/Button'
 
 interface IMainLayoutErrorFallbackProps {
     error: Error

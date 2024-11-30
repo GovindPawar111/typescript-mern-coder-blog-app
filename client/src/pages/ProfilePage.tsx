@@ -34,7 +34,7 @@ const ProfilePage: React.FC = () => {
 
     return (
         <section className="flex justify-center items-start w-full">
-            <div className="flex flex-col-reverse items-start lg:flex-row lg:gap-4 py-4 sm:py-8 px-4 sm:px-8 w-full lg:w-[90%] min-[1400px]:w-[1240px]">
+            <div className="flex flex-col-reverse items-start lg:flex-row lg:gap-4 py-8 px-4 sm:px-8 w-full lg:w-[90%] min-[1400px]:w-[1240px]">
                 <div className="flex flex-col w-full lg:w-[75%] mt-4 sm:mt-8 lg:mt-0 gap-6 md:gap-8">
                     <h1 className="text-xl font-extrabold">{`${
                         params.profileId === user?.id ? 'Your' : `${username}'s`

@@ -54,7 +54,7 @@ const PostDetailsPage: React.FC = () => {
     return (
         <section className="flex justify-center items-start w-full">
             <div className="w-full py-8 px-4 sm:px-8 lg:w-[90%] min-[1400px]:w-[1240px]">
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-2 justify-between items-start sm:items-center">
                     <h1 className="text-2xl font-bold text-black md:text-3xl">{post?.title}</h1>
                     {post?.userId === user?.id && (
                         <div className="flex items-center justify-center space-x-2">
@@ -74,7 +74,7 @@ const PostDetailsPage: React.FC = () => {
                         </div>
                     )}
                 </div>
-                <div className="flex justify-between items-center mt-2 md:mt-4">
+                <div className="flex justify-between items-center mt-4">
                     <Link to={`/profile/${post?.userId}`} state={post?.username}>
                         <p>@{post?.username}</p>
                     </Link>
@@ -87,7 +87,7 @@ const PostDetailsPage: React.FC = () => {
                         )}
                     </div>
                 </div>
-                <div className="w-full mx-auto mt-8 rounded-sm">
+                <div className="w-full mx-auto mt-6 rounded-sm">
                     {post?.headerImageUrl && (
                         <LazyLoadImage
                             alt={post.title}
@@ -101,12 +101,12 @@ const PostDetailsPage: React.FC = () => {
                         />
                     )}
                 </div>
-                <p className="mx-auto mt-8">{post?.description}</p>
-                <div className="flex items-center mt-8 space-x-4 font-semibold">
+                <p className="mx-auto mt-6">{post?.description}</p>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 items-start sm:items-center mt-6 font-semibold">
                     <p>Categories:</p>
-                    <div className="flex justify-center items-center space-x-2">
+                    <div className="flex justify-start items-start flex-wrap">
                         {post?.catagories.map((category, index) => (
-                            <div key={index} className="bg-gray-300 rounded-lg px-3 py-1 ">
+                            <div key={index} className="bg-gray-300 rounded-lg px-3 py-1 mr-2 mb-2">
                                 {category}
                             </div>
                         ))}

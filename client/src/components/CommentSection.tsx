@@ -10,7 +10,7 @@ import { CommentType } from '../types/commentType'
 import { ErrorType } from '../types/errorType'
 import { getFormattedDate, getFormattedTime } from '../utils/formattedDateTime'
 import { addComment, deleteComment, getAllCommentsOfPost, updateComment } from '../api/commentApi'
-import Button from './generic/button'
+import Button from './generic/Button'
 
 interface ICommentSectionProps {
     postId: string
@@ -91,8 +91,8 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
     }, [])
 
     return (
-        <section className="flex flex-col mt-8">
-            <h3 className="mt-8 mb-4 font-semibold">Comments:</h3>
+        <section className="flex flex-col">
+            <h3 className="mt-6 mb-4 font-semibold">Comments:</h3>
             {/* commentbox */}
             {comments.length > 0 &&
                 comments.map((comment) => {
@@ -107,7 +107,7 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
                                 <h3 className="font-bold text-gray-600">{`@${comment.author}`}</h3>
                                 <div className="flex justify-center items-center space-x-4">
                                     <p className="text-gray-500 text-sm">{getFormattedDate(comment.updatedAt)}</p>
-                                    <p className="text-graycomment-500 text-sm">
+                                    <p className="text-gray-500 text-sm hidden min-[450px]:block">
                                         {getFormattedTime(comment.updatedAt)}
                                     </p>
                                     {user?.id && user.id === comment.userId && !(editCommentId === comment._id) && (
@@ -166,15 +166,19 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
                     )
                 })}
 
-            <div className="w-full flex flex-col md:flex-row mt-4">
+            <div className="w-full flex flex-col mt-4 min-[450px]:flex-row">
                 <input
                     type="text"
                     placeholder="Write a comment"
-                    className="w-[80%] outline-none px-4 py-2 mt-4 md:mt-0"
+                    className="w-full outline-none px-4 py-2 mt-0 border border-gray-300"
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                 />
-                <Button label={'Add comment'} className="mt-4 md:mt-0 md:w-[20%]" onClick={handleAddComment} />
+                <Button
+                    label={'Add comment'}
+                    className="mt-4 min-[450px]:mt-0 w-full min-[450px]:w-[200px]"
+                    onClick={handleAddComment}
+                />
             </div>
         </section>
     )

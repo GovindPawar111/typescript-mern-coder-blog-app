@@ -8,7 +8,7 @@ import placeholderImage from '../assets/images/placeholder-image.png'
 import TextEditor from '../components/textEditor/TextEditor'
 import { ErrorType } from '../types/errorType'
 import { getPostWithId, updatePost } from '../api/postApi'
-import Button from '../components/generic/button'
+import Button from '../components/generic/Button'
 
 const EditPostPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -160,19 +160,15 @@ const EditPostPage: React.FC = () => {
                         onChange={(e) => handleAddImage(e)}
                     />
                     <div className="flex flex-col">
-                        <div className="flex items-center space-x-4 md:space-x-8">
+                        <div className="flex items-center">
                             <input
                                 type="text"
                                 placeholder="Enter post categories"
-                                className="px-4 py-2 text-black border-2 focus:border-black"
+                                className="px-4 py-2 mr-2 sm:mr-4 text-black border-2 focus:border-black"
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
                             />
-                            <Button
-                                label={'Add'}
-                                className="w-full md:w-[20%] mx-auto text-lg md:text-xl"
-                                onClick={() => handleAddCategory()}
-                            />
+                            <Button label={'Add'} className="" onClick={() => handleAddCategory()} />
                         </div>
                     </div>
                     {/* categories */}
@@ -198,7 +194,7 @@ const EditPostPage: React.FC = () => {
 
                     <TextEditor initialContent={initialContent} onChange={(text: string) => setContent(text)} />
 
-                    <Button type="submit" label={'Save'} className="w-full md:w-[20%] mx-auto text-lg md:text-xl" />
+                    <Button type="submit" label={'Save'} className="w-[200px] mx-auto text-lg md:text-xl" />
                 </form>
             </div>
         </section>
