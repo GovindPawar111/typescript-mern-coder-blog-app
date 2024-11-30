@@ -6,15 +6,17 @@ import { MainLayoutErrorFallback } from '../../components/MainLayoutErrorFallbac
 
 const MainLayout: React.FC = () => {
     return (
-        <div className="flex flex-col justify-between min-h-screen">
+        <section className="flex flex-col justify-between h-screen overflow-hidden">
             <Navbar />
-            <main className="flex bg-white ">
-                <ErrorBoundary FallbackComponent={MainLayoutErrorFallback}>
-                    <Outlet />
-                </ErrorBoundary>
-            </main>
-            <Footer />
-        </div>
+            <div className="flex flex-col h-full overflow-auto">
+                <main className="flex bg-white">
+                    <ErrorBoundary FallbackComponent={MainLayoutErrorFallback}>
+                        <Outlet />
+                    </ErrorBoundary>
+                </main>
+                <Footer />
+            </div>
+        </section>
     )
 }
 

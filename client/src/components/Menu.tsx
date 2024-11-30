@@ -17,8 +17,8 @@ const Menu = (props: IMenuProps): JSX.Element => {
     const { user } = useContext(AppContext)
 
     return (
-        <aside className="fixed top-0 left-0 z-10 w-[100vw] h-[100vh] flex flex-col bg-white text-black overflow-hidden">
-            <div className="flex flex-row px-6 py-4 justify-between">
+        <aside className="fixed top-0 left-0 z-10 w-full h-full flex flex-col bg-white text-black overflow-hidden">
+            <div className="flex flex-row py-4 px-4 sm:px-8 justify-between border-b shadow-lg">
                 <h1 className="font-extrabold text-2xl">
                     <Link to={'/'} onClick={onSetIsMenuOpen}>
                         CoderBlog
@@ -28,30 +28,30 @@ const Menu = (props: IMenuProps): JSX.Element => {
                     <CloseIcon />
                 </div>
             </div>
-            <div className="flex flex-col px-6 font-semibold ">
+            <div className="flex flex-col py-8 px-4 sm:px-8 font-semibold ">
                 {!isUserLoggedIn && (
                     <>
                         <Link to={'/login'} onClick={onSetIsMenuOpen}>
-                            <div className="text-black hover:underline text-xl mt-6 cursor-pointer">Login</div>
+                            <div className="text-black hover:underline text-xl mb-6 cursor-pointer">Login</div>
                         </Link>
                         <Link to={'/register'} onClick={onSetIsMenuOpen}>
-                            <div className="text-black hover:underline text-xl mt-6 cursor-pointer">Register</div>
+                            <div className="text-black hover:underline text-xl mb-6 cursor-pointer">Register</div>
                         </Link>
                     </>
                 )}
                 {isUserLoggedIn && user && (
                     <>
                         <Link to={'/posts/create'} onClick={onSetIsMenuOpen}>
-                            <div className="text-black hover:underline text-xl mt-6 cursor-pointer">Write blog</div>
+                            <div className="text-black hover:underline text-xl mb-6 cursor-pointer">Write blog</div>
                         </Link>
                         <Link to={`/profile/${user.id}`} onClick={onSetIsMenuOpen}>
-                            <div className="text-black hover:underline text-xl mt-6 cursor-pointer">Profile</div>
+                            <div className="text-black hover:underline text-xl mb-6 cursor-pointer">Profile</div>
                         </Link>
                         <div
                             onClick={() => {
                                 setIsModelOpen(true)
                             }}
-                            className="text-black hover:underline text-xl mt-6 cursor-pointer"
+                            className="text-black hover:underline text-xl mb-6 cursor-pointer"
                         >
                             Logout
                         </div>
