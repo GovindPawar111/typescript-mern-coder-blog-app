@@ -20,8 +20,8 @@ const Model = ({
 }: IModelProps): React.ReactElement | null => {
     return (
         <div className="flex flex-col">
-            <h2 className="text-black font-extrabold text-2xl capitalize">{headerText}</h2>
-            <p className="text-black py-4">{description}</p>
+            <h2 className="text-black font-extrabold text-xl sm:text-2xl first-letter:capitalize">{headerText}</h2>
+            <p className="text-black text-sm sm:text-base py-4">{description}</p>
             <div className="self-end">
                 <Button label={cancelLabel ? cancelLabel : 'Cancel'} className="ml-2" onClick={onClose} />
                 <Button

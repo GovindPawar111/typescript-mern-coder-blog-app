@@ -17,7 +17,7 @@ const Overlay = ({ isOpen, onClose, children }: IOverlayProps): React.ReactEleme
 
     return createPortal(
         <>
-            <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white p-8 rounded-lg z-20 shadow-xl text-black w-[30%]">
+            <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white p-6 sm:p-8 rounded-lg z-20 shadow-xl text-black w-[75%] sm:w-[480px]">
                 {children}
             </div>
             <div

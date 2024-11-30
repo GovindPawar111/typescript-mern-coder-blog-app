@@ -137,7 +137,7 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
                             </div>
 
                             {editCommentId === comment._id ? (
-                                <div className="m-4 flex">
+                                <div className="mt-1 mb-4 sm:m-4 flex flex-col min-[450px]:flex-row">
                                     <input
                                         type="text"
                                         placeholder="Update a comment"
@@ -145,7 +145,7 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
                                         value={updatedComment}
                                         onChange={(e) => setUpdatedComment(e.target.value)}
                                     />
-                                    <div className="flex justify-between">
+                                    <div className="flex justify-end min-[450px]:justify-between">
                                         <Button
                                             label={'Update'}
                                             className="mt-4 md:mt-0 ml-2"
