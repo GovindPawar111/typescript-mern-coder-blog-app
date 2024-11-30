@@ -128,69 +128,79 @@ const EditPostPage: React.FC = () => {
     }
 
     return (
-        <section className="px-8 py-8 md:mx-[160px] md:px-8 w-[100wh] bg-white shadow-md flex-grow">
-            <h1 className="font-bold text-xl md:text-2xl">Edit a post</h1>
-            <form className="w-full flex flex-col space-y-4 md:space-y-4 mt-4" onSubmit={(e) => handleFormSubmit(e)}>
-                <input
-                    type="text"
-                    placeholder="Enter post title"
-                    className="px-4 py-2 text-black border-2 focus:border-black"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-                <textarea
-                    placeholder="Enter post description"
-                    className="px-4 py-2 text-black border-2 focus:border-black"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                />
-                <img
-                    src={image.previewImageURL}
-                    alt={title}
-                    className="w-[250px] h-[150px] object-contain cursor-pointer"
-                />
-                <input type="file" className="px-4 w-[300px]" accept="image/*" onChange={(e) => handleAddImage(e)} />
-                <div className="flex flex-col">
-                    <div className="flex items-center space-x-4 md:space-x-8">
-                        <input
-                            type="text"
-                            placeholder="Enter post categories"
-                            className="px-4 py-2 text-black border-2 focus:border-black"
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                        />
-                        <Button
-                            label={'Add'}
-                            className="w-full md:w-[20%] mx-auto text-lg md:text-xl"
-                            onClick={() => handleAddCategory()}
-                        />
+        <section className="flex justify-center items-start w-full">
+            <div className="w-full py-8 px-4 sm:px-8 lg:w-[90%] min-[1400px]:w-[1240px]">
+                <h1 className="font-bold text-xl md:text-2xl">Edit a post</h1>
+                <form
+                    className="w-full flex flex-col space-y-4 md:space-y-4 mt-4"
+                    onSubmit={(e) => handleFormSubmit(e)}
+                >
+                    <input
+                        type="text"
+                        placeholder="Enter post title"
+                        className="px-4 py-2 text-black border-2 focus:border-black"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <textarea
+                        placeholder="Enter post description"
+                        className="px-4 py-2 text-black border-2 focus:border-black"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                    <img
+                        src={image.previewImageURL}
+                        alt={title}
+                        className="w-[250px] h-[150px] object-contain cursor-pointer"
+                    />
+                    <input
+                        type="file"
+                        className="px-4 w-[300px]"
+                        accept="image/*"
+                        onChange={(e) => handleAddImage(e)}
+                    />
+                    <div className="flex flex-col">
+                        <div className="flex items-center space-x-4 md:space-x-8">
+                            <input
+                                type="text"
+                                placeholder="Enter post categories"
+                                className="px-4 py-2 text-black border-2 focus:border-black"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                            />
+                            <Button
+                                label={'Add'}
+                                className="w-full md:w-[20%] mx-auto text-lg md:text-xl"
+                                onClick={() => handleAddCategory()}
+                            />
+                        </div>
                     </div>
-                </div>
-                {/* categories */}
-                <div className="flex flex-wrap mt-3">
-                    {categoryList.map((category) => {
-                        const key = category + Date.now() + Math.random()
-                        return (
-                            <div
-                                key={key}
-                                className="flex justify-center items-center space-x-2 m-2 bg-gray-200 px-2 py-1 rounded"
-                            >
-                                <span>{category}</span>
-                                <span
-                                    className="text-black p-1 cursor-pointer text-sm"
-                                    onClick={() => handleRemoveCategory(category)}
+                    {/* categories */}
+                    <div className="flex flex-wrap mt-3">
+                        {categoryList.map((category) => {
+                            const key = category + Date.now() + Math.random()
+                            return (
+                                <div
+                                    key={key}
+                                    className="flex justify-center items-center space-x-2 m-2 bg-gray-200 px-2 py-1 rounded"
                                 >
-                                    <CloseIcon />
-                                </span>
-                            </div>
-                        )
-                    })}
-                </div>
+                                    <span>{category}</span>
+                                    <span
+                                        className="text-black p-1 cursor-pointer text-sm"
+                                        onClick={() => handleRemoveCategory(category)}
+                                    >
+                                        <CloseIcon />
+                                    </span>
+                                </div>
+                            )
+                        })}
+                    </div>
 
-                <TextEditor initialContent={initialContent} onChange={(text: string) => setContent(text)} />
+                    <TextEditor initialContent={initialContent} onChange={(text: string) => setContent(text)} />
 
-                <Button type="submit" label={'Save'} className="w-full md:w-[20%] mx-auto text-lg md:text-xl" />
-            </form>
+                    <Button type="submit" label={'Save'} className="w-full md:w-[20%] mx-auto text-lg md:text-xl" />
+                </form>
+            </div>
         </section>
     )
 }

@@ -30,7 +30,7 @@ const RegisterPage = (): React.ReactElement => {
 
     return (
         <section className="w-full flex justify-center items-center h-[70vh] bg-white">
-            <div className="flex  flex-col justify-center items-center space-y-4 w-[80%] md:w-[25%]">
+            <div className="flex  flex-col justify-center items-center space-y-4 w-[80%] sm:w-[500px]">
                 <h1 className="text-xl font-bold text-left">Create an account</h1>
                 <input
                     type="text"

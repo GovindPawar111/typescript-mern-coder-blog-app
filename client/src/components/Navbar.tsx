@@ -57,67 +57,73 @@ const Navbar: React.FC = () => {
     }, [debouncedQuery])
 
     return (
-        <nav className="flex justify-between items-center px-6 md:px-[200px] py-4 sticky top-0 bg-white border-b shadow-lg  z-10">
-            <Link to={'/'}>
-                <h1 className="font-extrabold text-2xl flex justify-center items-center">CoderBlog</h1>
-            </Link>
-            {pathname === '/' && (
-                <div className="flex justify-center items-center space-x-0 px-3">
-                    <p>
-                        <SearchIcon />
-                    </p>
-                    <input
-                        value={searchQuery || ''}
-                        onChange={(event) => setSearchQuery(event.target.value)}
-                        className="outline-none px-3"
-                        type="text"
-                        placeholder="Search a post"
-                    />
+        <nav className="flex justify-center items-center sticky bg-white border-b shadow-lg top-0 z-10 w-full">
+            <div className="flex justify-between items-center py-4 px-4 sm:px-8 w-full lg:w-[90%] min-[1400px]:w-[1240px]">
+                <Link to={'/'}>
+                    <h1 className="font-extrabold text-2xl flex justify-center items-center">CoderBlog</h1>
+                </Link>
+                {pathname === '/' && (
+                    <div className="flex justify-center items-center space-x-0 px-3">
+                        <p>
+                            <SearchIcon />
+                        </p>
+                        <input
+                            value={searchQuery || ''}
+                            onChange={(event) => setSearchQuery(event.target.value)}
+                            className="outline-none px-3"
+                            type="text"
+                            placeholder="Search a post"
+                        />
+                    </div>
+                )}
+                <div className="hidden md:flex justify-center text-gray-500 items-center space-x-2 md:space-x-6">
+                    {isUserLoggedIn && user && (
+                        <>
+                            <div className="hover:text-black hover:underline hover:underline-offset-4">
+                                <Link to={'posts/create'}>Write</Link>
+                            </div>
+                            <div className="hover:text-black hover:underline hover:underline-offset-4">
+                                <Link to={`/profile/${user?.id}`}>Profile</Link>
+                            </div>
+                            <div
+                                onClick={() => setIsModelOpen(true)}
+                                className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4"
+                            >
+                                Logout
+                            </div>
+                            <Overlay isOpen={isModelOpen} onClose={() => setIsModelOpen(false)}>
+                                <Model
+                                    headerText={'Log Out?'}
+                                    description={'Are you sure want to logout?'}
+                                    onClose={() => setIsModelOpen(false)}
+                                    onAction={() => logoutUserHandler()}
+                                    actionLabel="Logout"
+                                />
+                            </Overlay>
+                        </>
+                    )}
+                    {!isUserLoggedIn && (
+                        <>
+                            <div className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4">
+                                <Link to={'/register'}>Register</Link>
+                            </div>
+                            <div className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4">
+                                <Link to={'/login'}>Login</Link>
+                            </div>
+                        </>
+                    )}
                 </div>
-            )}
-            <div className="hidden md:flex justify-center text-gray-500 items-center space-x-2 md:space-x-6">
-                {isUserLoggedIn && user && (
-                    <>
-                        <div className="hover:text-black hover:underline hover:underline-offset-4">
-                            <Link to={'posts/create'}>Write</Link>
-                        </div>
-                        <div className="hover:text-black hover:underline hover:underline-offset-4">
-                            <Link to={`/profile/${user?.id}`}>Profile</Link>
-                        </div>
-                        <div
-                            onClick={() => setIsModelOpen(true)}
-                            className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4"
-                        >
-                            Logout
-                        </div>
-                        <Overlay isOpen={isModelOpen} onClose={() => setIsModelOpen(false)}>
-                            <Model
-                                headerText={'Log Out?'}
-                                description={'Are you sure want to logout?'}
-                                onClose={() => setIsModelOpen(false)}
-                                onAction={() => logoutUserHandler()}
-                                actionLabel="Logout"
-                            />
-                        </Overlay>
-                    </>
-                )}
-                {!isUserLoggedIn && (
-                    <>
-                        <div className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4">
-                            <Link to={'/register'}>Register</Link>
-                        </div>
-                        <div className="hover:cursor-pointer hover:text-black hover:underline hover:underline-offset-4">
-                            <Link to={'/login'}>Login</Link>
-                        </div>
-                    </>
+                <div className="md:hidden text-xl">
+                    <MenuIcon onClick={handleMenuClick} />
+                </div>
+                {isMenuOpen && (
+                    <Menu
+                        isUserLoggedIn={isUserLoggedIn}
+                        onSetIsMenuOpen={handleMenuClick}
+                        onLogout={logoutUserHandler}
+                    />
                 )}
             </div>
-            <div className="md:hidden text-xl">
-                <MenuIcon onClick={handleMenuClick} />
-            </div>
-            {isMenuOpen && (
-                <Menu isUserLoggedIn={isUserLoggedIn} onSetIsMenuOpen={handleMenuClick} onLogout={logoutUserHandler} />
-            )}
         </nav>
     )
 }

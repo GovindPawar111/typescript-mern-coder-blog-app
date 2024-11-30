@@ -33,33 +33,35 @@ const ProfilePage: React.FC = () => {
     }, [params.profileId])
 
     return (
-        <section className="px-8 py-8 md:mx-[160px] md:px-8 flex flex-col-reverse items-start md:flex-row md:gap-4 flex-grow bg-white shadow-md flex-grow">
-            <div className="flex flex-col w-full md:w-[70%] mt-8 md:mt-0">
-                <h1 className="text-xl font-extrabold mb-4 ">{`${
-                    params.profileId === user?.id ? 'Your' : `${username}'s`
-                } posts:`}</h1>
-                {posts === undefined || posts === null ? (
-                    <Loader></Loader>
-                ) : posts.length > 0 ? (
-                    posts?.map((post) => (
-                        <Post
-                            key={post._id}
-                            id={post._id}
-                            title={post.title}
-                            description={post.description}
-                            headerImageUrl={post.headerImageUrl}
-                            username={post.username}
-                            userId={post.userId}
-                            catagories={post.catagories}
-                            dateTimeStamp={post.updatedAt}
-                        />
-                    ))
-                ) : (
-                    <NoPost title="This user hasn't posted anything yet." />
-                )}
-            </div>
-            <div className="flex flex-col justify-start items-start space-x-2 md:space-x-4 md:w-[30%] w-full md:pl-8">
-                <ProfileSection id={params.profileId} />
+        <section className="flex justify-center items-start w-full">
+            <div className="flex flex-col-reverse items-start py-8 lg:flex-row lg:gap-4 w-full px-4 sm:px-8 lg:w-[90%] min-[1400px]:w-[1240px]">
+                <div className="flex flex-col w-full lg:w-[70%] mt-8 lg:mt-0">
+                    <h1 className="text-xl font-extrabold mb-4 ">{`${
+                        params.profileId === user?.id ? 'Your' : `${username}'s`
+                    } posts:`}</h1>
+                    {posts === undefined || posts === null ? (
+                        <Loader></Loader>
+                    ) : posts.length > 0 ? (
+                        posts?.map((post) => (
+                            <Post
+                                key={post._id}
+                                id={post._id}
+                                title={post.title}
+                                description={post.description}
+                                headerImageUrl={post.headerImageUrl}
+                                username={post.username}
+                                userId={post.userId}
+                                catagories={post.catagories}
+                                dateTimeStamp={post.updatedAt}
+                            />
+                        ))
+                    ) : (
+                        <NoPost title="This user hasn't posted anything yet." />
+                    )}
+                </div>
+                <div className="flex flex-col justify-start items-start space-x-2 md:space-x-4 lg:w-[30%] w-full lg:pl-8">
+                    <ProfileSection id={params.profileId} />
+                </div>
             </div>
         </section>
     )

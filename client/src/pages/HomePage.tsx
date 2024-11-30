@@ -27,33 +27,35 @@ const HomePage: React.FC = () => {
     }, [])
 
     return (
-        <section className="flex flex-col gap-8 md:mx-[160px] w-[100wh] md:px-8 bg-white shadow-md flex-grow">
-            {posts === undefined || posts === null ? (
-                <Loader></Loader>
-            ) : posts.length > 0 ? (
-                posts?.map((post) => (
-                    <Post
-                        key={post._id}
-                        id={post._id}
-                        title={post.title}
-                        description={post.description}
-                        headerImageUrl={post.headerImageUrl}
-                        username={post.username}
-                        userId={post.userId}
-                        catagories={post.catagories}
-                        dateTimeStamp={post.updatedAt}
+        <section className="flex justify-center items-start w-full">
+            <div className="flex flex-col gap-8 w-full px-4 sm:px-8 lg:w-[90%] min-[1400px]:w-[1240px]">
+                {posts === undefined || posts === null ? (
+                    <Loader></Loader>
+                ) : posts.length > 0 ? (
+                    posts?.map((post) => (
+                        <Post
+                            key={post._id}
+                            id={post._id}
+                            title={post.title}
+                            description={post.description}
+                            headerImageUrl={post.headerImageUrl}
+                            username={post.username}
+                            userId={post.userId}
+                            catagories={post.catagories}
+                            dateTimeStamp={post.updatedAt}
+                        />
+                    ))
+                ) : (
+                    <NoPost
+                        title="Posts not found!"
+                        steps={[
+                            'Make sure all words are spelled correctly.',
+                            'Try different keywords.',
+                            'Try more general keywords.',
+                        ]}
                     />
-                ))
-            ) : (
-                <NoPost
-                    title="Posts not found!"
-                    steps={[
-                        'Make sure all words are spelled correctly.',
-                        'Try different keywords.',
-                        'Try more general keywords.',
-                    ]}
-                />
-            )}
+                )}
+            </div>
         </section>
     )
 }

@@ -14,7 +14,7 @@ export const TextViewer = ({ initialContent }: ITextViewerProps) => {
         content: JSON.parse(initialContent),
         editorProps: {
             attributes: {
-                class: 'px-4 py-2 focus:border-none focus:rounded-none border-none',
+                class: 'py-2 focus:border-none focus:rounded-none border-none',
             },
         },
     })
@@ -27,7 +27,7 @@ export const TextViewer = ({ initialContent }: ITextViewerProps) => {
     }, [initialContent])
 
     return (
-        <div className=" focus:border-black focus:rounded-none border-[1px] mt-8">
+        <div className="focus:rounded-none mt-8">
             <EditorContent editor={editor} />
         </div>
     )

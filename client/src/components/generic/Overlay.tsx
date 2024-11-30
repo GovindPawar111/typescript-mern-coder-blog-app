@@ -17,15 +17,15 @@ const Overlay = ({ isOpen, onClose, children }: IOverlayProps): React.ReactEleme
 
     return createPortal(
         <>
+            <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white p-8 rounded-lg z-20 shadow-xl text-black w-[30%]">
+                {children}
+            </div>
             <div
-                className="fixed inset-0 bg-black  bg-opacity-30 backdrop-blur-sm "
+                className="bg-opacity-30 bg-black backdrop-blur-sm fixed top-0 left-0 w-full h-full z-10"
                 onClick={() => {
                     onClose()
                 }}
             ></div>
-            <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white p-8 rounded-lg shadow-xl text-black w-[30%]">
-                {children}
-            </div>
         </>,
         document.getElementById('overlay') as Element
     )

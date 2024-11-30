@@ -8,7 +8,7 @@ const MainLayout: React.FC = () => {
     return (
         <div className="flex flex-col justify-between min-h-screen">
             <Navbar />
-            <main className="flex-grow bg-[#f5f5f5ff] flex">
+            <main className="flex bg-white ">
                 <ErrorBoundary FallbackComponent={MainLayoutErrorFallback}>
                     <Outlet />
                 </ErrorBoundary>

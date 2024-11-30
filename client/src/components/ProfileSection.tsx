@@ -46,7 +46,7 @@ const ProfileSection: React.FC<IProfileSectionProps> = ({ id }: IProfileSectionP
 
     return (
         <div className="flex flex-col">
-            <h1 className="text-xl font-bold mb-8 md:mb-6">Profile</h1>
+            <h1 className="text-xl font-bold mb-8 lg:mb-6">Profile</h1>
 
             <div className="flex items-center text-gray-800 mb-4">
                 <div>
