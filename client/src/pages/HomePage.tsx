@@ -50,14 +50,16 @@ const HomePage: React.FC = () => {
                         />
                     ))
                 ) : (
-                    <NoPost
-                        title="Posts not found!"
-                        steps={[
-                            'Make sure all words are spelled correctly.',
-                            'Try different keywords.',
-                            'Try more general keywords.',
-                        ]}
-                    />
+                    <div className="flex justify-center items-center">
+                        <NoPost
+                            title="No Posts Found!"
+                            steps={[
+                                'Ensure all words are spelled correctly.',
+                                'Try using different keywords.',
+                                'Consider using broader or more general terms.',
+                            ]}
+                        />
+                    </div>
                 )}
             </div>
         </section>

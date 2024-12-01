@@ -56,7 +56,9 @@ const ProfilePage: React.FC = () => {
                             />
                         ))
                     ) : (
-                        <NoPost title="This user hasn't posted anything yet." />
+                        <div className='flex justify-center items-center'>
+                            <NoPost title="This user hasn't posted anything yet." />
+                        </div>
                     )}
                 </div>
                 <div className="flex flex-col justify-start items-start space-x-2 md:space-x-4 lg:w-[25%] w-full lg:pl-4">
