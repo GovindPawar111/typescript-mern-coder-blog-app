@@ -12,7 +12,9 @@ const NoPost: React.FC<INoPost> = ({ title, steps }: INoPost) => {
             {steps && (
                 <div className="text-md text-black font-Semibold text-start">
                     {steps.map((step) => (
-                        <p className="mb-1">{step}</p>
+                        <p className="mb-1" key={`${step}-${Math.random()}-${Date.now()}`}>
+                            {step}
+                        </p>
                     ))}
                 </div>
             )}

@@ -106,7 +106,10 @@ const PostDetailsPage: React.FC = () => {
                     <p>Categories:</p>
                     <div className="flex justify-start items-start flex-wrap">
                         {post?.catagories.map((category, index) => (
-                            <div key={index} className="bg-gray-300 rounded-lg px-3 py-1 mr-2 mb-2">
+                            <div
+                                key={`${category}-${Math.random()}-${Date.now()}`}
+                                className="bg-gray-300 rounded-lg px-3 py-1 mr-2 mb-2"
+                            >
                                 {category}
                             </div>
                         ))}

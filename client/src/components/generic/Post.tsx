@@ -85,7 +85,14 @@ const Post = ({
                             if (index === 3) {
                                 return
                             }
-                            return <div className="p-2 rounded-lg bg-gray-200 text-black mr-1">{category}</div>
+                            return (
+                                <div
+                                    className="p-2 rounded-lg bg-gray-200 text-black mr-1"
+                                    key={`${category}-${Math.random()}-${Date.now()}`}
+                                >
+                                    {category}
+                                </div>
+                            )
                         })}
                     </div>
                 </div>
