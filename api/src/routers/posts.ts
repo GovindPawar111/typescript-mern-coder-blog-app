@@ -194,7 +194,7 @@ router.get('/user/:id', async (req: Request, res: Response) => {
             return res.status(404).json({ message: 'User not found.' })
         }
 
-        const posts = await Post.find({ userId: req.params.id }).lean().exec()
+        const posts = await Post.find({ userId: req.params.id }).sort({ updatedAt: -1 }).lean().exec()
         res.status(200).json(posts)
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error, Please try again later.' })
