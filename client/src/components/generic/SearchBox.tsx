@@ -31,6 +31,11 @@ const SearchBox = () => {
         }
     }, [debouncedQuery])
 
+    useEffect(() => {
+        // Clear the search query when the user navigates from home page
+        setSearchQuery(null)
+    }, [pathname])
+
     return (
         pathname === '/' && (
             <div className="flex justify-center items-center space-x-0 px-4 h-[31px] border border-gray-400 rounded-full w-full">

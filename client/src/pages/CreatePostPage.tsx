@@ -9,6 +9,7 @@ import TextEditor from '../components/textEditor/TextEditor'
 import { ErrorType } from '../types/errorType'
 import { createPost } from '../api/postApi'
 import Button from '../components/generic/Button'
+import useNotification, { ToastType } from '../hooks/useNotification'
 
 const CreatePostPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -25,6 +26,7 @@ const CreatePostPage: React.FC = () => {
 
     const { user } = useContext(AppContext)
     const navigate = useNavigate()
+    const { createNotification } = useNotification()
 
     const handleAddCategory = (): void => {
         if (categoryList.length >= 3) {
@@ -85,11 +87,13 @@ const CreatePostPage: React.FC = () => {
             const data = await createPost(formData)
             navigate(`/posts/${data._id}`)
             setIsLoading(false)
+            createNotification('Post Created Successfully', ToastType.Success)
         } catch (e) {
             const error = e as AxiosError<ErrorType>
             setIsLoading(false)
             navigate('/posts')
             console.error(error.response?.data.message)
+            createNotification('Post Creation Failed', ToastType.Error)
         }
     }
 

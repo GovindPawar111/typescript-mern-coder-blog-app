@@ -9,6 +9,7 @@ import TextEditor from '../components/textEditor/TextEditor'
 import { ErrorType } from '../types/errorType'
 import { getPostWithId, updatePost } from '../api/postApi'
 import Button from '../components/generic/Button'
+import useNotification, { ToastType } from '../hooks/useNotification'
 
 const EditPostPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -29,6 +30,7 @@ const EditPostPage: React.FC = () => {
     const { user } = useContext(AppContext)
     const navigate = useNavigate()
     const params = useParams()
+    const { createNotification } = useNotification()
 
     const handleAddCategory = (): void => {
         if (categoryList.length >= 3) {
@@ -94,9 +96,11 @@ const EditPostPage: React.FC = () => {
             const response = await updatePost(params.postId, formData)
             navigate(`/posts/${response._id}`)
             setIsLoading(false)
+            createNotification('Post Updated Successfully', ToastType.Success)
         } catch (e) {
             const error = e as AxiosError<ErrorType>
             console.error(error.response?.data.message)
+            createNotification('Post Update Failed', ToastType.Error)
         }
     }
 

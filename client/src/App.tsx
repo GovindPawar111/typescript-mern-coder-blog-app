@@ -9,6 +9,7 @@ import AppErrorFallback from './components/AppErrorFallback'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './api/queryClient'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { Toaster } from 'react-hot-toast'
 
 const router = createBrowserRouter([
     {
@@ -63,6 +64,7 @@ const App: React.FC = () => {
             <QueryClientProvider client={queryClient}>
                 <AppContextProvider>
                     <RouterProvider router={router} />
+                    <Toaster position="bottom-right" reverseOrder={true} />
                 </AppContextProvider>
                 <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
