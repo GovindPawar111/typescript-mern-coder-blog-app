@@ -23,18 +23,25 @@ router.post('/', validateToken, upload.single('header-image'), async (req: Reque
         let imageUrl: string = ''
         if (req.file?.path) {
             const urlParts = req.file?.path.split('\\')
-            const filename = urlParts[urlParts.length - 1].split('.')[0]
+            // File name with extension eg. image.png
+            const filenameWithExtension = urlParts[urlParts.length - 1]
+            // File extension eg. png
+            const fileExtension = filenameWithExtension.substring(filenameWithExtension.lastIndexOf('.') + 1)
+            // Extract file name without extension eg. image
+            const filename = filenameWithExtension.substring(0, filenameWithExtension.lastIndexOf('.'))
 
-            // convert image to webp formate
-            await imageToWebp(req.file?.path, filename)
+            if (fileExtension !== 'webp') {
+                // convert image to webp formate
+                await imageToWebp(req.file?.path, filename)
+            }
 
             // upload header image file on cloudinary
-            const cloudinaryResponse = await uploadOnCloudinary('./src/public/temp/webp/' + filename + '.webp')
+            const cloudinaryResponse = await uploadOnCloudinary('./src/public/temp/' + filename + '.webp')
             imageUrl = cloudinaryResponse?.secure_url || ''
 
             // remove the file stored on server.
             await fs.unlink(req.file?.path, () => {})
-            await fs.unlink('./src/public/temp/webp/' + filename + '.webp', () => {})
+            fileExtension !== 'webp' && (await fs.unlink('./src/public/temp/' + filename + '.webp', () => {}))
         }
 
         const newPost = new Post({
@@ -90,18 +97,25 @@ router.put('/:id', validateToken, upload.single('header-image'), async (req: Req
         let imageUrl: string = ''
         if (req.file?.path) {
             const urlParts = req.file?.path.split('\\')
-            const filename = urlParts[urlParts.length - 1].split('.')[0]
+            // File name with extension eg. image.png
+            const filenameWithExtension = urlParts[urlParts.length - 1]
+            // File extension eg. png
+            const fileExtension = filenameWithExtension.substring(filenameWithExtension.lastIndexOf('.') + 1)
+            // Extract file name without extension eg. image
+            const filename = filenameWithExtension.substring(0, filenameWithExtension.lastIndexOf('.'))
 
-            // convert image to webp formate
-            await imageToWebp(req.file?.path, filename)
+            if (fileExtension !== 'webp') {
+                // convert image to webp formate
+                await imageToWebp(req.file?.path, filename)
+            }
 
             // upload header image file on cloudinary
-            const cloudinaryResponse = await uploadOnCloudinary('./src/public/temp/webp/' + filename + '.webp')
+            const cloudinaryResponse = await uploadOnCloudinary('./src/public/temp/' + filename + '.webp')
             imageUrl = cloudinaryResponse?.secure_url || headerImageUrl || ''
 
             // remove the file stored on server.
             await fs.unlink(req.file?.path, () => {})
-            await fs.unlink('./src/public/temp/webp/' + filename + '.webp', () => {})
+            fileExtension !== 'webp' && (await fs.unlink('./src/public/temp/' + filename + '.webp', () => {}))
         } else {
             imageUrl = headerImageUrl
         }

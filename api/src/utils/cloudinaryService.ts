@@ -48,7 +48,7 @@ export const imageToWebp = async (filepath: string, filename: string) => {
     try {
         await sharp(filepath)
             .webp({ quality: 80 })
-            .toFile('./src/public/temp/webp/' + filename + '.webp')
+            .toFile('./src/public/temp/' + filename + '.webp')
     } catch (error) {
         console.log(error)
     }
