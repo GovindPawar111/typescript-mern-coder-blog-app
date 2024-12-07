@@ -99,7 +99,7 @@ const CreatePostPage: React.FC = () => {
 
     if (isLoading) {
         return (
-            <div className="px-6 md:mx-[160px] md:px-8 w-[100wh] mt-8 min-h-screen">
+            <div className="w-full flex flex-grow">
                 <Loader label={'Creating New Post...'}></Loader>
             </div>
         )

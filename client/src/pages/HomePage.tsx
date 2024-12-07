@@ -27,15 +27,21 @@ const HomePage: React.FC = () => {
         getPosts()
     }, [])
 
+    if (posts === undefined || posts === null) {
+        return (
+            <div className="w-full flex flex-grow">
+                <Loader></Loader>
+            </div>
+        )
+    }
+
     return (
         <section className="flex justify-center items-start w-full">
             <div className="flex flex-col gap-6 md:gap-8 w-full py-4 sm:py-8 px-4 sm:px-8 lg:w-[90%] min-[1400px]:w-[1240px]">
                 <div className="block md:hidden w-[240px]">
                     <SearchBox />
                 </div>
-                {posts === undefined || posts === null ? (
-                    <Loader></Loader>
-                ) : posts.length > 0 ? (
+                {posts.length > 0 ? (
                     posts?.map((post) => (
                         <Post
                             key={post._id}

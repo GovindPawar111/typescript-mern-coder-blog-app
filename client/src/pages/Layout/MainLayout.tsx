@@ -9,7 +9,7 @@ const MainLayout: React.FC = () => {
         <section className="flex flex-col justify-between h-screen overflow-hidden">
             <Navbar />
             <div className="flex flex-col h-full overflow-auto">
-                <main className="flex bg-white">
+                <main className="flex bg-white flex-grow">
                     <ErrorBoundary FallbackComponent={MainLayoutErrorFallback}>
                         <Outlet />
                     </ErrorBoundary>

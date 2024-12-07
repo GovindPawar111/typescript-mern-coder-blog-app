@@ -32,6 +32,14 @@ const ProfilePage: React.FC = () => {
         params.profileId && getUserPost(params.profileId)
     }, [params.profileId])
 
+    if (posts === undefined || posts === null) {
+        return (
+            <div className="w-full flex flex-grow">
+                <Loader></Loader>
+            </div>
+        )
+    }
+
     return (
         <section className="flex justify-center items-start w-full">
             <div className="flex flex-col-reverse items-start lg:flex-row lg:gap-4 py-8 px-4 sm:px-8 w-full lg:w-[90%] min-[1400px]:w-[1240px]">
@@ -39,9 +47,7 @@ const ProfilePage: React.FC = () => {
                     <h1 className="text-xl font-extrabold">{`${
                         params.profileId === user?.id ? 'Your' : `${username}'s`
                     } posts:`}</h1>
-                    {posts === undefined || posts === null ? (
-                        <Loader></Loader>
-                    ) : posts.length > 0 ? (
+                    {posts.length > 0 ? (
                         posts?.map((post) => (
                             <Post
                                 key={post._id}
@@ -56,7 +62,7 @@ const ProfilePage: React.FC = () => {
                             />
                         ))
                     ) : (
-                        <div className='flex justify-center items-center'>
+                        <div className="flex justify-center items-center">
                             <NoPost title="This user hasn't posted anything yet." />
                         </div>
                     )}
