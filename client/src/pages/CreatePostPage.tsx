@@ -129,7 +129,7 @@ const CreatePostPage: React.FC = () => {
                     <img
                         src={image.previewImageURL}
                         alt={title}
-                        className="w-[250px] h-[150px] object-contain cursor-pointer"
+                        className="w-[250px] h-[150px] object-cover cursor-pointer"
                     />
                     <input
                         type="file"
