@@ -69,7 +69,7 @@ const CreatePostPage: React.FC = () => {
         const newPost = {
             title,
             description,
-            catagories: categoryList,
+            categories: categoryList,
             content: content,
             username: user?.username,
             userId: user?.id,

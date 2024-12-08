@@ -51,7 +51,7 @@ const HomePage: React.FC = () => {
                             headerImageUrl={post.headerImageUrl}
                             username={post.username}
                             userId={post.userId}
-                            catagories={post.catagories}
+                            categories={post.categories}
                             dateTimeStamp={post.updatedAt}
                         />
                     ))

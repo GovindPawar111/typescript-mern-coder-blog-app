@@ -105,7 +105,7 @@ const PostDetailsPage: React.FC = () => {
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 items-start sm:items-center mt-6 font-semibold">
                     <p>Categories:</p>
                     <div className="flex justify-start items-start flex-wrap">
-                        {post?.catagories.map((category, index) => (
+                        {post?.categories.map((category, index) => (
                             <div
                                 key={`${category}-${Math.random()}-${Date.now()}`}
                                 className="bg-gray-300 rounded-lg px-3 py-1 mr-2 mb-2"

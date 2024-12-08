@@ -78,7 +78,7 @@ const EditPostPage: React.FC = () => {
             title,
             description,
             headerImageUrl: image.file ? '' : headerImageUrlRef.current,
-            catagories: categoryList,
+            categories: categoryList,
             content: content,
             username: user?.username,
             userId: user?.id,
@@ -116,7 +116,7 @@ const EditPostPage: React.FC = () => {
                 file: null,
                 previewImageURL: postResponse.headerImageUrl || placeholderImage,
             })
-            setCategoryList(postResponse.catagories || [])
+            setCategoryList(postResponse.categories || [])
         }
 
         params.postId && getPost(params.postId)

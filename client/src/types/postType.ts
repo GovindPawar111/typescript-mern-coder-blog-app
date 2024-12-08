@@ -6,7 +6,7 @@ export const PostSchema = z.object({
     description: z.string(),
     content: z.string().optional(),
     headerImageUrl: z.union([z.string().url(), z.string()]),
-    catagories: z.array(z.string()),
+    categories: z.array(z.string()),
     username: z.string(),
     userId: z.string(),
     createdAt: z.string(),

@@ -12,7 +12,7 @@ export interface IPostProps {
     headerImageUrl: string
     username: string
     userId: string
-    catagories: string[]
+    categories: string[]
     dateTimeStamp: string
 }
 
@@ -24,7 +24,7 @@ const Post = ({
     username,
     userId,
     dateTimeStamp,
-    catagories,
+    categories,
 }: IPostProps): React.ReactElement => {
     return (
         <div className="flex flex-col md:flex-row md:w-full md:space-x-6 lg:space-x-8">
@@ -81,7 +81,7 @@ const Post = ({
                         <div className="px-1 hidden md:block">·</div>
                     </div>
                     <div className="flex">
-                        {catagories.map((category, index) => {
+                        {categories.map((category, index) => {
                             if (index === 3) {
                                 return
                             }
