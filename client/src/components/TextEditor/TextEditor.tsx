@@ -27,6 +27,7 @@ import { useEffect } from 'react'
 interface ITextEditorProps {
     initialContent: string
     onChange: (editorText: string) => void
+    onEmpty?: (isEditorTextEmpty: boolean) => void
 }
 
 export const extension = [
@@ -95,7 +96,7 @@ export const extension = [
     }),
 ]
 
-export const TextEditor = ({ initialContent, onChange }: ITextEditorProps) => {
+export const TextEditor = ({ initialContent, onChange, onEmpty }: ITextEditorProps) => {
     const editor = useEditor({
         extensions: extension,
         content: '',
@@ -106,6 +107,8 @@ export const TextEditor = ({ initialContent, onChange }: ITextEditorProps) => {
         },
         onUpdate({ editor }) {
             onChange(JSON.stringify(editor.getJSON()))
+            // handle empty editor state
+            onEmpty?.(editor.isEmpty)
         },
     })
 

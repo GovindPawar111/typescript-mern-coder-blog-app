@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { loginFormSchema } from '../types/loginFormType'
+import { LoginFormSchema } from '../types/loginFormType'
 
-export const RegisterFormSchema = loginFormSchema.extend({
+export const RegisterFormSchema = LoginFormSchema.extend({
     username: z
         .string()
         .min(1, 'Username is required') // Ensures it's not empty

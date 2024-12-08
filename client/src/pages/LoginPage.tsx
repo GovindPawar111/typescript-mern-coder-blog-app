@@ -8,7 +8,7 @@ import Button from '../components/generic/Button'
 import useNotification, { ToastType } from '../hooks/useNotification'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { loginFormSchema, LoginFormType } from '../types/loginFormType'
+import { LoginFormSchema, LoginFormType } from '../types/loginFormType'
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate()
@@ -22,7 +22,7 @@ const LoginPage: React.FC = () => {
         setError,
     } = useForm<LoginFormType>({
         defaultValues: {},
-        resolver: zodResolver(loginFormSchema),
+        resolver: zodResolver(LoginFormSchema),
     })
 
     const formSubmit = async ({ email, password }: LoginFormType) => {

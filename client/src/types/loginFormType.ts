@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const loginFormSchema = z.object({
+export const LoginFormSchema = z.object({
     email: z
         .string()
         .min(1, 'Email is required') // Ensures it's not empty
@@ -16,4 +16,4 @@ export const loginFormSchema = z.object({
         .regex(/[\W_]/, 'Password must contain at least one special character'), // At least one special character
 })
 
-export type LoginFormType = z.infer<typeof loginFormSchema>
+export type LoginFormType = z.infer<typeof LoginFormSchema>
