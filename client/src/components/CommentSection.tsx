@@ -1,23 +1,30 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import EditIcon from '../assets/svgs/edit.svg?react'
 import DeleteIcon from '../assets/svgs/Delete.svg?react'
-import { AxiosError } from 'axios'
 import { AppContext } from '../context/appContext'
 import { useNavigate } from 'react-router-dom'
 import Overlay from './generic/Overlay'
 import Model from './generic/Model'
 import { CommentType } from '../types/commentType'
-import { ErrorType } from '../types/errorType'
 import { getFormattedDate, getFormattedTime } from '../utils/formattedDateTime'
-import { addComment, deleteComment, getAllCommentsOfPost, updateComment } from '../api/commentApi'
 import Button from './generic/Button'
+import {
+    COMMENT_QUERY_KEY,
+    useAddComment,
+    useDeleteComment,
+    useGetAllCommentsOfPost,
+    useUpdateComment,
+} from '../api/queries/commentQueries'
+import Loader from './generic/Loader'
+import { useErrorBoundary } from 'react-error-boundary'
+import { queryClient } from '../api/queryClient'
+import useNotification, { ToastType } from '../hooks/useNotification'
 
 interface ICommentSectionProps {
     postId: string
 }
 
 const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSectionProps) => {
-    const [comments, setComments] = useState<CommentType[]>([])
     const [newComment, setNewComment] = useState<string>('')
     const [updatedComment, setUpdatedComment] = useState<string>('')
     const [editCommentId, setEditCommentId] = useState<string | undefined>(undefined)
@@ -25,45 +32,87 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
 
     const { user } = useContext(AppContext)
     const navigate = useNavigate()
+    const { showBoundary } = useErrorBoundary()
+    const { createNotification } = useNotification()
 
-    const getComments = async (postId: string) => {
-        try {
-            const response = await getAllCommentsOfPost(postId)
-            response && setComments(response)
-        } catch (e) {
-            const error = e as AxiosError<ErrorType>
-            console.log(error)
-        }
+    const {
+        data: comments,
+        isLoading: isCommentsLoading,
+        isError: isCommentsError,
+        error: commentsError,
+    } = useGetAllCommentsOfPost(postId)
+
+    const { mutate: addCommentMutation } = useAddComment()
+    const { mutate: deleteCommentMutation } = useDeleteComment()
+    const { mutate: updateCommentMutation } = useUpdateComment()
+
+    if (isCommentsError) {
+        showBoundary(commentsError)
+        console.log(isCommentsError)
+    }
+
+    if (isCommentsLoading || !comments) {
+        return (
+            <div className="w-full flex flex-grow">
+                <Loader></Loader>
+            </div>
+        )
     }
 
     const AddComments = async (comment: string, postId: string, userId: string, author: string) => {
-        try {
-            const response = await addComment(postId, userId, author, comment)
-            response && (await getComments(postId))
-        } catch (e) {
-            const error = e as AxiosError<ErrorType>
-            console.log(error)
-        }
+        addCommentMutation(
+            { postId, userId, author, comment },
+            {
+                onSuccess: (data) => {
+                    // Add the comment to the cache
+                    queryClient.setQueryData<CommentType[]>([COMMENT_QUERY_KEY, postId], (oldData) =>
+                        oldData ? oldData.concat(data) : [data]
+                    )
+                    createNotification('Successfully Added the comment', ToastType.Success)
+                },
+
+                onError: () => {
+                    createNotification('Failed to add comment', ToastType.Error)
+                },
+            }
+        )
     }
 
-    const deleteComments = async (id: string) => {
-        try {
-            await deleteComment(id)
-            await getComments(postId)
-        } catch (e) {
-            const error = e as AxiosError<ErrorType>
-            console.log(error)
-        }
+    const deleteComments = async (commentId: string) => {
+        deleteCommentMutation(commentId, {
+            onSuccess: () => {
+                // Add the comment to the cache
+                queryClient.setQueryData<CommentType[]>([COMMENT_QUERY_KEY, postId], (oldData) =>
+                    oldData ? oldData.filter((comment) => comment._id !== commentId) : []
+                )
+                createNotification('Successfully deleted the comment', ToastType.Success)
+            },
+
+            onError: () => {
+                createNotification('Failed to delete comment', ToastType.Error)
+            },
+        })
     }
 
-    const updateComments = async (id: string, updatedComment: string) => {
-        try {
-            const response = await updateComment(id, updatedComment)
-            response && (await getComments(postId))
-        } catch (e) {
-            const error = e as AxiosError<ErrorType>
-            console.log(error)
-        }
+    const updateComments = async (commentId: string, updatedComment: string = '') => {
+        updateCommentMutation(
+            { commentId, updatedComment },
+            {
+                onSuccess: (data) => {
+                    // Add the comment to the cache
+                    queryClient.setQueryData<CommentType[]>([COMMENT_QUERY_KEY, postId], (oldData) => {
+                        if (!oldData) return []
+
+                        return [...oldData.filter((comment) => comment._id !== commentId), data]
+                    })
+                    createNotification('Successfully updated the comment', ToastType.Success)
+                },
+
+                onError: () => {
+                    createNotification('Failed to update comment', ToastType.Error)
+                },
+            }
+        )
     }
 
     const handleAddComment = () => {
@@ -72,8 +121,8 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
         setNewComment('')
     }
 
-    const handleCommentEdit = (id: string, comment: string) => {
-        setEditCommentId(id)
+    const handleCommentEdit = (commentId: string, comment: string) => {
+        setEditCommentId(commentId)
         setUpdatedComment(comment)
     }
 
@@ -82,18 +131,14 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
         setEditCommentId('')
     }
 
-    const handleCommentDelete = (id: string) => {
-        deleteComments(id)
+    const handleCommentDelete = (commentId: string) => {
+        deleteComments(commentId)
     }
-
-    useEffect(() => {
-        getComments(postId)
-    }, [])
 
     return (
         <section className="flex flex-col">
             <h3 className="mt-6 mb-4 font-semibold">Comments:</h3>
-            {/* commentbox */}
+            {/* comment box */}
             {comments.length > 0 &&
                 comments.map((comment) => {
                     return (

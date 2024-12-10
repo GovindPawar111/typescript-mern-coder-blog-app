@@ -109,9 +109,24 @@ router.get('/refetch', validateToken, async (req: Request, res: Response) => {
 })
 
 //Logout route
-router.get('/logout', validateToken, async (req: Request, res: Response) => {
+router.post('/logout', validateToken, async (req: Request, res: Response) => {
     try {
-        res.status(200).clearCookie('token', { sameSite: 'none', secure: true }).json({ message: 'logout successful' })
+        const user = await User.findOne({ email: req.body.user.email })
+        if (!user) {
+            return res.status(404).json({
+                error: 'User not found',
+                message: 'The requested user could not be found on the server.',
+            })
+        }
+
+        // Clear the 'token' cookie to log the user out
+        res.status(200).clearCookie('token', { sameSite: 'none', secure: true }).json({
+            email: user.email,
+            id: user._id,
+            username: user.username,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        })
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error. Please try again later.' })
     }

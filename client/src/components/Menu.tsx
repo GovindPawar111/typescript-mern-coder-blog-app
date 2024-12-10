@@ -8,7 +8,7 @@ import Model from './generic/Model'
 interface IMenuProps {
     isUserLoggedIn: boolean
     onSetIsMenuOpen: () => void
-    onLogout: () => Promise<void>
+    onLogout: () => void
 }
 
 const Menu = (props: IMenuProps): JSX.Element => {

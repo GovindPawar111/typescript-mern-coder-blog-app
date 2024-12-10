@@ -1,21 +1,21 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import CloseIcon from '../assets/svgs/close.svg?react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../context/appContext'
 import Loader from '../components/generic/Loader'
-import { AxiosError } from 'axios'
 import placeholderImage from '../assets/images/placeholder-image.png'
 import TextEditor from '../components/textEditor/TextEditor'
-import { ErrorType } from '../types/errorType'
-import { getPostWithId, updatePost } from '../api/postApi'
 import Button from '../components/generic/Button'
 import useNotification, { ToastType } from '../hooks/useNotification'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { PostFormSchema, PostFormType } from '../types/postFormType'
+import { queryClient } from '../api/queryClient'
+import { PostType } from '../types/postType'
+import { POST_QUERY_KEY, useGetPostWithId, useUpdatePost } from '../api/queries/postQueries'
+import { useErrorBoundary } from 'react-error-boundary'
 
 const EditPostPage: React.FC = () => {
-    const [isLoading, setIsLoading] = useState<boolean>(true)
     const [inputCategory, setInputCategory] = useState<string>('')
     // To hold the headerImageUrl value which already on cloudinary store.
     const headerImageUrlRef = useRef<string>('')
@@ -28,6 +28,7 @@ const EditPostPage: React.FC = () => {
     const navigate = useNavigate()
     const params = useParams()
     const { createNotification } = useNotification()
+    const { showBoundary } = useErrorBoundary()
 
     const {
         register,
@@ -48,10 +49,58 @@ const EditPostPage: React.FC = () => {
         resolver: zodResolver(PostFormSchema),
     })
 
-    const handleAddCategory = () => {
-        const currentCategories = getValues('categories')
+    if (!params.postId) {
+        return
+    }
 
-        if (currentCategories && currentCategories.length >= 3) {
+    // Get post data from react query cache
+    const posts = queryClient.getQueryData<PostType[]>([POST_QUERY_KEY, { search: '' }])
+    const postDataFromCache = useMemo(() => posts?.find((post) => post._id === params.postId), [posts, params.postId])
+    let post: PostType | undefined = undefined
+
+    const {
+        data: postDataFromApi,
+        isError: postIsError,
+        error: postError,
+        isLoading: postLoading,
+    } = useGetPostWithId(params.postId, !postDataFromCache && !post)
+    const { mutate: updatePostMutation } = useUpdatePost(params.postId)
+
+    if (postIsError) {
+        showBoundary(postError)
+    }
+
+    post = postDataFromCache || postDataFromApi
+
+    useEffect(() => {
+        if (post) {
+            const { title, description, content, categories, headerImageUrl } = post
+            headerImageUrlRef.current = headerImageUrl
+            setImage({
+                file: null,
+                previewImageURL: headerImageUrl || placeholderImage,
+            })
+            reset({
+                title: title || '',
+                description: description || '',
+                content: content || '',
+                categories: categories || [], // Ensure categories is an array
+            })
+        }
+    }, [post, reset])
+
+    if (postLoading || post === undefined) {
+        return (
+            <div className="w-full flex flex-grow">
+                <Loader></Loader>
+            </div>
+        )
+    }
+
+    const handleAddCategory = () => {
+        const currentCategories = getValues('categories') || []
+
+        if (currentCategories.length >= 3) {
             setInputCategory('')
             setError('categories', { message: 'Maximum of 3 categories are allowed' })
             return
@@ -60,7 +109,7 @@ const EditPostPage: React.FC = () => {
             setError('categories', { message: 'Duplicate categories are not allowed' })
             return
         }
-        currentCategories && setValue('categories', [...currentCategories, inputCategory.trim()])
+        setValue('categories', [...currentCategories, inputCategory.trim()])
         setInputCategory('')
     }
 
@@ -109,48 +158,26 @@ const EditPostPage: React.FC = () => {
         }
 
         formData.append('data', JSON.stringify(newPost))
-        try {
-            setIsLoading(true)
-            const response = await updatePost(params.postId, formData)
-            navigate(`/posts/${response._id}`)
-            setIsLoading(false)
-            createNotification('Post Updated Successfully', ToastType.Success)
-        } catch (e) {
-            const error = e as AxiosError<ErrorType>
-            console.error(error.response?.data.message)
-            createNotification('Post Update Failed', ToastType.Error)
-        }
-    }
 
-    useEffect(() => {
-        const getPost = async (postId: string) => {
-            const { title, description, content, categories, headerImageUrl } = await getPostWithId(postId)
-            headerImageUrlRef.current = headerImageUrl
-            setImage({
-                file: null,
-                previewImageURL: headerImageUrl || placeholderImage,
-            })
+        updatePostMutation(
+            { postId: params.postId, data: formData },
+            {
+                onSuccess: (data) => {
+                    // If post data is present in react query cache then replace new post with old one
+                    if (postDataFromCache) {
+                        queryClient.setQueryData<PostType[]>([POST_QUERY_KEY, { search: '' }], (oldPost) => {
+                            if (!oldPost) return []
 
-            const fetchedData = {
-                title: title || '',
-                description: description || '',
-                content: content || '',
-                categories: categories || [], // Ensure categories is an array
+                            return [data, ...oldPost.filter((post) => post._id !== params.postId)]
+                        })
+                    }
+                    createNotification('Post updated successfully', ToastType.Success)
+                    navigate(`/posts/${data._id}`)
+                },
+                onError: () => {
+                    createNotification('Failed to update the post', ToastType.Error)
+                },
             }
-
-            // Update form default values
-            reset(fetchedData)
-        }
-
-        params.postId && getPost(params.postId)
-        setIsLoading(false)
-    }, [])
-
-    if (isLoading) {
-        return (
-            <div className="w-full flex flex-grow">
-                <Loader label={'Saving Post...'}></Loader>
-            </div>
         )
     }
 
@@ -233,10 +260,9 @@ const EditPostPage: React.FC = () => {
                         render={({ field }) => (
                             <div className="flex flex-wrap">
                                 {field.value?.map((category, index) => {
-                                    const key = category + index + Date.now() + Math.random()
                                     return (
                                         <div
-                                            key={key}
+                                            key={category + index}
                                             className="flex justify-center items-center space-x-2 m-2 bg-gray-200 px-2 py-1 rounded"
                                         >
                                             <span>{category}</span>

@@ -2,15 +2,16 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AxiosError } from 'axios'
 import { ErrorType } from '../types/errorType'
-import { registerUser } from '../api/authApi'
 import Button from '../components/generic/Button'
 import useNotification, { ToastType } from '../hooks/useNotification'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { RegisterFormSchema, RegisterFormType } from '../types/registerFormType'
+import { useRegisterUser } from '../api/queries/authQueries'
 
 const RegisterPage = (): React.ReactElement => {
     const { createNotification } = useNotification()
+    const { mutate: registerMutation } = useRegisterUser()
 
     const navigate = useNavigate()
     const {
@@ -24,18 +25,21 @@ const RegisterPage = (): React.ReactElement => {
     })
 
     const formSubmit = async ({ username, email, password }: RegisterFormType): Promise<void> => {
-        try {
-            await registerUser(username, email, password)
-            createNotification('Registration Successful', ToastType.Success)
-            navigate('/login')
-        } catch (e) {
-            const error = e as AxiosError<ErrorType>
-            setError('root', {
-                message: error.response?.data.message || 'Something went wrong, please try after sometime.',
-            })
-            createNotification('Registration Failed', ToastType.Error)
-            console.error(error.response?.data.message)
-        }
+        registerMutation(
+            { username, email, password },
+            {
+                onSuccess() {
+                    createNotification('Registration Successful', ToastType.Success)
+                    navigate('/login')
+                },
+                onError: (error) => {
+                    setError('root', {
+                        message: error.response?.data.message || 'Something went wrong, please try after sometime.',
+                    })
+                    createNotification('Registration Failed', ToastType.Error)
+                },
+            }
+        )
     }
 
     return (

@@ -4,28 +4,14 @@ import placeholderImage from '../../assets/images/placeholder-image.png'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import 'react-lazy-load-image-component/src/effects/blur.css'
 import { getFormattedDate } from '../../utils/formattedDateTime'
+import { PostType } from '../../types/postType'
 
 export interface IPostProps {
-    id: string
-    title: string
-    description: string
-    headerImageUrl: string
-    username: string
-    userId: string
-    categories: string[]
-    dateTimeStamp: string
+    postData: PostType
 }
 
-const Post = ({
-    id,
-    title,
-    description,
-    headerImageUrl,
-    username,
-    userId,
-    dateTimeStamp,
-    categories,
-}: IPostProps): React.ReactElement => {
+const Post = ({ postData }: IPostProps): React.ReactElement => {
+    const { _id: id, title, description, headerImageUrl, username, userId, updatedAt, categories } = postData
     return (
         <div className="flex flex-col md:flex-row md:w-full md:space-x-6 lg:space-x-8">
             {/* left side*/}
@@ -77,7 +63,7 @@ const Post = ({
                             </div>
                         </Link>
                         <div className="px-1">·</div>
-                        <div>{getFormattedDate(dateTimeStamp)}</div>
+                        <div>{getFormattedDate(updatedAt)}</div>
                         <div className="px-1 hidden md:block">·</div>
                     </div>
                     <div className="flex">

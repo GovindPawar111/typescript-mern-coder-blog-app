@@ -3,12 +3,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { AxiosError } from 'axios'
 import { AppContext } from '../context/appContext'
 import { ErrorType } from '../types/errorType'
-import { loginUser } from '../api/authApi'
 import Button from '../components/generic/Button'
 import useNotification, { ToastType } from '../hooks/useNotification'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LoginFormSchema, LoginFormType } from '../types/loginFormType'
+import { useLoginUser } from '../api/queries/authQueries'
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate()
@@ -25,26 +25,31 @@ const LoginPage: React.FC = () => {
         resolver: zodResolver(LoginFormSchema),
     })
 
-    const formSubmit = async ({ email, password }: LoginFormType) => {
-        try {
-            const response = await loginUser(email, password)
+    const { mutate: loginMutation } = useLoginUser()
 
-            setUser({
-                id: response.id,
-                username: response.username,
-                email: response.email,
-                createdAt: response.createdAt,
-                updatedAt: response.updatedAt,
-            })
-            createNotification('Login Successful', ToastType.Success)
-            navigate('/')
-        } catch (e) {
-            const error = e as AxiosError<ErrorType>
-            setError('root', {
-                message: error.response?.data.message || 'Something went wrong, please try after sometime.',
-            })
-            createNotification('Login Failed', ToastType.Error)
-        }
+    const formSubmit = async ({ email, password }: LoginFormType) => {
+        loginMutation(
+            { email, password },
+            {
+                onSuccess(response) {
+                    setUser({
+                        id: response.id,
+                        username: response.username,
+                        email: response.email,
+                        createdAt: response.createdAt,
+                        updatedAt: response.updatedAt,
+                    })
+                    createNotification('Login Successful', ToastType.Success)
+                    navigate('/')
+                },
+                onError: (error) => {
+                    setError('root', {
+                        message: error.response?.data.message || 'Something went wrong, please try after sometime.',
+                    })
+                    createNotification('Login Failed', ToastType.Error)
+                },
+            }
+        )
     }
 
     return (

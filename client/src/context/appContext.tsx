@@ -1,23 +1,20 @@
-import { AxiosError } from 'axios'
 import { ReactNode, createContext, useEffect, useState } from 'react'
-import { UserType } from '../types/userType'
-import { PostType } from '../types/postType'
-import { ErrorType } from '../types/errorType'
 import { useErrorBoundary } from 'react-error-boundary'
-import { refetchUserDetails } from '../api/authApi'
+import { useRefetchUserDetails } from '../api/queries/authQueries'
+import { UserType } from '../types/userType'
 
 export type appContextType = {
     user: UserType | null
-    posts: PostType[] | null
     setUser: React.Dispatch<React.SetStateAction<UserType | null>>
-    setPosts: React.Dispatch<React.SetStateAction<PostType[] | null>>
+    search: string
+    setSearch: React.Dispatch<React.SetStateAction<string>>
 }
 
 export const AppContext = createContext<appContextType>({
     user: null,
-    posts: null,
+    search: '',
     setUser: () => {},
-    setPosts: () => {},
+    setSearch: () => {},
 })
 
 type AppContextProviderProps = {
@@ -26,26 +23,25 @@ type AppContextProviderProps = {
 
 export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     const [user, setUser] = useState<UserType | null>(null)
-    const [posts, setPosts] = useState<PostType[] | null>(null)
+    const [search, setSearch] = useState<string>('')
     const { showBoundary } = useErrorBoundary()
 
-    // check whether token is present or not, If it is then refetch the data.
-    const refetchUser = async () => {
-        try {
-            if (!document.cookie.indexOf('token=')) {
-                const response = await refetchUserDetails()
-                setUser(response)
-            }
-        } catch (e) {
-            const error = e as AxiosError<ErrorType>
-            console.error(error.response?.data.message)
-            showBoundary(error)
-        }
+    // check whether token is present or not, If it is then refetch the data.}
+    const {
+        data: userData,
+        isError: userIsError,
+        error: userError,
+    } = useRefetchUserDetails(!document.cookie.indexOf('token='))
+
+    if (userIsError) {
+        showBoundary(userError)
     }
 
     useEffect(() => {
-        refetchUser()
-    }, [])
+        if (userData) {
+            setUser(userData)
+        }
+    }, [userData])
 
-    return <AppContext.Provider value={{ user, posts, setUser, setPosts }}>{children}</AppContext.Provider>
+    return <AppContext.Provider value={{ user, search, setUser, setSearch }}>{children}</AppContext.Provider>
 }

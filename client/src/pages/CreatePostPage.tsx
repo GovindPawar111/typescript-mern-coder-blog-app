@@ -1,21 +1,21 @@
 import React, { useContext, useState } from 'react'
 import CloseIcon from '../assets/svgs/close.svg?react'
 import { AppContext } from '../context/appContext'
-import { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
 import Loader from '../components/generic/Loader'
 import placeholderImage from '../assets/images/placeholder-image.png'
 import TextEditor from '../components/textEditor/TextEditor'
-import { ErrorType } from '../types/errorType'
-import { createPost } from '../api/postApi'
 import Button from '../components/generic/Button'
 import useNotification, { ToastType } from '../hooks/useNotification'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { PostFormSchema, PostFormType } from '../types/postFormType'
+import { POST_QUERY_KEY, useCreatePost } from '../api/queries/postQueries'
+import { queryClient } from '../api/queryClient'
+import { PostType } from '../types/postType'
+import { COMMENT_QUERY_KEY } from '../api/queries/commentQueries'
 
 const CreatePostPage: React.FC = () => {
-    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [inputCategory, setInputCategory] = useState<string>('')
     const [image, setImage] = useState<{ file: File | null; previewImageURL: string }>({
         file: null,
@@ -25,6 +25,7 @@ const CreatePostPage: React.FC = () => {
     const { user } = useContext(AppContext)
     const navigate = useNavigate()
     const { createNotification } = useNotification()
+    const { mutate: createPostMutation, isPending: isMutationLoading } = useCreatePost()
 
     const {
         register,
@@ -100,22 +101,26 @@ const CreatePostPage: React.FC = () => {
         }
 
         formData.append('data', JSON.stringify(newPost))
-        try {
-            setIsLoading(true)
-            const data = await createPost(formData)
-            navigate(`/posts/${data._id}`)
-            setIsLoading(false)
-            createNotification('Post Created Successfully', ToastType.Success)
-        } catch (e) {
-            const error = e as AxiosError<ErrorType>
-            setIsLoading(false)
-            navigate('/posts')
-            console.error(error.response?.data.message)
-            createNotification('Post Creation Failed', ToastType.Error)
-        }
+
+        createPostMutation(formData, {
+            onSuccess: (data) => {
+                // Add the post to the cache
+                queryClient.setQueryData<PostType[]>([POST_QUERY_KEY, { search: '' }], (postsData) =>
+                    postsData ? [data, ...postsData] : [data]
+                )
+                // Add the empty comments to the cache
+                queryClient.setQueryData<PostType[]>([COMMENT_QUERY_KEY, data._id], [])
+                createNotification('Successfully create a new post', ToastType.Success)
+                navigate(`/posts/${data._id}`)
+            },
+
+            onError: () => {
+                createNotification('Failed to create post', ToastType.Error)
+            },
+        })
     }
 
-    if (isLoading) {
+    if (isMutationLoading) {
         return (
             <div className="w-full flex flex-grow">
                 <Loader label={'Creating New Post...'}></Loader>

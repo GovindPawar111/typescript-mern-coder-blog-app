@@ -1,63 +1,45 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { AppContext } from '../context/appContext'
+import React from 'react'
 import UserIcon from '../assets/svgs/user.svg?react'
 import CakeIcon from '../assets/svgs/cake.svg?react'
 import { getFormattedDate } from '../utils/formattedDateTime'
-import { getUserWithId } from '../api/userApi'
+import { useErrorBoundary } from 'react-error-boundary'
+import { useGetUserWithId } from '../api/queries/userQueries'
+import Loader from './generic/Loader'
 
 interface IProfileSectionProps {
-    id?: string
+    id: string
 }
 
 const ProfileSection: React.FC<IProfileSectionProps> = ({ id }: IProfileSectionProps) => {
-    const { user } = useContext(AppContext)
-    const [userProfile, setUserProfile] = useState<{
-        username: string
-        createdAt: string
-    }>({ username: '', createdAt: '' })
+    const { showBoundary } = useErrorBoundary()
+    const { data: userData, isError: userIsError, error: userError, isLoading: userLoading } = useGetUserWithId(id)
 
-    if (!id && user && user.createdAt) {
-        setUserProfile({
-            username: user.username,
-            createdAt: user.createdAt,
-        })
+    if (userIsError) {
+        showBoundary(userError)
     }
 
-    const userDetails = async (id: string) => {
-        try {
-            const response = await getUserWithId(id)
-
-            if (response && response.createdAt) {
-                setUserProfile({
-                    username: response.username,
-                    createdAt: response.createdAt,
-                })
-            }
-        } catch (error) {
-            console.log(error)
-        }
+    if (userLoading || userData === undefined) {
+        return (
+            <div className="w-full flex flex-grow">
+                <Loader></Loader>
+            </div>
+        )
     }
-
-    useEffect(() => {
-        if (id) {
-            userDetails(id)
-        }
-    }, [id])
 
     return (
         <div className="flex flex-col">
             <h1 className="text-xl font-bold mb-4 sm:mb-8 lg:mb-6">Profile</h1>
             <div className="flex items-center text-gray-800 mb-2 sm:mb-4">
-                <div>
-                    <UserIcon className="text-xl" />
+                <div className="h-[24px] flex items-center justify-center">
+                    <UserIcon className="text-xl block w-[18px] h-[18px]" />
                 </div>
-                <h2 className="text-lg font-bold flex ml-2">{userProfile.username}</h2>
+                <p className="text-lg font-bold flex ml-2">{userData.username}</p>
             </div>
-            <div className="flex items-center text-gray-500">
-                <div>
-                    <CakeIcon className="text-xl" />
+            <div className="flex items-start text-gray-500 ">
+                <div className="h-[24px] flex items-center justify-center">
+                    <CakeIcon className="text-xl block w-[18px] h-[18px]" />
                 </div>
-                <h2 className="text-lg font-medium ml-2">{`Joined on ${getFormattedDate(userProfile.createdAt)}`}</h2>
+                <p className="font-normal ml-2">{`Joined on ${getFormattedDate(userData.createdAt || '')}`}</p>
             </div>
         </div>
     )

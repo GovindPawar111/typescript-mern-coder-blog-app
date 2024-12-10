@@ -11,45 +11,73 @@ import { LazyLoadImage } from 'react-lazy-load-image-component'
 import placeholderImage from '../assets/images/placeholder-image.png'
 import { PostType } from '../types/postType'
 import { getFormattedDate, getFormattedTime } from '../utils/formattedDateTime'
+import { queryClient } from '../api/queryClient'
+import { POST_QUERY_KEY, useDeletePost, useGetPostWithId } from '../api/queries/postQueries'
+import useNotification, { ToastType } from '../hooks/useNotification'
 import { useErrorBoundary } from 'react-error-boundary'
-import { deletePost, getPostWithId } from '../api/postApi'
+import Loader from '../components/generic/Loader'
 
 const PostDetailsPage: React.FC = () => {
-    const [post, setPost] = useState<PostType | null>(null)
     const [isModelOpen, setIsModelOpen] = useState<boolean>(false)
 
     const { user } = useContext(AppContext)
     const params = useParams()
     const navigate = useNavigate()
+    const { createNotification } = useNotification()
     const { showBoundary } = useErrorBoundary()
+
+    if (!params.postId) {
+        return
+    }
+
+    // Get post data from react query cache
+    const posts = queryClient.getQueryData<PostType[]>([POST_QUERY_KEY, { search: '' }])
+    const postDataFromCache = posts?.find((post) => post._id === params.postId)
+
+    const {
+        data: postDataFromApi,
+        isError: postIsError,
+        error: postError,
+        isLoading: postLoading,
+    } = useGetPostWithId(params.postId, !postDataFromCache)
+    const { mutate: deletePostMutation, isPending: deletePostPending } = useDeletePost(params.postId)
+
+    if (postIsError) {
+        showBoundary(postError)
+    }
+
+    const post = postDataFromCache || postDataFromApi
 
     const handleDeletePost = async (): Promise<void> => {
         if (!params.postId) {
             return
         }
 
-        try {
-            await deletePost(params.postId)
-            navigate('/')
-        } catch (error) {
-            console.log(error)
-            showBoundary(error)
-        }
+        deletePostMutation(params.postId, {
+            onSuccess: () => {
+                // If post data is present in react query cache then remove it
+                if (postDataFromCache) {
+                    queryClient.setQueryData(
+                        [POST_QUERY_KEY, { search: '' }],
+                        posts?.filter((post) => post._id !== params.postId)
+                    )
+                }
+                createNotification('Post deleted successfully', ToastType.Success)
+                navigate('/')
+            },
+            onError: () => {
+                createNotification('Failed to delete the post', ToastType.Error)
+            },
+        })
     }
 
-    useEffect(() => {
-        const getPost = async (postId: string) => {
-            try {
-                const postResponse = await getPostWithId(postId)
-                setPost(postResponse)
-            } catch (error) {
-                console.log(error)
-                showBoundary(error)
-            }
-        }
-
-        params.postId && getPost(params.postId)
-    }, [])
+    if (postLoading || post === undefined || deletePostPending) {
+        return (
+            <div className="w-full flex flex-grow">
+                <Loader></Loader>
+            </div>
+        )
+    }
 
     return (
         <section className="flex justify-center items-start w-full">
@@ -106,10 +134,7 @@ const PostDetailsPage: React.FC = () => {
                     <p>Categories:</p>
                     <div className="flex justify-start items-start flex-wrap">
                         {post?.categories.map((category, index) => (
-                            <div
-                                key={`${category}-${Math.random()}-${Date.now()}`}
-                                className="bg-gray-300 rounded-lg px-3 py-1 mr-2 mb-2"
-                            >
+                            <div key={`${category}-${index}`} className="bg-gray-300 rounded-lg px-3 py-1 mr-2 mb-2">
                                 {category}
                             </div>
                         ))}

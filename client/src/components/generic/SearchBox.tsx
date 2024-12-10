@@ -1,33 +1,18 @@
 import { useContext, useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { AxiosError } from 'axios'
-import { ErrorType } from '../../types/errorType'
-import { getAllSearchedPosts } from '../../api/postApi'
-import { AppContext } from '../../context/appContext'
+import { useLocation } from 'react-router-dom'
 import useSearchDebounce from '../../hooks/useSearchDebounce'
 import SearchIcon from '../../assets/svgs/search.svg?react'
+import { AppContext } from '../../context/appContext'
 
 const SearchBox = () => {
     const [searchQuery, setSearchQuery] = useState<string | null>(null)
-    const { setPosts } = useContext(AppContext)
-
+    const { setSearch } = useContext(AppContext)
     const debouncedQuery = useSearchDebounce(searchQuery)
-    const navigate = useNavigate()
     const pathname = useLocation().pathname
 
     useEffect(() => {
-        const getSearchedPost = async (query: string) => {
-            try {
-                const data = await getAllSearchedPosts(query)
-                setPosts(data)
-            } catch (e) {
-                const error = e as AxiosError<ErrorType>
-                console.log(error)
-            }
-        }
-        if (debouncedQuery !== null && debouncedQuery !== '/') {
-            getSearchedPost(debouncedQuery)
-            navigate(debouncedQuery ? '?search=' + debouncedQuery : '')
+        if (debouncedQuery !== null) {
+            setSearch(debouncedQuery)
         }
     }, [debouncedQuery])
 

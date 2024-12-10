@@ -3,30 +3,38 @@ import { Link, useNavigate } from 'react-router-dom'
 import MenuIcon from '../assets/svgs/menu.svg?react'
 import Menu from './Menu'
 import { AppContext } from '../context/appContext'
-import { AxiosError } from 'axios'
 import Overlay from './generic/Overlay'
 import Model from './generic/Model'
-import { ErrorType } from '../types/errorType'
-import { logoutUser } from '../api/authApi'
 import SearchBox from './generic/SearchBox'
+import { useLogoutUser } from '../api/queries/authQueries'
+import useNotification, { ToastType } from '../hooks/useNotification'
 
 const Navbar: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
     const [isModelOpen, setIsModelOpen] = useState<boolean>(false)
     const { user, setUser } = useContext(AppContext)
     const navigate = useNavigate()
+    const { mutate: logout } = useLogoutUser()
+    const { createNotification } = useNotification()
 
     const isUserLoggedIn = user?.email && user.id ? true : false
 
-    const logoutUserHandler = async () => {
-        try {
-            await logoutUser()
-            setUser(null)
-            navigate('/')
-        } catch (e) {
-            const error = e as AxiosError<ErrorType>
-            console.log(error)
-        }
+    const logoutUserHandler = () => {
+        /**
+         * Trigger the logout mutation, If you don't have first argument,
+         * but if you need the second parameter (object with callbacks), you need to provide the first one as undefined.
+         * https://github.com/TanStack/query/discussions/3974
+         */
+        logout(undefined, {
+            onSuccess() {
+                setUser(null)
+                navigate('/')
+                createNotification('Successfully logged out', ToastType.Success)
+            },
+            onError() {
+                createNotification('Failed to logout', ToastType.Error)
+            },
+        })
     }
 
     const handleMenuClick = () => {

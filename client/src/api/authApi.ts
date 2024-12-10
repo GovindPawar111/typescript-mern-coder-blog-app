@@ -17,5 +17,6 @@ export const refetchUserDetails = async () => {
 }
 
 export const logoutUser = async () => {
-    await apiClient.get('/auth/logout', { withCredentials: true })
+    const response = await apiClient.post('/auth/logout', {}, { withCredentials: true })
+    return UserSchema.parse(response.data)
 }

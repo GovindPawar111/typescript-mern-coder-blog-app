@@ -1,33 +1,27 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import Post from '../components/generic/Post'
-import { AppContext } from '../context/appContext'
 import NoPost from '../components/generic/NoPost'
 import Loader from '../components/generic/Loader'
-import { AxiosError } from 'axios'
-import { getAllPosts } from '../api/postApi'
-import { ErrorType } from '../types/errorType'
 import { useErrorBoundary } from 'react-error-boundary'
 import SearchBox from '../components/generic/SearchBox'
+import { useGetAllSearchedPosts } from '../api/queries/postQueries'
+import { AppContext } from '../context/appContext'
 
 const HomePage: React.FC = () => {
-    const { posts, setPosts } = useContext(AppContext)
+    const { search } = useContext(AppContext)
     const { showBoundary } = useErrorBoundary()
+    const {
+        data: postsData,
+        isError: postsIsError,
+        error: postsError,
+        isLoading: postsLoading,
+    } = useGetAllSearchedPosts(search)
 
-    useEffect(() => {
-        const getPosts = async () => {
-            try {
-                const data = await getAllPosts()
-                setPosts(data)
-            } catch (e) {
-                const error = e as AxiosError<ErrorType>
-                console.log(error)
-                showBoundary(error)
-            }
-        }
-        getPosts()
-    }, [])
+    if (postsIsError) {
+        showBoundary(postsError)
+    }
 
-    if (posts === undefined || posts === null) {
+    if (postsLoading || postsData === undefined) {
         return (
             <div className="w-full flex flex-grow">
                 <Loader></Loader>
@@ -41,20 +35,8 @@ const HomePage: React.FC = () => {
                 <div className="block md:hidden w-[240px]">
                     <SearchBox />
                 </div>
-                {posts.length > 0 ? (
-                    posts?.map((post) => (
-                        <Post
-                            key={post._id}
-                            id={post._id}
-                            title={post.title}
-                            description={post.description}
-                            headerImageUrl={post.headerImageUrl}
-                            username={post.username}
-                            userId={post.userId}
-                            categories={post.categories}
-                            dateTimeStamp={post.updatedAt}
-                        />
-                    ))
+                {postsData.length > 0 ? (
+                    postsData.map((post) => <Post key={post._id} postData={post} />)
                 ) : (
                     <div className="flex justify-center items-center">
                         <NoPost
