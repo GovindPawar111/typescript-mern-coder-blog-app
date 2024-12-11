@@ -5,6 +5,8 @@ import { getFormattedDate } from '../utils/formattedDateTime'
 import { useErrorBoundary } from 'react-error-boundary'
 import { useGetUserWithId } from '../api/queries/userQueries'
 import Loader from './generic/Loader'
+import { useNavigate } from 'react-router-dom'
+import ArrowBack from '../assets/svgs/arrow_back.svg?react'
 
 interface IProfileSectionProps {
     id: string
@@ -12,6 +14,7 @@ interface IProfileSectionProps {
 
 const ProfileSection: React.FC<IProfileSectionProps> = ({ id }: IProfileSectionProps) => {
     const { showBoundary } = useErrorBoundary()
+    const navigate = useNavigate()
     const { data: userData, isError: userIsError, error: userError, isLoading: userLoading } = useGetUserWithId(id)
 
     if (userIsError) {
@@ -28,7 +31,13 @@ const ProfileSection: React.FC<IProfileSectionProps> = ({ id }: IProfileSectionP
 
     return (
         <div className="flex flex-col">
-            <h1 className="text-xl font-bold mb-4 sm:mb-8 lg:mb-6">Profile</h1>
+            <div className="flex justify-start align-center gap-1">
+                <ArrowBack
+                    className="cursor-pointer w-[32px] h-[22px] mt-[4px] block lg:hidden"
+                    onClick={() => navigate(-1)}
+                />
+                <h1 className="text-xl font-bold mb-4 sm:mb-8 lg:mb-6">Profile</h1>
+            </div>
             <div className="flex items-center text-gray-800 mb-2 sm:mb-4">
                 <div className="h-[24px] flex items-center justify-center">
                     <UserIcon className="text-xl block w-[18px] h-[18px]" />

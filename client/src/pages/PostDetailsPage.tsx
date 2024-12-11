@@ -16,6 +16,7 @@ import { POST_QUERY_KEY, useDeletePost, useGetPostWithId } from '../api/queries/
 import useNotification, { ToastType } from '../hooks/useNotification'
 import { useErrorBoundary } from 'react-error-boundary'
 import Loader from '../components/generic/Loader'
+import ArrowBack from '../assets/svgs/arrow_back.svg?react'
 
 const PostDetailsPage: React.FC = () => {
     const [isModelOpen, setIsModelOpen] = useState<boolean>(false)
@@ -83,7 +84,11 @@ const PostDetailsPage: React.FC = () => {
         <section className="flex justify-center items-start w-full">
             <div className="w-full py-8 px-4 sm:px-8 lg:w-[90%] min-[1400px]:w-[1240px]">
                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-2 justify-between items-start sm:items-center">
-                    <h1 className="text-2xl font-bold text-black md:text-3xl">{post?.title}</h1>
+                    <div className="flex justify-start align-center gap-1">
+                        <ArrowBack className="cursor-pointer w-[32px] h-[24px] mt-[8px]" onClick={() => navigate(-1)} />
+                        <h1 className="text-2xl font-bold text-black md:text-3xl">{post?.title}</h1>
+                    </div>
+
                     {post?.userId === user?.id && (
                         <div className="flex items-center justify-center space-x-2">
                             <Link to={`/posts/edit/${post?._id}`}>
