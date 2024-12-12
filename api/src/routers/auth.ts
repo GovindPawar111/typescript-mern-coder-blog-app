@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt'
 import JWT from 'jsonwebtoken'
 import env from '../utils/validateEnv'
 import validateToken from '../middlewares/validateToken'
+import generateVerificationToken from '../utils/generateVerificationToken'
+import sendVerificationEmail from '../utils/sendEmail'
 
 const router = express.Router()
 
@@ -26,13 +28,26 @@ router.post('/register', async (req: Request, res: Response) => {
 
         const salt = await bcrypt.genSalt(11)
         const hashedPassword = await bcrypt.hash(password, salt)
-        const newUser = new User({ username, email, password: hashedPassword })
+
+        const verificationToken = generateVerificationToken()
+        const newUser = new User({
+            username,
+            email,
+            password: hashedPassword,
+            verificationToken,
+        })
+        // Save the user
         const savedUser = await newUser.save()
+
+        // Send verification email
+        await sendVerificationEmail(email, verificationToken)
 
         res.status(201).json({
             message: 'Register successful',
             email: savedUser.email,
             id: savedUser.id,
+            isVerified: savedUser.isVerified,
+            isAnonymous: savedUser.isAnonymous,
             username: savedUser.username,
             createdAt: savedUser.createdAt,
             updatedAt: savedUser.updatedAt,
@@ -40,6 +55,42 @@ router.post('/register', async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error. Please try again later.' })
     }
+})
+router.post('/verify-email', async (req: Request, res: Response) => {
+    try {
+        const { verificationToken } = req.body
+
+        if (!verificationToken) {
+            return res.status(400).json({
+                message: 'Missing required fields. Please provide proper credentials.',
+            })
+        }
+
+        const user = await User.findOne({ verificationToken })
+        if (!user) {
+            return res.status(404).json({
+                error: 'User not found',
+                message: 'The requested user could not be found, or the verification token is invalid.',
+            })
+        }
+
+        user.isVerified = true
+        user.verificationToken = null
+
+        // Save the user after verification
+        await user.save()
+
+        res.status(200).json({
+            message: 'Email verification successful',
+            email: user.email,
+            id: user._id,
+            username: user.username,
+            isVerified: user.isVerified,
+            isAnonymous: user.isAnonymous,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        })
+    } catch (error) {}
 })
 
 //Login route
@@ -57,6 +108,13 @@ router.post('/login', async (req: Request, res: Response) => {
             return res.status(404).json({
                 error: 'User not found',
                 message: 'The requested user could not be found on the server.',
+            })
+        }
+
+        if (!user.isVerified) {
+            return res.status(401).json({
+                error: 'Unauthorized',
+                message: 'Please verify your email before logging in.',
             })
         }
 
@@ -90,7 +148,8 @@ router.post('/login', async (req: Request, res: Response) => {
                 username: user.username,
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,
-                isAnonymous: false,
+                isVerified: user.isVerified,
+                isAnonymous: user.isAnonymous,
             })
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error. Please try again later.' })
@@ -130,7 +189,8 @@ router.post('/anonymous-login', async (req: Request, res: Response) => {
                 username: user.username,
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,
-                isAnonymous: true,
+                isVerified: user.isVerified,
+                isAnonymous: user.isAnonymous,
             })
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error. Please try again later.' })
@@ -154,7 +214,8 @@ router.get('/refetch', validateToken, async (req: Request, res: Response) => {
             username: user.username,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
-            isAnonymous: user.email === 'anonymous@gmail.com',
+            isVerified: user.isVerified,
+            isAnonymous: user.isAnonymous,
         })
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error. Please try again later.' })
@@ -184,6 +245,8 @@ router.post('/logout', validateToken, async (req: Request, res: Response) => {
                 username: user.username,
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,
+                isVerified: user.isVerified,
+                isAnonymous: user.isAnonymous,
             })
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error. Please try again later.' })

@@ -25,3 +25,8 @@ export const anonymousLoginUser = async () => {
     const response = await apiClient.post('/auth/anonymous-login', {}, { withCredentials: true })
     return UserSchema.parse(response.data)
 }
+
+export const emailVerification = async (verificationToken: string) => {
+    const response = await apiClient.post('/auth/verify-email', { verificationToken }, { withCredentials: true })
+    return UserSchema.parse(response.data)
+}

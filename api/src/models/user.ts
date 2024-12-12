@@ -6,6 +6,9 @@ export type UserType = {
     username: string
     email: string
     password: string
+    isVerified: boolean
+    verificationToken: string | null
+    isAnonymous: boolean
 }
 
 const userSchema = new mongoose.Schema(
@@ -22,6 +25,17 @@ const userSchema = new mongoose.Schema(
         password: {
             type: String,
             require: true,
+        },
+        isVerified: {
+            type: Boolean,
+            default: false,
+        },
+        verificationToken: {
+            type: String,
+        },
+        isAnonymous: {
+            type: Boolean,
+            default: false,
         },
     },
     { timestamps: true },

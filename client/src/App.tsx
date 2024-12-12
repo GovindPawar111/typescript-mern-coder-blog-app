@@ -47,6 +47,10 @@ const router = createBrowserRouter([
                 lazy: () => import('./pages/RegisterPage'),
             },
             {
+                path: '/verify-email',
+                lazy: () => import('./pages/EmailVerificationPage'),
+            },
+            {
                 path: '/login',
                 lazy: () => import('./pages/LoginPage'),
             },

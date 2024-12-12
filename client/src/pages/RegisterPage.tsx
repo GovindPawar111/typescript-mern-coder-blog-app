@@ -30,8 +30,11 @@ const RegisterPage = (): React.ReactElement => {
             { username, email, password },
             {
                 onSuccess() {
-                    createNotification('Registration Successful', ToastType.Success)
-                    navigate('/login')
+                    createNotification(
+                        'An Email has been sent to your registered email, please verify',
+                        ToastType.Success
+                    )
+                    navigate('/verify-email')
                 },
                 onError: (error) => {
                     setError('root', {

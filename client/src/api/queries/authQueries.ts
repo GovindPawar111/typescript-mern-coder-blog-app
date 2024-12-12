@@ -1,7 +1,14 @@
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { UserType } from '../../types/userType'
-import { anonymousLoginUser, loginUser, logoutUser, refetchUserDetails, registerUser } from '../authApi'
+import {
+    anonymousLoginUser,
+    emailVerification,
+    loginUser,
+    logoutUser,
+    refetchUserDetails,
+    registerUser,
+} from '../authApi'
 import { ErrorType } from '../../types/errorType'
 
 // Key constants for auth queries
@@ -21,6 +28,16 @@ export const useLoginUser = () => {
 export const useRegisterUser = () => {
     return useMutation<UserType, AxiosError<ErrorType>, { username: string; email: string; password: string }>({
         mutationFn: ({ username, email, password }) => registerUser(username, email, password),
+        onError: (error) => {
+            console.error(error.response?.data.message)
+        },
+    })
+}
+
+// Custom hook to register a user
+export const useEmailVerification = () => {
+    return useMutation<UserType, AxiosError<ErrorType>, { verificationToken: string }>({
+        mutationFn: ({ verificationToken }) => emailVerification(verificationToken),
         onError: (error) => {
             console.error(error.response?.data.message)
         },

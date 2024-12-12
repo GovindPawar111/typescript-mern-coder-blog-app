@@ -104,7 +104,7 @@ const LoginPage: React.FC = () => {
                         className="w-full py-3 text-lg font-bold rounded-lg hover:bg-gray-500 hover:text-black mt-4"
                     />
                 </form>
-                {errors.root && <p className="text-red-600 text-xs">{errors.root.message}</p>}
+                {errors.root && <p className="text-red-600 text-xs mt-2">{errors.root.message}</p>}
                 <div className="flex justify-center items-center space-x-2 mt-1">
                     <p>New here?</p>
                     <p className="text-gray-500 hover:text-black hover:underline">
