@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import CloseIcon from '../assets/svgs/close.svg?react'
-import { AppContext } from '../context/appContext'
+import { useUserContext } from '../context/appContext'
 import { useNavigate } from 'react-router-dom'
 import Loader from '../components/generic/Loader'
 import placeholderImage from '../assets/images/placeholder-image.png'
@@ -23,7 +23,7 @@ const CreatePostPage: React.FC = () => {
         previewImageURL: placeholderImage,
     })
 
-    const { user } = useContext(AppContext)
+    const { user } = useUserContext()
     const navigate = useNavigate()
     const { createNotification } = useNotification()
     const { mutate: createPostMutation, isPending: isMutationLoading } = useCreatePost()
@@ -86,6 +86,10 @@ const CreatePostPage: React.FC = () => {
     }
 
     const handleFormSubmit = async ({ title, description, categories, content }: PostFormType): Promise<void> => {
+        if (user?.isAnonymous) {
+            createNotification('You need to log in as a real user to create a post.', ToastType.Info)
+            return
+        }
         const newPost = {
             title,
             description,
@@ -133,7 +137,10 @@ const CreatePostPage: React.FC = () => {
         <section className="flex justify-center items-start w-full">
             <div className="w-full py-8 px-4 sm:px-8 lg:w-[90%] min-[1400px]:w-[1240px]">
                 <div className="flex justify-start align-center gap-1">
-                    <ArrowBack className="cursor-pointer w-[32px] h-[24px] mt-[3px] md:mt-[5px]" onClick={() => navigate(-1)} />
+                    <ArrowBack
+                        className="cursor-pointer w-[32px] h-[24px] mt-[3px] md:mt-[5px]"
+                        onClick={() => navigate(-1)}
+                    />
                     <h1 className="font-bold text-xl md:text-2xl">Create a post</h1>
                 </div>
                 <form noValidate className="w-full flex flex-col mt-4" onSubmit={handleSubmit(handleFormSubmit)}>

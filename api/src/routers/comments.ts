@@ -1,12 +1,13 @@
 import express, { Request, Response } from 'express'
 import Post from '../models/post'
 import Comment from '../models/comment'
-import validateToken from '../utils/validateToken'
+import validateToken from '../middlewares/validateToken'
+import restrictAnonymous from '../middlewares/restrictAnonymous'
 
 const router = express.Router()
 
 //create
-router.post('/', validateToken, async (req: Request, res: Response) => {
+router.post('/', validateToken, restrictAnonymous, async (req: Request, res: Response) => {
     try {
         const { comment, author, postId, userId } = req.body
         // if user don't  provide valid fields to create the comment return bad request.
@@ -34,7 +35,7 @@ router.post('/', validateToken, async (req: Request, res: Response) => {
 })
 
 //update
-router.put('/:id', validateToken, async (req: Request, res: Response) => {
+router.put('/:id', validateToken, restrictAnonymous, async (req: Request, res: Response) => {
     try {
         // if user don't  provide least one valid fields to update the post return bad request.
         if (!(req.body.comment || req.body.author)) {
@@ -65,7 +66,7 @@ router.put('/:id', validateToken, async (req: Request, res: Response) => {
 })
 
 //delete
-router.delete('/:id', validateToken, async (req: Request, res: Response) => {
+router.delete('/:id', validateToken, restrictAnonymous, async (req: Request, res: Response) => {
     try {
         const existingComment = await Comment.findById({ _id: req.params.id }).lean().exec()
         if (!existingComment) {

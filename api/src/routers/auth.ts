@@ -3,7 +3,7 @@ import User from '../models/user'
 import bcrypt from 'bcrypt'
 import JWT from 'jsonwebtoken'
 import env from '../utils/validateEnv'
-import validateToken from '../utils/validateToken'
+import validateToken from '../middlewares/validateToken'
 
 const router = express.Router()
 
@@ -69,17 +69,69 @@ router.post('/login', async (req: Request, res: Response) => {
         }
 
         const token = JWT.sign({ id: user._id, email: user.email, username: user.username }, env.JWT_SECRETE, {
-            expiresIn: '2d',
+            expiresIn: '1d',
         })
 
-        res.status(200).cookie('token', token).json({
-            message: 'Login successful',
-            email: user.email,
-            id: user._id,
-            username: user.username,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
+        // Determine environment
+        const isProduction = process.env.NODE_ENV === 'production'
+
+        res.status(200)
+            .cookie('token', token, {
+                httpOnly: true,
+                secure: isProduction,
+                sameSite: isProduction ? 'strict' : 'lax',
+                path: '/',
+                maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days in milliseconds
+            })
+            .json({
+                message: 'Login successful',
+                email: user.email,
+                id: user._id,
+                username: user.username,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+                isAnonymous: false,
+            })
+    } catch (error) {
+        res.status(500).json({ error: error, message: 'Internal server error. Please try again later.' })
+    }
+})
+
+// anonymous Login route
+router.post('/anonymous-login', async (req: Request, res: Response) => {
+    try {
+        const user = await User.findOne({ email: 'anonymous@gmail.com' })
+        if (!user) {
+            return res.status(404).json({
+                error: 'User not found',
+                message: 'The requested user could not be found on the server.',
+            })
+        }
+
+        const token = JWT.sign({ id: user._id, email: user.email, username: user.username }, env.JWT_SECRETE, {
+            expiresIn: '2h',
         })
+
+        // Determine environment
+        const isProduction = process.env.NODE_ENV === 'production'
+
+        res.status(200)
+            .cookie('token', token, {
+                httpOnly: true,
+                secure: isProduction,
+                sameSite: isProduction ? 'strict' : 'lax',
+                path: '/',
+                maxAge: 2 * 60 * 60 * 1000, // 2 hours in milliseconds
+            })
+            .json({
+                message: 'Anonymous login successful',
+                email: user.email,
+                id: user._id,
+                username: user.username,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+                isAnonymous: true,
+            })
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error. Please try again later.' })
     }
@@ -102,6 +154,7 @@ router.get('/refetch', validateToken, async (req: Request, res: Response) => {
             username: user.username,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
+            isAnonymous: user.email === 'anonymous@gmail.com',
         })
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error. Please try again later.' })
@@ -120,13 +173,18 @@ router.post('/logout', validateToken, async (req: Request, res: Response) => {
         }
 
         // Clear the 'token' cookie to log the user out
-        res.status(200).clearCookie('token', { sameSite: 'none', secure: true }).json({
-            email: user.email,
-            id: user._id,
-            username: user.username,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
-        })
+        res.status(200)
+            .clearCookie('token', {
+                path: '/',
+                httpOnly: true,
+            })
+            .json({
+                email: user.email,
+                id: user._id,
+                username: user.username,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+            })
     } catch (error) {
         res.status(500).json({ error: error, message: 'Internal server error. Please try again later.' })
     }

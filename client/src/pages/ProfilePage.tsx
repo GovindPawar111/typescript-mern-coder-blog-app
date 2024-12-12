@@ -1,7 +1,7 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import ProfileSection from '../components/ProfileSection'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { AppContext } from '../context/appContext'
+import { useUserContext } from '../context/appContext'
 import Loader from '../components/generic/Loader'
 import Post from '../components/generic/Post'
 import NoPost from '../components/generic/NoPost'
@@ -10,7 +10,7 @@ import { useErrorBoundary } from 'react-error-boundary'
 import ArrowBack from '../assets/svgs/arrow_back.svg?react'
 
 const ProfilePage: React.FC = () => {
-    const { user } = useContext(AppContext)
+    const { user } = useUserContext()
 
     const params = useParams()
     const location = useLocation()

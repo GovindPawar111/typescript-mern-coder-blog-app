@@ -2,154 +2,169 @@ import express, { Request, Response } from 'express'
 import Post from '../models/post'
 import User from '../models/user'
 import Comment from '../models/comment'
-import validateToken from '../utils/validateToken'
+import validateToken from '../middlewares/validateToken'
 import { upload } from '../middlewares/multer.middleware'
 import { DeleteOnCloudinary, imageToWebp, uploadOnCloudinary } from '../utils/cloudinaryService'
 import fs from 'fs'
+import  restrictAnonymous  from '../middlewares/restrictAnonymous'
 
 const router = express.Router()
 
 //create
-router.post('/', validateToken, upload.single('header-image'), async (req: Request, res: Response) => {
-    try {
-        const { title, description, categories, content, username, userId } = JSON.parse(req.body.data)
-        if (!title || !userId || !username) {
-            return res.status(400).json({
-                message: 'Missing required fields. Please provide proper values.',
-                ...req.body,
-            })
-        }
-
-        let imageUrl: string = ''
-        if (req.file?.path) {
-            const urlParts = req.file?.path.split('\\')
-            // File name with extension eg. image.png
-            const filenameWithExtension = urlParts[urlParts.length - 1]
-            // File extension eg. png
-            const fileExtension = filenameWithExtension.substring(filenameWithExtension.lastIndexOf('.') + 1)
-            // Extract file name without extension eg. image
-            const filename = filenameWithExtension.substring(0, filenameWithExtension.lastIndexOf('.'))
-
-            if (fileExtension !== 'webp') {
-                // convert image to webp formate
-                await imageToWebp(req.file?.path, filename)
+router.post(
+    '/',
+    validateToken,
+    restrictAnonymous,
+    upload.single('header-image'),
+    async (req: Request, res: Response) => {
+        try {
+            const { title, description, categories, content, username, userId } = JSON.parse(req.body.data)
+            if (!title || !userId || !username) {
+                return res.status(400).json({
+                    message: 'Missing required fields. Please provide proper values.',
+                    ...req.body,
+                })
             }
 
-            // upload header image file on cloudinary
-            const cloudinaryResponse = await uploadOnCloudinary('./src/public/temp/' + filename + '.webp')
-            imageUrl = cloudinaryResponse?.secure_url || ''
+            let imageUrl: string = ''
+            if (req.file?.path) {
+                const urlParts = req.file?.path.split('\\')
+                // File name with extension eg. image.png
+                const filenameWithExtension = urlParts[urlParts.length - 1]
+                // File extension eg. png
+                const fileExtension = filenameWithExtension.substring(filenameWithExtension.lastIndexOf('.') + 1)
+                // Extract file name without extension eg. image
+                const filename = filenameWithExtension.substring(0, filenameWithExtension.lastIndexOf('.'))
 
-            // remove the file stored on server.
-            await fs.unlink(req.file?.path, () => {})
-            fileExtension !== 'webp' && (await fs.unlink('./src/public/temp/' + filename + '.webp', () => {}))
+                if (fileExtension !== 'webp') {
+                    // convert image to webp formate
+                    await imageToWebp(req.file?.path, filename)
+                }
+
+                // upload header image file on cloudinary
+                const cloudinaryResponse = await uploadOnCloudinary('./src/public/temp/' + filename + '.webp')
+                imageUrl = cloudinaryResponse?.secure_url || ''
+
+                // remove the file stored on server.
+                await fs.unlink(req.file?.path, () => {})
+                fileExtension !== 'webp' && (await fs.unlink('./src/public/temp/' + filename + '.webp', () => {}))
+            }
+
+            const newPost = new Post({
+                title,
+                description,
+                content,
+                headerImageUrl: imageUrl,
+                categories,
+                username,
+                userId,
+            })
+
+            const savedPost = await newPost.save()
+            res.status(201).json({
+                message: 'Post create Successfully.',
+                title: savedPost.title,
+                description: savedPost.description,
+                content: savedPost.content,
+                headerImageUrl: savedPost.headerImageUrl,
+                categories: savedPost.categories,
+                username: savedPost.username,
+                userId: savedPost.userId,
+                _id: savedPost.id,
+                createdAt: savedPost.createdAt,
+                updatedAt: savedPost.updatedAt,
+            })
+        } catch (error) {
+            // remove the file stored on server in case of any error.
+            if (req.file?.path) {
+                await fs.unlink(req.file?.path, () => {})
+            }
+            res.status(500).json({ error, message: 'Internal server error, Please try again later.' })
         }
-
-        const newPost = new Post({
-            title,
-            description,
-            content,
-            headerImageUrl: imageUrl,
-            categories,
-            username,
-            userId,
-        })
-
-        const savedPost = await newPost.save()
-        res.status(201).json({
-            message: 'Post create Successfully.',
-            title: savedPost.title,
-            description: savedPost.description,
-            content: savedPost.content,
-            headerImageUrl: savedPost.headerImageUrl,
-            categories: savedPost.categories,
-            username: savedPost.username,
-            userId: savedPost.userId,
-            _id: savedPost.id,
-            createdAt: savedPost.createdAt,
-            updatedAt: savedPost.updatedAt,
-        })
-    } catch (error) {
-        // remove the file stored on server in case of any error.
-        if (req.file?.path) {
-            await fs.unlink(req.file?.path, () => {})
-        }
-        res.status(500).json({ error, message: 'Internal server error, Please try again later.' })
-    }
-})
+    },
+)
 
 //update
-router.put('/:id', validateToken, upload.single('header-image'), async (req: Request, res: Response) => {
-    try {
-        const { title, description, categories, content, username, userId, headerImageUrl } = JSON.parse(req.body.data)
-        if (!title || !userId || !username) {
-            return res.status(400).json({
-                message: 'Missing required fields. Please provide proper values.',
-                ...req.body,
-            })
-        }
-
-        const oldPost = await Post.findById(req.params.id)
-        if (oldPost?.headerImageUrl) {
-            // delete the old image file from cloudinary
-            await DeleteOnCloudinary(oldPost?.headerImageUrl)
-        }
-
-        let imageUrl: string = ''
-        if (req.file?.path) {
-            const urlParts = req.file?.path.split('\\')
-            // File name with extension eg. image.png
-            const filenameWithExtension = urlParts[urlParts.length - 1]
-            // File extension eg. png
-            const fileExtension = filenameWithExtension.substring(filenameWithExtension.lastIndexOf('.') + 1)
-            // Extract file name without extension eg. image
-            const filename = filenameWithExtension.substring(0, filenameWithExtension.lastIndexOf('.'))
-
-            if (fileExtension !== 'webp') {
-                // convert image to webp formate
-                await imageToWebp(req.file?.path, filename)
+router.put(
+    '/:id',
+    validateToken,
+    restrictAnonymous,
+    upload.single('header-image'),
+    async (req: Request, res: Response) => {
+        try {
+            const { title, description, categories, content, username, userId, headerImageUrl } = JSON.parse(
+                req.body.data,
+            )
+            if (!title || !userId || !username) {
+                return res.status(400).json({
+                    message: 'Missing required fields. Please provide proper values.',
+                    ...req.body,
+                })
             }
 
-            // upload header image file on cloudinary
-            const cloudinaryResponse = await uploadOnCloudinary('./src/public/temp/' + filename + '.webp')
-            imageUrl = cloudinaryResponse?.secure_url || headerImageUrl || ''
+            const oldPost = await Post.findById(req.params.id)
+            if (oldPost?.headerImageUrl) {
+                // delete the old image file from cloudinary
+                await DeleteOnCloudinary(oldPost?.headerImageUrl)
+            }
 
-            // remove the file stored on server.
-            await fs.unlink(req.file?.path, () => {})
-            fileExtension !== 'webp' && (await fs.unlink('./src/public/temp/' + filename + '.webp', () => {}))
-        } else {
-            imageUrl = headerImageUrl
-        }
+            let imageUrl: string = ''
+            if (req.file?.path) {
+                const urlParts = req.file?.path.split('\\')
+                // File name with extension eg. image.png
+                const filenameWithExtension = urlParts[urlParts.length - 1]
+                // File extension eg. png
+                const fileExtension = filenameWithExtension.substring(filenameWithExtension.lastIndexOf('.') + 1)
+                // Extract file name without extension eg. image
+                const filename = filenameWithExtension.substring(0, filenameWithExtension.lastIndexOf('.'))
 
-        const updatedPost = await Post.findByIdAndUpdate(
-            req.params.id,
-            {
-                $set: {
-                    title: title,
-                    description: description,
-                    content: content,
-                    headerImageUrl: imageUrl,
-                    categories: categories,
-                    username: username,
-                    userId: userId,
+                if (fileExtension !== 'webp') {
+                    // convert image to webp formate
+                    await imageToWebp(req.file?.path, filename)
+                }
+
+                // upload header image file on cloudinary
+                const cloudinaryResponse = await uploadOnCloudinary('./src/public/temp/' + filename + '.webp')
+                imageUrl = cloudinaryResponse?.secure_url || headerImageUrl || ''
+
+                // remove the file stored on server.
+                await fs.unlink(req.file?.path, () => {})
+                fileExtension !== 'webp' && (await fs.unlink('./src/public/temp/' + filename + '.webp', () => {}))
+            } else {
+                imageUrl = headerImageUrl
+            }
+
+            const updatedPost = await Post.findByIdAndUpdate(
+                req.params.id,
+                {
+                    $set: {
+                        title: title,
+                        description: description,
+                        content: content,
+                        headerImageUrl: imageUrl,
+                        categories: categories,
+                        username: username,
+                        userId: userId,
+                    },
                 },
-            },
-            { new: true },
-        )
-            .lean()
-            .exec()
+                { new: true },
+            )
+                .lean()
+                .exec()
 
-        res.status(200).json({
-            message: 'Post updated successfully.',
-            ...updatedPost,
-        })
-    } catch (error) {
-        // remove the file stored on server in case of any error.
-        if (req.file?.path) {
-            await fs.unlink(req.file?.path, () => {})
+            res.status(200).json({
+                message: 'Post updated successfully.',
+                ...updatedPost,
+            })
+        } catch (error) {
+            // remove the file stored on server in case of any error.
+            if (req.file?.path) {
+                await fs.unlink(req.file?.path, () => {})
+            }
+            res.status(500).json({ error, message: 'Internal server error, Please try again later.' })
         }
-        res.status(500).json({ error, message: 'Internal server error, Please try again later.' })
-    }
-})
+    },
+)
 
 //delete
 router.delete('/:id', validateToken, async (req: Request, res: Response) => {

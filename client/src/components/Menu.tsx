@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import CloseIcon from '../assets/svgs/close.svg?react'
-import { useContext, useState } from 'react'
-import { AppContext } from '../context/appContext'
+import { useState } from 'react'
+import { useUserContext } from '../context/appContext'
 import Overlay from './generic/Overlay'
 import Model from './generic/Model'
 
@@ -14,7 +14,7 @@ interface IMenuProps {
 const Menu = (props: IMenuProps): JSX.Element => {
     const { isUserLoggedIn, onSetIsMenuOpen, onLogout } = props
     const [isModelOpen, setIsModelOpen] = useState<boolean>(false)
-    const { user } = useContext(AppContext)
+    const { user } = useUserContext()
 
     return (
         <aside className="fixed top-0 left-0 z-10 w-full h-full flex flex-col bg-white text-black overflow-hidden">

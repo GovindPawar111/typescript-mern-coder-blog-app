@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { UserType } from '../../types/userType'
-import { loginUser, logoutUser, refetchUserDetails, registerUser } from '../authApi'
+import { anonymousLoginUser, loginUser, logoutUser, refetchUserDetails, registerUser } from '../authApi'
 import { ErrorType } from '../../types/errorType'
 
 // Key constants for auth queries
@@ -41,6 +41,16 @@ export const useRefetchUserDetails = (enable?: boolean) => {
 export const useLogoutUser = () => {
     return useMutation<UserType, AxiosError<ErrorType>>({
         mutationFn: logoutUser,
+        onError: (error) => {
+            console.error(error.response?.data.message)
+        },
+    })
+}
+
+// Custom hook to anonymous login a user
+export const useAnonymousLoginUser = () => {
+    return useMutation<UserType, AxiosError<ErrorType>>({
+        mutationFn: anonymousLoginUser,
         onError: (error) => {
             console.error(error.response?.data.message)
         },

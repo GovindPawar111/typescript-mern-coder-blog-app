@@ -3,7 +3,8 @@ import bcrypt from 'bcrypt'
 import User from '../models/user'
 import Post from '../models/post'
 import Comment from '../models/comment'
-import validateToken from '../utils/validateToken'
+import validateToken from '../middlewares/validateToken'
+import restrictAnonymous from '../middlewares/restrictAnonymous'
 
 const router = express.Router()
 
@@ -31,7 +32,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 })
 
 //update route
-router.put('/:id', validateToken, async (req: Request, res: Response) => {
+router.put('/:id', validateToken, restrictAnonymous, restrictAnonymous, async (req: Request, res: Response) => {
     try {
         //NOTE: remove once authentication is start working
         const user = await User.findById({ _id: req.params.id }).select(['-password', '-__v']).lean().exec()
@@ -71,7 +72,7 @@ router.put('/:id', validateToken, async (req: Request, res: Response) => {
 })
 
 //delete route
-router.delete('/:id', validateToken, async (req: Request, res: Response) => {
+router.delete('/:id', validateToken, restrictAnonymous, async (req: Request, res: Response) => {
     try {
         const user = await User.findById({ _id: req.params.id })
         if (!user) {

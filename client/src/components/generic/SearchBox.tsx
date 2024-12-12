@@ -1,12 +1,12 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import useSearchDebounce from '../../hooks/useSearchDebounce'
 import SearchIcon from '../../assets/svgs/search.svg?react'
-import { AppContext } from '../../context/appContext'
+import { useUserContext } from '../../context/appContext'
 
 const SearchBox = () => {
     const [searchQuery, setSearchQuery] = useState<string | null>(null)
-    const { setSearch } = useContext(AppContext)
+    const { setSearch } = useUserContext()
     const debouncedQuery = useSearchDebounce(searchQuery)
     const pathname = useLocation().pathname
 

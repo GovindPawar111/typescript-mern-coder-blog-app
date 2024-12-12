@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import EditIcon from '../assets/svgs/edit.svg?react'
 import DeleteIcon from '../assets/svgs/Delete.svg?react'
-import { AppContext } from '../context/appContext'
+import { useUserContext } from '../context/appContext'
 import { useNavigate } from 'react-router-dom'
 import Overlay from './generic/Overlay'
 import Model from './generic/Model'
@@ -30,7 +30,7 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
     const [editCommentId, setEditCommentId] = useState<string | undefined>(undefined)
     const [isModelOpen, setIsModelOpen] = useState<boolean>(false)
 
-    const { user } = useContext(AppContext)
+    const { user } = useUserContext()
     const navigate = useNavigate()
     const { showBoundary } = useErrorBoundary()
     const { createNotification } = useNotification()
@@ -48,7 +48,6 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
 
     if (isCommentsError) {
         showBoundary(commentsError)
-        console.log(isCommentsError)
     }
 
     if (isCommentsLoading || !comments) {
@@ -60,6 +59,10 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
     }
 
     const AddComments = async (comment: string, postId: string, userId: string, author: string) => {
+        if (user?.isAnonymous) {
+            createNotification('You need to log in as a real user to add comment.', ToastType.Info, Infinity)
+            return
+        }
         addCommentMutation(
             { postId, userId, author, comment },
             {
@@ -79,6 +82,10 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
     }
 
     const deleteComments = async (commentId: string) => {
+        if (user?.isAnonymous) {
+            createNotification('You need to log in as a real user to delete comment.', ToastType.Info)
+            return
+        }
         deleteCommentMutation(commentId, {
             onSuccess: () => {
                 // Add the comment to the cache
@@ -95,6 +102,10 @@ const CommentSection: React.FC<ICommentSectionProps> = ({ postId }: ICommentSect
     }
 
     const updateComments = async (commentId: string, updatedComment: string = '') => {
+        if (user?.isAnonymous) {
+            createNotification('You need to log in as a real user to edit comment.', ToastType.Info)
+            return
+        }
         updateCommentMutation(
             { commentId, updatedComment },
             {

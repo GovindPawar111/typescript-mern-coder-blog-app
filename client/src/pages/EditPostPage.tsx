@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import CloseIcon from '../assets/svgs/close.svg?react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { AppContext } from '../context/appContext'
+import { useUserContext } from '../context/appContext'
 import Loader from '../components/generic/Loader'
 import placeholderImage from '../assets/images/placeholder-image.png'
 import TextEditor from '../components/textEditor/TextEditor'
@@ -25,7 +25,7 @@ const EditPostPage: React.FC = () => {
         previewImageURL: placeholderImage,
     })
 
-    const { user } = useContext(AppContext)
+    const { user } = useUserContext()
     const navigate = useNavigate()
     const params = useParams()
     const { createNotification } = useNotification()
@@ -138,6 +138,10 @@ const EditPostPage: React.FC = () => {
     }
 
     const handleFormSubmit = async ({ title, description, categories, content }: PostFormType): Promise<void> => {
+        if (user?.isAnonymous) {
+            createNotification('You need to log in as a real user to edit a post.', ToastType.Info)
+            return
+        }
         if (!params.postId) {
             return
         }

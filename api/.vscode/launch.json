@@ -10,8 +10,7 @@
             "runtimeExecutable": "node", // Use the Node.js runtime
             "env": {
                 // Optional: Define environment variables
-                "NODE_ENV": "development",
-                "PORT": "5000"
+                "NODE_ENV": "development"
             },
             "envFile": "${workspaceFolder}/.env", // Optional: Load environment variables from a .env file
             "outFiles": ["${workspaceFolder}/dist/**/*.js"], // For TypeScript or transpiled projects

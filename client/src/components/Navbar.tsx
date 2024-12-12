@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import MenuIcon from '../assets/svgs/menu.svg?react'
 import Menu from './Menu'
-import { AppContext } from '../context/appContext'
+import { useUserContext } from '../context/appContext'
 import Overlay from './generic/Overlay'
 import Model from './generic/Model'
 import SearchBox from './generic/SearchBox'
@@ -12,7 +12,7 @@ import useNotification, { ToastType } from '../hooks/useNotification'
 const Navbar: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
     const [isModelOpen, setIsModelOpen] = useState<boolean>(false)
-    const { user, setUser } = useContext(AppContext)
+    const { user, setUser } = useUserContext()
     const navigate = useNavigate()
     const { mutate: logout } = useLogoutUser()
     const { createNotification } = useNotification()
@@ -29,6 +29,7 @@ const Navbar: React.FC = () => {
             onSuccess() {
                 setUser(null)
                 navigate('/')
+                sessionStorage.removeItem('user')
                 createNotification('Successfully logged out', ToastType.Success)
             },
             onError() {

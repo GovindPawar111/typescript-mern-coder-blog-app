@@ -1,17 +1,18 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { AxiosError } from 'axios'
-import { ErrorType } from '../types/errorType'
 import Button from '../components/generic/Button'
 import useNotification, { ToastType } from '../hooks/useNotification'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { RegisterFormSchema, RegisterFormType } from '../types/registerFormType'
 import { useRegisterUser } from '../api/queries/authQueries'
+import { useAnonymousLogin } from '../hooks/useAnonymousLogin'
+import { useUserContext } from '../context/appContext'
 
 const RegisterPage = (): React.ReactElement => {
     const { createNotification } = useNotification()
     const { mutate: registerMutation } = useRegisterUser()
+    const { setUser } = useUserContext()
 
     const navigate = useNavigate()
     const {
@@ -41,6 +42,25 @@ const RegisterPage = (): React.ReactElement => {
             }
         )
     }
+
+    const anonymousLogin = useAnonymousLogin(
+        (response) => {
+            setUser({
+                id: response.id,
+                username: response.username,
+                email: response.email,
+                createdAt: response.createdAt,
+                updatedAt: response.updatedAt,
+                isAnonymous: true,
+            })
+            createNotification('Login Successful as Guest', ToastType.Success)
+            navigate('/')
+            sessionStorage.setItem('user', JSON.stringify({ id: response.id, name: response.username }))
+        },
+        () => {
+            createNotification('Failed to login as Guest', ToastType.Error)
+        }
+    )
 
     return (
         <section className="w-full flex justify-center items-center h-[70vh] bg-white">
@@ -87,10 +107,14 @@ const RegisterPage = (): React.ReactElement => {
                     />
                 </form>
                 {errors.root && <p className="text-red-600 text-xs mt-2">{errors.root.message}</p>}
-                <div className="flex justify-center items-center space-x-3 mt-2">
+                <div className="flex justify-center items-center space-x-2 mt-2">
                     <p>Already have an account?</p>
                     <p className="text-gray-500 hover:text-black hover:underline">
                         <Link to="/login">Log in</Link>
+                    </p>
+                    <p>or</p>
+                    <p className="text-gray-500 hover:text-black hover:underline" onClick={anonymousLogin}>
+                        Login as Guest
                     </p>
                 </div>
             </div>

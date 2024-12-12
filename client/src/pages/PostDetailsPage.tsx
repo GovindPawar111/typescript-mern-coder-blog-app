@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import EditIcon from '../assets/svgs/edit.svg?react'
 import DeleteIcon from '../assets/svgs/Delete.svg?react'
 import CommentSection from '../components/CommentSection'
-import { AppContext } from '../context/appContext'
+import { useUserContext } from '../context/appContext'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import Overlay from '../components/generic/Overlay'
 import Model from '../components/generic/Model'
@@ -21,7 +21,7 @@ import ArrowBack from '../assets/svgs/arrow_back.svg?react'
 const PostDetailsPage: React.FC = () => {
     const [isModelOpen, setIsModelOpen] = useState<boolean>(false)
 
-    const { user } = useContext(AppContext)
+    const { user } = useUserContext()
     const params = useParams()
     const navigate = useNavigate()
     const { createNotification } = useNotification()
@@ -50,6 +50,11 @@ const PostDetailsPage: React.FC = () => {
     const post = postDataFromCache || postDataFromApi
 
     const handleDeletePost = async (): Promise<void> => {
+        if (user?.isAnonymous) {
+            createNotification('You need to log in as a real user to delete a post.', ToastType.Info)
+            return
+        }
+        
         if (!params.postId) {
             return
         }

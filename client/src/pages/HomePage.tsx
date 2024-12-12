@@ -1,14 +1,14 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import Post from '../components/generic/Post'
 import NoPost from '../components/generic/NoPost'
 import Loader from '../components/generic/Loader'
 import { useErrorBoundary } from 'react-error-boundary'
 import SearchBox from '../components/generic/SearchBox'
 import { useGetAllSearchedPosts } from '../api/queries/postQueries'
-import { AppContext } from '../context/appContext'
+import { useUserContext } from '../context/appContext'
 
 const HomePage: React.FC = () => {
-    const { search } = useContext(AppContext)
+    const { search } = useUserContext()
     const { showBoundary } = useErrorBoundary()
     const {
         data: postsData,

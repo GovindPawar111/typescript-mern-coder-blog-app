@@ -20,3 +20,8 @@ export const logoutUser = async () => {
     const response = await apiClient.post('/auth/logout', {}, { withCredentials: true })
     return UserSchema.parse(response.data)
 }
+
+export const anonymousLoginUser = async () => {
+    const response = await apiClient.post('/auth/anonymous-login', {}, { withCredentials: true })
+    return UserSchema.parse(response.data)
+}

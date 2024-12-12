@@ -1,18 +1,17 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { AxiosError } from 'axios'
-import { AppContext } from '../context/appContext'
-import { ErrorType } from '../types/errorType'
+import { useUserContext } from '../context/appContext'
 import Button from '../components/generic/Button'
 import useNotification, { ToastType } from '../hooks/useNotification'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LoginFormSchema, LoginFormType } from '../types/loginFormType'
 import { useLoginUser } from '../api/queries/authQueries'
+import { useAnonymousLogin } from '../hooks/useAnonymousLogin'
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate()
-    const { setUser } = useContext(AppContext)
+    const { setUser } = useUserContext()
     const { createNotification } = useNotification()
 
     const {
@@ -41,6 +40,7 @@ const LoginPage: React.FC = () => {
                     })
                     createNotification('Login Successful', ToastType.Success)
                     navigate('/')
+                    sessionStorage.setItem('user', JSON.stringify({ id: response.id, name: response.username }))
                 },
                 onError: (error) => {
                     setError('root', {
@@ -51,6 +51,25 @@ const LoginPage: React.FC = () => {
             }
         )
     }
+
+    const anonymousLogin = useAnonymousLogin(
+        (response) => {
+            setUser({
+                id: response.id,
+                username: response.username,
+                email: response.email,
+                createdAt: response.createdAt,
+                updatedAt: response.updatedAt,
+                isAnonymous: true,
+            })
+            createNotification('Login Successful as Guest', ToastType.Success)
+            navigate('/')
+            sessionStorage.setItem('user', JSON.stringify({ id: response.id, name: response.username }))
+        },
+        () => {
+            createNotification('Failed to login as Guest', ToastType.Error)
+        }
+    )
 
     return (
         <section className="w-full flex justify-center items-center h-[70vh] bg-white">
@@ -86,10 +105,14 @@ const LoginPage: React.FC = () => {
                     />
                 </form>
                 {errors.root && <p className="text-red-600 text-xs">{errors.root.message}</p>}
-                <div className="flex justify-center items-center space-x-3 mt-1">
+                <div className="flex justify-center items-center space-x-2 mt-1">
                     <p>New here?</p>
                     <p className="text-gray-500 hover:text-black hover:underline">
                         <Link to="/register">Register</Link>
+                    </p>
+                    <p>or</p>
+                    <p className="text-gray-500 hover:text-black hover:underline" onClick={anonymousLogin}>
+                        Login as Guest
                     </p>
                 </div>
             </div>

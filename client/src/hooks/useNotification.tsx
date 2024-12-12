@@ -23,22 +23,24 @@ const useNotification = () => {
                         'max-w-[20rem] w-full flex bg-white rounded-lg items-center shadow-md ring-1 ring-black ring-opacity-5 hover:scale-105 hover:shadow-lg hover:shadow-gray-200'
                     }
                 >
-                    <div className={'flex-1 p-4 w-full flex justify-start items-center'}>
-                        {toastType === ToastType.Success && (
-                            <div className="animate-fadeIn animate-duration-1000 w-[1rem] h-[1rem] bg-green-400 rounded-full flex justify-center items-center mr-2">
-                                <CheckIcon className="w-[80%] h-[80%] text-white text-lg" />
-                            </div>
-                        )}
-                        {toastType === ToastType.Error && (
-                            <div className="animate-fadeIn animate-duration-1000 w-[1rem] h-[1rem] bg-red-500 rounded-full flex justify-center items-center mr-2">
-                                <CloseIcon className="w-[80%] h-[80%] text-white text-lg" />
-                            </div>
-                        )}
-                        {toastType === ToastType.Info && (
-                            <div className="animate-fadeIn animate-duration-1000 w-[1rem] h-[1rem] bg-blue-500 rounded-full flex justify-center items-center mr-2">
-                                <InfoIcon className="w-[80%] h-[80%] text-white text-lg" />
-                            </div>
-                        )}
+                    <div className={'flex p-4 flex-grow justify-start gap-2 items-center'}>
+                        <div className="flex justify-center items-center w-[20px]">
+                            {toastType === ToastType.Success && (
+                                <div className="animate-fadeIn animate-duration-1000 w-[18px] h-[18px] bg-green-400 rounded-full flex justify-center items-center">
+                                    <CheckIcon className="w-[14px] h-[14px] text-white text-lg" />
+                                </div>
+                            )}
+                            {toastType === ToastType.Error && (
+                                <div className="animate-fadeIn animate-duration-1000 w-[18px] h-[18px] bg-red-500 rounded-full flex justify-center items-center">
+                                    <CloseIcon className="w-[14px] h-[14px] text-white text-lg" />
+                                </div>
+                            )}
+                            {toastType === ToastType.Info && (
+                                <div className="animate-fadeIn animate-duration-1000 w-[18px] h-[18px] bg-blue-500 rounded-full flex justify-center items-center">
+                                    <InfoIcon className="w-[14px] h-[14px] text-white text-lg" />
+                                </div>
+                            )}
+                        </div>
                         <div className="flex items-start">
                             <p className="text-sm font-medium text-gray-900">{message}</p>
                         </div>

@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useEffect, useState } from 'react'
+import { ReactNode, createContext, useContext, useEffect, useState } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { useRefetchUserDetails } from '../api/queries/authQueries'
 import { UserType } from '../types/userType'
@@ -31,7 +31,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         data: userData,
         isError: userIsError,
         error: userError,
-    } = useRefetchUserDetails(!document.cookie.indexOf('token='))
+    } = useRefetchUserDetails(Boolean(sessionStorage.getItem('user')))
 
     if (userIsError) {
         showBoundary(userError)
@@ -45,3 +45,5 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
 
     return <AppContext.Provider value={{ user, search, setUser, setSearch }}>{children}</AppContext.Provider>
 }
+
+export const useUserContext = () => useContext(AppContext)
