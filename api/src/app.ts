@@ -15,10 +15,11 @@ import connectDB from './utils/connectDB'
 const app: Application = express()
 
 const port = env.PORT
+const allowedOrigins = env.ALLOWED_ORIGINS.split(',')
 
 app.use(
     cors({
-        origin: ['http://localhost:4173', 'http://localhost:5173'],
+        origin: allowedOrigins,
         credentials: true,
     }),
 )

@@ -1,10 +1,11 @@
 import { DeleteApiResponse, UploadApiResponse, v2 as cloudinary } from 'cloudinary'
+import env from './validateEnv'
 import sharp from 'sharp'
 
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
+    cloud_name: env.CLOUDINARY_CLOUD_NAME,
+    api_key: env.CLOUDINARY_API_KEY,
+    api_secret: env.CLOUDINARY_API_SECRET,
 })
 
 // upload the file on cloudinary

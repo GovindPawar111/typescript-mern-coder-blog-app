@@ -131,7 +131,7 @@ router.post('/login', async (req: Request, res: Response) => {
         })
 
         // Determine environment
-        const isProduction = process.env.NODE_ENV === 'production'
+        const isProduction = env.NODE_ENV === 'production'
 
         res.status(200)
             .cookie('token', token, {
@@ -172,7 +172,7 @@ router.post('/anonymous-login', async (req: Request, res: Response) => {
         })
 
         // Determine environment
-        const isProduction = process.env.NODE_ENV === 'production'
+        const isProduction = env.NODE_ENV === 'production'
 
         res.status(200)
             .cookie('token', token, {
