@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import EditIcon from '../assets/svgs/edit.svg?react'
-import DeleteIcon from '../assets/svgs/Delete.svg?react'
+import DeleteIcon from '../assets/svgs/delete.svg?react'
 import { useUserContext } from '../context/appContext'
 import { useNavigate } from 'react-router-dom'
 import Overlay from './generic/Overlay'

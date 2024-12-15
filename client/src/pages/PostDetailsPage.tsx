@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import EditIcon from '../assets/svgs/edit.svg?react'
-import DeleteIcon from '../assets/svgs/Delete.svg?react'
+import DeleteIcon from '../assets/svgs/delete.svg?react'
 import CommentSection from '../components/CommentSection'
 import { useUserContext } from '../context/appContext'
 import { Link, useNavigate, useParams } from 'react-router-dom'
