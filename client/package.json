@@ -3,7 +3,6 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
-    "homepage": "https://GovindPawar111.github.io/typescript-mern-coder-blog-app",
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
@@ -12,7 +11,6 @@
         "prod": "npm run build && npm run preview",
         "update-browserslist": "npx update-browserslist-db@latest",
         "predeploy": "npm run build",
-        "deploy": "gh-pages -d dist"
     },
     "dependencies": {
         "@hookform/resolvers": "^3.9.1",
