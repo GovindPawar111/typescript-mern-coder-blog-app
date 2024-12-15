@@ -4,7 +4,7 @@
     "description": "Express api project with typescript",
     "main": "dist/app.js",
     "scripts": {
-        "build": "npm install && npx tsc --build",
+        "build": "npx tsc --build",
         "start": "node dist/app.js",
         "dev": "nodemon src/app.ts"
     },
