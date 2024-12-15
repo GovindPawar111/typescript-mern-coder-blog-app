@@ -12,7 +12,7 @@
         "prod": "npm run build && npm run preview",
         "update-browserslist": "npx update-browserslist-db@latest",
         "predeploy": "npm run build",
-        "deploy": "gh-pages -d client/dist"
+        "deploy": "gh-pages -d dist"
     },
     "dependencies": {
         "@hookform/resolvers": "^3.9.1",
