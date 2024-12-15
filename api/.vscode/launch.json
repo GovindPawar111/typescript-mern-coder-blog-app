@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch API",
+            "program": "${workspaceFolder}/src/app.ts", // Path to your main entry file
+            "cwd": "${workspaceFolder}", // Current working directory
+            "runtimeExecutable": "node", // Use the Node.js runtime
+            "env": {
+                // Optional: Define environment variables
+                "NODE_ENV": "development"
+            },
+            "envFile": "${workspaceFolder}/.env", // Optional: Load environment variables from a .env file
+            "outFiles": ["${workspaceFolder}/dist/**/*.js"], // For TypeScript or transpiled projects
+            "preLaunchTask": "npm: build", // Optional: Pre-build task for TypeScript projects
+            "restart": true, // Automatically restart on file changes
+            "console": "integratedTerminal" // Output logs in the VS Code terminal
+        }
+    ]
+}
