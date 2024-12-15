@@ -1,0 +1,45 @@
+name: Deploy React Client to GitHub Pages
+
+on:
+    push:
+        branches:
+            - main # Trigger on commits to the main branch
+    pull_request:
+        branches:
+            - main # Trigger on PRs targeting the main branch
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            # Checkout the code
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            # Set up Node.js 20.x (as per your specified version)
+            - name: Set up Node.js 20.x
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '20.x' # Using Node.js version 20.x
+
+            # Navigate to the Client folder
+            - name: Install dependencies for Client
+              run: |
+                  cd Client
+                  npm install
+
+            # Build the React project in Client folder
+            - name: Build React project
+              run: |
+                  cd Client
+                  npm run build
+
+            # Deploy to GitHub Pages from Client/build folder
+            - name: Deploy to GitHub Pages
+              uses: JamesIves/github-pages-deploy-action@v4
+              with:
+                  branch: gh-pages # The branch to deploy to
+                  folder: Client/build # Folder to deploy (from `npm run build` in Client)
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
