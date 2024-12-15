@@ -30,8 +30,7 @@ jobs:
             - name: Set up Node.js 20.x
               uses: actions/setup-node@v4
               with:
-                  node-version: '20.x' # Using Node.js version 20.x
-                  cache: 'npm'
+                  node-version: '20.17.x' # Using Node.js version 20.x
 
             # Navigate to the client folder
             - name: Install dependencies for client
@@ -45,18 +44,10 @@ jobs:
                   cd client
                   npm run build
 
-            # Setup Pages
-            - name: Setup Pages
-              uses: actions/configure-pages@v4
-
-            # Upload artifact
-            - name: Upload artifact
-              uses: actions/upload-pages-artifact@v3
+            # Deploy to GitHub Pages
+            - name: 🚀 Deploy to GitHub Pages 🚀
+              if: github.ref == 'refs/heads/main'
+              uses: peaceiris/actions-gh-pages@v3
               with:
-                  path: './client/dist'
-            
-            - name: Deploy to GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v4
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: .client/dist
