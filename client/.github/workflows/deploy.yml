@@ -40,6 +40,6 @@ jobs:
               uses: JamesIves/github-pages-deploy-action@v4
               with:
                   branch: gh-pages # The branch to deploy to
-                  folder: Client/build # Folder to deploy (from `npm run build` in Client)
+                  folder: Client/dist # Folder to deploy (from `npm run build` in Client)
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

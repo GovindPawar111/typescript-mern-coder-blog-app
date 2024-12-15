@@ -1,4 +1,4 @@
-import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { createPost, deletePost, getAllSearchedPosts, getPostWithId, getUsersPosts, updatePost } from '../postApi'
 import { PostType } from '../../types/postType'
 import { queryClient } from './queryClient'
