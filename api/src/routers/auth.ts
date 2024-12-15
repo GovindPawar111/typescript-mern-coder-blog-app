@@ -137,7 +137,7 @@ router.post('/login', async (req: Request, res: Response) => {
             .cookie('token', token, {
                 httpOnly: true,
                 secure: isProduction,
-                sameSite: isProduction ? 'strict' : 'lax',
+                sameSite: 'lax',
                 path: '/',
                 maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days in milliseconds
             })
@@ -178,7 +178,7 @@ router.post('/anonymous-login', async (req: Request, res: Response) => {
             .cookie('token', token, {
                 httpOnly: true,
                 secure: isProduction,
-                sameSite: isProduction ? 'strict' : 'lax',
+                sameSite: 'lax',
                 path: '/',
                 maxAge: 2 * 60 * 60 * 1000, // 2 hours in milliseconds
             })
