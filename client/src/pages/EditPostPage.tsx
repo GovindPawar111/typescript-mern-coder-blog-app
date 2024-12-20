@@ -172,10 +172,17 @@ const EditPostPage: React.FC = () => {
                     if (postDataFromCache) {
                         queryClient.setQueryData<PostType[]>([POST_QUERY_KEY, { search: '' }], (oldPost) => {
                             if (!oldPost) return []
-
                             return [data, ...oldPost.filter((post) => post._id !== params.postId)]
                         })
+
+                        // If post data is present user profile cache then replace new post with old one
+                        user &&
+                            queryClient.setQueryData<PostType[]>([POST_QUERY_KEY, user.id], (oldPost) => {
+                                if (!oldPost) return []
+                                return [data, ...oldPost.filter((post) => post._id !== params.postId)]
+                            })
                     }
+
                     createNotification('Post updated successfully', ToastType.Success)
                     navigate(`/posts/${data._id}`)
                 },

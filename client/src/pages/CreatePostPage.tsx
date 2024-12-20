@@ -113,6 +113,11 @@ const CreatePostPage: React.FC = () => {
                 queryClient.setQueryData<PostType[]>([POST_QUERY_KEY, { search: '' }], (postsData) =>
                     postsData ? [data, ...postsData] : [data]
                 )
+                // Add the post to profile caches
+                user &&
+                    queryClient.setQueryData<PostType[]>([POST_QUERY_KEY, user.id], (postsData) =>
+                        postsData ? [data, ...postsData] : [data]
+                    )
                 // Add the empty comments to the cache
                 queryClient.setQueryData<PostType[]>([COMMENT_QUERY_KEY, data._id], [])
                 createNotification('Successfully create a new post', ToastType.Success)

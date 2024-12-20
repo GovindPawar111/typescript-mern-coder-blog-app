@@ -54,7 +54,7 @@ const PostDetailsPage: React.FC = () => {
             createNotification('You need to log in as a real user to delete a post.', ToastType.Info)
             return
         }
-        
+
         if (!params.postId) {
             return
         }
@@ -67,6 +67,13 @@ const PostDetailsPage: React.FC = () => {
                         [POST_QUERY_KEY, { search: '' }],
                         posts?.filter((post) => post._id !== params.postId)
                     )
+
+                    // If post data is present user profile cache then remove it
+                    user &&
+                        queryClient.setQueryData(
+                            [POST_QUERY_KEY, user.id],
+                            posts?.filter((post) => post._id !== params.postId)
+                        )
                 }
                 createNotification('Post deleted successfully', ToastType.Success)
                 navigate('/')
