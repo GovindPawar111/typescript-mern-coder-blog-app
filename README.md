@@ -1,23 +1,24 @@
 # CoderBlog
 
-CoderBlog is a blog post application designed for coders to create, read, update, and delete (CRUD) their posts and comments. The application features a rich text editor for seamless blog content management, powered by the open-source Tiptap library.
+[Live WebLink](https://coder-blog-application.netlify.app/)
+
+CoderBlog is a blogging platform designed for coders, allowing them to easily create, read, update, and delete blog posts and comments. The app integrates a rich text editor powered by Tiptap, offering a seamless content management experience.
 
 ## Features
 
-- CRUD Operations: Manage blog posts and comments effortlessly.
-- Rich Text Editor: Integrated with Tiptap for a customizable and user-friendly editing experience.
-- API Management: Utilizes Tanstack/React Query for efficient API management and caching on the frontend.
-- Form Validation: Employs React-hook-form with Zod for robust and type-safe form validation.
-- Image Handling: Combines react-lazy-load-image-component, Multer, Sharp, Compression, and Cloudinary for efficient image rendering, storage, and CDN access.
-- Notifications: Implements React-hot-toast for dynamic toast notifications.
-- Authentication: Secured using JWT for user authentication and session management.
-- State Management: Simplified using useContext for lightweight state handling.
+- **CRUD Operations:** Effortlessly manage blog posts and comments.
+- **Rich Text Editor:** A customizable and intuitive editing interface powered by Tiptap.
+- **API Management:** Utilizes Tanstack/React Query for efficient API calls and caching.
+- **Type-safe Form Validation:** React-hook-form combined with Zod ensures robust and - type-safe form validation.
+- **Image Handling:** Implements Multer and Sharp for efficient image storage, compression, and rendering.
+- **User Authentication:** JWT authentication with email verification for account activation via Nodemailer.
+- **Guest/Anonymous Login:** Allows users to access certain routes with read-only permissions, even without logging in.
 
 ## Development Setup
-- Frameworks: Built with Vite and TypeScript for a fast and type-safe development experience.
-- Code Quality: Integrated Prettier for code formatting and ESLint for linting checks.
-- Styling: Developed with Tailwind CSS for responsive and efficient UI design.
-- Routing: Uses React Router for client-side routing functionality.
+- **Frameworks:** Built with Vite and TypeScript for a fast, type-safe development experience.
+- **Code Quality:** Prettier for consistent code formatting and ESLint for linting checks.
+- **Styling:** Responsive UI design powered by Tailwind CSS.
+- **Routing:** Client-side routing with React Router for dynamic page navigation.
 
 ## Tech Stack
 
