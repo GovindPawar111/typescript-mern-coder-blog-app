@@ -1,5 +1,4 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
 import { useRefetchUserDetails } from '../api/queries/authQueries'
 import { UserType } from '../types/userType'
 
@@ -24,17 +23,17 @@ type AppContextProviderProps = {
 export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     const [user, setUser] = useState<UserType | null>(null)
     const [search, setSearch] = useState<string>('')
-    const { showBoundary } = useErrorBoundary()
 
-    // check whether token is present or not, If it is then refetch the data.}
+    // check whether token is present or not, If it is then refetch the data.
     const {
         data: userData,
         isError: userIsError,
         error: userError,
-    } = useRefetchUserDetails(Boolean(sessionStorage.getItem('user')))
+    } = useRefetchUserDetails(!user && Boolean(sessionStorage.getItem('user')))
 
     if (userIsError) {
-        showBoundary(userError)
+        sessionStorage.removeItem('user')
+        console.log(userError)
     }
 
     useEffect(() => {

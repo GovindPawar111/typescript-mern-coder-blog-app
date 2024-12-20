@@ -49,7 +49,6 @@ export const useRefetchUserDetails = (enable?: boolean) => {
     return useQuery<UserType, AxiosError<ErrorType>>({
         queryKey: [AUTH_QUERY_KEY],
         queryFn: refetchUserDetails,
-        staleTime: 1000 * 60 * 10,
         enabled: enable,
     })
 }

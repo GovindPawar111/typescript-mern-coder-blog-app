@@ -136,7 +136,8 @@ router.post('/login', async (req: Request, res: Response) => {
         res.status(200)
             .cookie('token', token, {
                 httpOnly: true,
-                secure: isProduction,
+                secure: isProduction, // need to be true in production to support sameSite = 'none'.
+                sameSite: isProduction ? 'none' : 'lax', // need to seat to none in production
                 path: '/',
                 maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days in milliseconds
             })
@@ -176,7 +177,8 @@ router.post('/anonymous-login', async (req: Request, res: Response) => {
         res.status(200)
             .cookie('token', token, {
                 httpOnly: true,
-                secure: isProduction,
+                secure: isProduction, // need to be true in production to support sameSite = 'none'.
+                sameSite: isProduction ? 'none' : 'lax', // need to seat to none in production
                 path: '/',
                 maxAge: 2 * 60 * 60 * 1000, // 2 hours in milliseconds
             })
@@ -231,11 +233,16 @@ router.post('/logout', validateToken, async (req: Request, res: Response) => {
             })
         }
 
+        // Determine environment
+        const isProduction = env.NODE_ENV === 'production'
+
         // Clear the 'token' cookie to log the user out
         res.status(200)
             .clearCookie('token', {
                 path: '/',
                 httpOnly: true,
+                secure: isProduction, // need to be true in production to support sameSite = 'none'.
+                sameSite: isProduction ? 'none' : 'lax', // need to seat to none in production
             })
             .json({
                 email: user.email,
